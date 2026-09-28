@@ -1,10 +1,10 @@
 # Tactical Co-op Asset Pack
 
-This repository contains a procedural Blender-based asset pack for a stylized-realistic top-down tactical action game in a warehouse infiltration mission.
+This repository contains procedural Blender assets for a stylized-realistic top-down tactical co-op game. The quality sample is focused on one rifle-equipped officer and a test room; broader inventory work remains secondary until this sample has been inspected in Blender.
 
 ## Scope
 
-The goal is to produce a reusable first-mission pack with:
+The longer-term goal is a reusable first-mission pack with:
 - three humanoid character archetypes
 - modular architecture for warehouse/office spaces
 - original equipment and props
@@ -13,10 +13,7 @@ The goal is to produce a reusable first-mission pack with:
 
 ## Important status
 
-This environment does not expose a Blender runtime or Unity import pipeline for direct validation. As a result:
-- no .blend, .fbx, .glb, .png, or Unity-imported files were generated in this session
-- all Blender export steps remain runnable via the scripts below on a local machine with Blender installed
-- no asset, animation or Unity import is claimed as tested here
+Blender and Unity are not available in the current editing environment. The scripts and launchers are implemented, but this revision has not produced or visually inspected binary assets. See [quality_sample_report.md](Documentation/quality_sample_report.md) for checks run and checks still pending.
 
 ## Required folder structure
 
@@ -34,28 +31,26 @@ This environment does not expose a Blender runtime or Unity import pipeline for 
 ## Repository layout
 
 - `Scripts/generate_quality_sample.py` — builds the quality sample: officer, carbine, and hinge-pivot doorway room.
-- `Scripts/generate_full_pack.py` — generates the full reusable pack and writes an asset manifest.
+- `Scripts/generate_full_pack.py` — an unfinished secondary prop-set generator; it is not the quality-sample acceptance path.
 - `Scripts/blender_asset_pack_common.py` — shared helpers for scene setup, materials, and export.
 - `Documentation/asset_manifest.md` — dimension, material, rig, and budget notes.
 - `Documentation/limitations.md` — warnings, rough passes, and validation gaps.
 
 ## Local generation workflow
 
-1. Install Blender 3.6+ or 4.x.
-2. Open a terminal in this repo.
-3. Run:
+Install Blender 3.6 LTS or newer, then run the launcher for your shell from the repository root:
 
 ```bash
-blender --background --python Scripts/generate_quality_sample.py
-blender --background --python Scripts/generate_full_pack.py
+Scripts/run_quality_sample.sh
 ```
 
-Or, from the Blender scripting workspace:
+Windows PowerShell equivalent, with automatic detection through PATH and common install locations:
 
-```python
-import os
-exec(open("Scripts/generate_full_pack.py").read())
+```powershell
+.\Scripts\run_quality_sample.ps1
 ```
+
+Set `BLENDER_BIN` or pass `-BlenderPath` for a custom install. The launcher checks Blender's process exit code and the generated validation/export reports. `generate_quality_sample.py -- --export` exports the three sample assets in the same Blender run.
 
 ## Output directories
 
@@ -66,14 +61,14 @@ The generation scripts write to:
 - `Equipment/`
 - `Environment/`
 - `Animations/`
-- `Previews/`
+- `Previews/` — close officer views, gameplay angle, door states, and sampled animation frames after a Blender run
 - `Materials/`
 - `Textures/`
 
 ## Asset conventions
 
 - 1-meter grid basis
-- upright world orientation, +Z up in Blender, facing +Y for front-aim direction
+- upright world orientation, +Z up in Blender, character forward is -Y
 - consistent naming: `Char_Officer_01`, `Prop_Wall_3m`, `Anim_Idle`
 - shared material palette for metal, concrete, wood, fabric, plastic, glass, emissive
 - separate collision meshes labeled with `Collision_` postfix
@@ -92,14 +87,7 @@ The project uses Unity import conventions, so generated FBX/GLB exports should b
 
 This repo intentionally does not claim a tested Unity import because no Unity project or runtime is present in this session.
 
-## Files intentionally not generated here
-
-Because the Blender runtime is unavailable in this environment, the following remain to be generated locally:
-- all .blend source files
-- all .fbx/.glb exports
-- animation clip files
-- preview renders
-- Unity-imported validation results
+The `.blend`, `.fbx`, preview images, and measured validation reports are generated locally by the launcher. They are not present in this checkout because Blender is unavailable in the current environment.
 
 ## License
 
