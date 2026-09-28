@@ -14,6 +14,8 @@ rm -f Documentation/quality_sample_status.json Documentation/export_validation.j
 	--python Scripts/generate_quality_sample.py -- --validate
 test -s Documentation/quality_sample_status.json
 "$BLENDER_BIN" --background Sources/quality_sample.blend \
+	--python-exit-code 1 --python Scripts/validate_animation_quality.py
+"$BLENDER_BIN" --background Sources/quality_sample.blend \
 	--python-exit-code 1 --python Scripts/export_to_unity.py -- --validate
 test -s Documentation/export_validation.json
 grep -q '"export_status": "passed"' Documentation/export_validation.json

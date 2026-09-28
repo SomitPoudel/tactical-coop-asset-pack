@@ -39,12 +39,42 @@
     "Previews\\animations\\Anim_RifleRecoil_011.png",
     "Previews\\animations\\Anim_RifleRecoil_012.png"
   ],
-  "exports": [
-    "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\Characters\\Officer_Quality.fbx",
-    "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\Equipment\\Carbine_Quality.fbx",
-    "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\Environment\\QualityRoom.fbx"
+  "exports": [],
+  "unity_compatibility": {
+    "status": "not_tested_no_workspace_project",
+    "reason": "No Unity project metadata exists in this workspace."
+  },
+  "animation_reviews": [
+    {
+      "path": "Previews/animations/idle_review.gif",
+      "frame_count": 8,
+      "width": 480,
+      "height": 480,
+      "size_bytes": 525712
+    },
+    {
+      "path": "Previews/animations/walk_review.gif",
+      "frame_count": 7,
+      "width": 480,
+      "height": 480,
+      "size_bytes": 465777
+    },
+    {
+      "path": "Previews/animations/crouch_review.gif",
+      "frame_count": 7,
+      "width": 480,
+      "height": 480,
+      "size_bytes": 504879
+    },
+    {
+      "path": "Previews/animations/recoil_review.gif",
+      "frame_count": 7,
+      "width": 480,
+      "height": 480,
+      "size_bytes": 459715
+    }
   ],
-  "unity_compatibility": "not_run",
+  "preview_status": "passed",
   "export_status": "passed",
   "round_trip_status": "passed"
 }

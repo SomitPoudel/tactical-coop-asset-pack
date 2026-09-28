@@ -1105,7 +1105,8 @@ def validate(path):
             'human_visual_review': 'pending rendered inspection',
         },
         'unity_compatibility': {
-            'status': 'not_run',
+            'status': 'not_tested_no_workspace_project',
+            'reason': 'No Unity project metadata exists in this workspace; no Unity import was attempted.',
             'checks': ['Humanoid avatar mapping', 'animation playback',
                        'materials and import settings'],
         },
@@ -1159,6 +1160,7 @@ def render_quality_previews(arm, output_dir, views=None):
     scene.render.resolution_percentage = 100
     scene.camera = camera
     previews = []
+    door_light = None
 
     def render(path):
         for proxy in collision_visibility:
@@ -1204,11 +1206,24 @@ def render_quality_previews(arm, output_dir, views=None):
                 obj.hide_render = True
             for obj in room_objects:
                 obj.hide_render = False
-            camera.location = (0, 5.4, 1.35)
-            point_camera(camera, (0, 2.82, 1.18))
+            camera.data.type = 'ORTHO'
+            camera.data.ortho_scale = 5.2
+            camera.location = (3.4, 6.2, 2.35)
+            point_camera(camera, (0, 2.82, 1.2))
+            light_data = bpy.data.lights.new('Preview_Door_Neutral', 'AREA')
+            light_data.energy = 1200
+            light_data.color = (1, 1, 1)
+            light_data.shape = 'DISK'
+            light_data.size = 4.0
+            door_light = bpy.data.objects.new(
+                'Preview_Door_Neutral', light_data)
+            scene.collection.objects.link(door_light)
+            door_light.location = (2.0, 5.5, 3.8)
+            point_camera(door_light, (0, 2.82, 1.2))
             for side, frame in (('closed', 1), ('open', 24)):
                 if f'door_{side}' not in door_views:
                     continue
+                camera.data.ortho_scale = 3.6 if side == 'closed' else 5.2
                 scene.frame_set(frame)
                 render(output_dir/f'door_{side}.png')
 
@@ -1219,8 +1234,10 @@ def render_quality_previews(arm, output_dir, views=None):
                 obj.hide_render = False
             scene.render.resolution_x = 480
             scene.render.resolution_y = 480
-            camera.location = (0, -4.2, 1.0)
-            point_camera(camera, (0, -.35, .96))
+            camera.data.type = 'ORTHO'
+            camera.data.ortho_scale = 2.7
+            camera.location = (2.7, -4.8, 2.05)
+            point_camera(camera, (0, -.2, .93))
             for name in ('Anim_RifleReadyIdle', 'Anim_Walk_Forward',
                          'Anim_CrouchIdle', 'Anim_RifleRecoil'):
                 clip = bpy.data.actions[name]
@@ -1235,6 +1252,10 @@ def render_quality_previews(arm, output_dir, views=None):
                     scene.frame_set(frame)
                     render(animation_dir/f'{name}_{frame:03}.png')
     finally:
+        if door_light:
+            light_data = door_light.data
+            bpy.data.objects.remove(door_light, do_unlink=True)
+            bpy.data.lights.remove(light_data)
         for obj, hidden in room_visibility.items():
             obj.hide_render = hidden
         for obj, hidden in collision_visibility.items():
@@ -1255,16 +1276,16 @@ def render_quality_previews(arm, output_dir, views=None):
 def build_animations(arm):
     neutral = {}
     walk_a = {
-        'thigh.L': {'rotation': (.32, 0, 0)},
-        'thigh.R': {'rotation': (-.32, 0, 0)},
+        'thigh.L': {'rotation': (.48, 0, 0)},
+        'thigh.R': {'rotation': (-.48, 0, 0)},
         'shin.L': {'rotation': (-.22, 0, 0)},
         'shin.R': {'rotation': (.08, 0, 0)},
         'foot.L': {'rotation': (-.10, 0, 0)},
         'foot.R': {'rotation': (.10, 0, 0)},
     }
     walk_b = {
-        'thigh.L': {'rotation': (-.32, 0, 0)},
-        'thigh.R': {'rotation': (.32, 0, 0)},
+        'thigh.L': {'rotation': (-.48, 0, 0)},
+        'thigh.R': {'rotation': (.48, 0, 0)},
         'shin.L': {'rotation': (.08, 0, 0)},
         'shin.R': {'rotation': (-.22, 0, 0)},
         'foot.L': {'rotation': (.10, 0, 0)},
@@ -1290,8 +1311,75 @@ def build_animations(arm):
     action(arm, 'Anim_RifleReadyIdle', 40,
            [(1, neutral), (20, {'spine_02': {'rotation': (0, .015, 0)}}),
             (40, neutral)], True)
-    action(arm, 'Anim_Walk_Forward', 25,
-           [(1, walk_a), (13, walk_b), (25, walk_a)], True)
+    walk_clip = action(arm, 'Anim_Walk_Forward', 25,
+                       [(1, walk_a), (13, walk_b), (25, walk_a)], True)
+    arm.animation_data.action = walk_clip
+    scene = bpy.context.scene
+    frame_start = int(walk_clip['frame_start'])
+    frame_end = int(walk_clip['frame_end'])
+    period = frame_end-frame_start
+    contact_height = .015
+    centers = {side: {} for side in ('L', 'R')}
+    sole_heights = {side: {} for side in ('L', 'R')}
+    for frame in range(frame_start, frame_end+1):
+        scene.frame_set(frame)
+        for side in ('L', 'R'):
+            bounds = world_aabb(bpy.data.objects['Officer_BootSole.'+side])
+            centers[side][frame] = (
+                (bounds[0][0]+bounds[1][0])*.5,
+                (bounds[0][1]+bounds[1][1])*.5)
+            sole_heights[side][frame] = bounds[0][2]
+
+    def cycle_frame(frame):
+        return frame_start+(frame-frame_start) % period
+
+    for side in ('L', 'R'):
+        planted_intervals = []
+        for frame in range(frame_start+1, frame_end+1):
+            previous = frame-1
+            if max(sole_heights[side][previous], sole_heights[side][frame]) > contact_height:
+                continue
+            previous_xy = centers[side][previous]
+            current_xy = centers[side][frame]
+            if current_xy[1] <= previous_xy[1]:
+                continue
+            planted_intervals.append((previous, frame,
+                                      current_xy[0]-previous_xy[0]))
+        if not planted_intervals:
+            continue
+
+        offsets = {}
+        first_contact = cycle_frame(planted_intervals[0][0])
+        previous_offset = 0.0
+        offsets[first_contact] = previous_offset
+        for previous, current, lateral_delta in planted_intervals:
+            previous_frame = cycle_frame(previous)
+            current_frame = cycle_frame(current)
+            previous_offset = offsets.get(previous_frame, previous_offset)
+            previous_offset -= lateral_delta
+            offsets[current_frame] = previous_offset
+
+        last_contact = cycle_frame(planted_intervals[-1][1])
+        release_frames = []
+        frame = last_contact
+        while True:
+            frame = frame_start+(frame-frame_start+1) % period
+            if frame == first_contact:
+                break
+            release_frames.append(frame)
+        for index, frame in enumerate(release_frames, 1):
+            offsets[frame] = previous_offset*(1-index/len(release_frames))
+
+        foot = arm.pose.bones['foot.'+side]
+        for frame in range(frame_start, frame_end+1):
+            scene.frame_set(frame)
+            foot.location.x = offsets.get(cycle_frame(frame), 0.0)
+            foot.keyframe_insert(
+                data_path='location', index=0, frame=frame, group='Walk Foot Plant')
+
+    for curve in action_fcurves(walk_clip):
+        for key in curve.keyframe_points:
+            key.interpolation = 'LINEAR'
     action(arm, 'Anim_CrouchIdle', 30,
            [(1, crouch), (30, crouch)], True)
     action(arm, 'Anim_RifleRecoil', 12,

@@ -215,7 +215,17 @@ def export_asset(root_name, filename, folder, animation_tracks):
         obj.select_set(True)
     bpy.context.view_layer.objects.active = next(
         (obj for obj in objects if obj.type == 'ARMATURE'), root)
-    dimensions = evaluated_dimensions(objects)
+    scene = bpy.context.scene
+    original_frame = scene.frame_current
+    clip_starts = [int(bpy.data.actions[name]['frame_start'])
+                   for _, action_names in animation_tracks
+                   for name in action_names]
+    rest_frame = min([int(scene.frame_start)]+clip_starts)-1
+    try:
+        scene.frame_set(rest_frame)
+        dimensions = evaluated_dimensions(objects)
+    finally:
+        scene.frame_set(original_frame)
     output = DIRS[folder]/filename
     output.parent.mkdir(parents=True, exist_ok=True)
     bpy.ops.export_scene.fbx(
@@ -249,7 +259,10 @@ def export_all(validate_exports=False):
         'exports': [],
         'failures': [],
         'round_trip_status': 'not_run',
-        'unity_compatibility': 'not_run',
+        'unity_compatibility': {
+            'status': 'not_tested_no_workspace_project',
+            'reason': 'No Unity project metadata exists in this workspace; no Unity import was attempted.',
+        },
     }
 
     def save_report():

@@ -314,5 +314,8 @@
   ],
   "failures": [],
   "round_trip_status": "passed",
-  "unity_compatibility": "not_run"
+  "unity_compatibility": {
+    "status": "not_tested_no_workspace_project",
+    "reason": "No Unity project metadata exists in this workspace; no Unity import was attempted."
+  }
 }

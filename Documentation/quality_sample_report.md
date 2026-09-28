@@ -1,55 +1,39 @@
 # Quality Sample Completion Report
 
-## Verified Runtime
+## Runtime and Scope
 
-All current generation, rendering, validation, export, and reimport checks ran locally on Windows with Blender 5.2.2 LTS:
+Generation, rendering, numerical checks, FBX export, and Blender clean-scene reimports ran on Windows with Blender 5.2.2 LTS from `%TEMP%\BlenderCLI-5.2.2\blender.exe`. No Blender, Unity, or Python packages were installed. The existing officer, carbine, room, rig, and asset inventory were retained; no networking or new asset categories were added.
 
-`%TEMP%\BlenderCLI-5.2.2\blender.exe`
+## Numerical Verification
 
-No Blender installation or package was installed during this pass. The current scene is `Sources/quality_sample.blend`.
-
-## Results
-
-| Asset | Evaluated dimensions (m) | Evaluated triangles | Budget | Result |
+| Asset | Bind dimensions (m) | Evaluated triangles | Budget | Result |
 |---|---:|---:|---:|---|
 | Officer | 0.832 x 0.905 x 1.840 | 8,876 | 12,000 | Passed |
 | Carbine | 0.185 x 0.949 x 0.435 | 1,296 | 2,000 | Passed |
 | Quality room | 6.200 x 6.200 x 3.295 | 2,856 | 12,000 | Passed |
 
-Structural validation passed for asset roots, skeleton and attachment contracts, skinning, grip/muzzle alignment, doorway dimensions, collision proxy alignment, and the full 24-frame door swing/frame clearance check.
+Structural checks passed for roots, attachments, skinning, weapon alignment, doorway dimensions, collision-proxy alignment, and the full 24-frame door swing/frame-clearance test. Collision proxies were hidden for preview rendering.
 
-All four officer clips were evaluated at every frame (107 frames total). Loop endpoint matrix deltas are zero; recoil returns to its starting transforms. Crouch lowers the pelvis 0.11 m with no measured foot penetration. Across the walk, maximum foot penetration is 0.00419 m and maximum sole lift is 0.01924 m. Adjacent arm/leg surface gaps remain at or below 0.00269 m. Maximum support-hand grip error is 0.02101 m; main-hand error is 0. The full per-frame measurements and tolerances are in `Documentation/animation_validation.json`.
+All four officer clips were evaluated at all 107 authored frames. The walk uses the documented 1.25 m/s controller speed: maximum measured planted-foot drift is 0.0664 m/s (0.10 m/s limit), with nine grounded backward-travel intervals measured per foot. Maximum sole penetration is 0.00459 m; maximum walk sole lift is 0.05040 m. Joint seam checks sample ten terminal-ring vertices per limb connection against its elbow/knee connector on every frame; maximum separation is 0.01256 m (0.035 m limit). Main-hand grip error is 0 m, maximum support-hand error is 0.02101 m, loop endpoint deltas are zero, and recoil returns to its starting transforms. Existing thresholds were not loosened. Full measurements and limits are in `Documentation/animation_validation.json`.
 
-FBX exports and clean-scene reimports passed. Round-trip checks detected all four officer clips and both door clips, evaluated representative frames on the intended armature/pivot owners, and matched measured asset dimensions. Unity compatibility remains untested.
+All three FBX exports passed Blender clean-scene reimport checks for bind dimensions, hierarchy, and declared clips. The officer contains all four clips; the room contains both door clips. Dimensions are measured before the first NLA clip so the export comparison uses bind pose. Details are in `Documentation/export_validation.json`.
 
-## Generated Files
+## Visual Review Artifacts
 
-- Editable scene: `Sources/quality_sample.blend`
-- Officer FBX: `Characters/Officer_Quality.fbx`
-- Carbine FBX: `Equipment/Carbine_Quality.fbx`
-- Room FBX: `Environment/QualityRoom.fbx`
-- Still previews: `Previews/officer_front.png`, `Previews/officer_side.png`, `Previews/gameplay_angle.png`, `Previews/door_closed.png`, `Previews/door_open.png`
-- Sampled animation frames: 29 PNGs under `Previews/animations/` (480 x 480)
-- Reports: `Documentation/quality_validation.json`, `Documentation/animation_validation.json`, `Documentation/export_validation.json`, `Documentation/quality_sample_status.json`
+Rendered, not visually inspected in this pass. Numerical checks do not establish appearance, contact quality, or framing.
 
-The gameplay camera uses a 12.5 m orthographic field; the officer's projected height is approximately 14.7% of the frame. Only the five named still previews are allowlisted in `.gitignore`; animation frames remain ignored unless intentionally added.
+- Animation GIFs: `Previews/animations/idle_review.gif` (8 frames), `walk_review.gif` (7), `crouch_review.gif` (7), `recoil_review.gif` (7); all are 480 x 480.
+- Animation sample frames: 29 PNGs under `Previews/animations/`.
+- Three-quarter officer still: `Previews/officer_side.png`.
+- Door states: `Previews/door_closed.png` and `Previews/door_open.png`, rendered with neutral fill lighting and framing for the doorway.
+- Other stills: `Previews/officer_front.png` and `Previews/gameplay_angle.png`.
 
-## Commands Run
+Only the four named GIFs are allowlisted for tracking; sampled PNG frames remain ignored.
 
-The successful checks used these command forms from the repository root:
+## Unity Status
 
-```powershell
-& "$env:Temp\BlenderCLI-5.2.2\blender.exe" --background --python-exit-code 1 --python Scripts/generate_quality_sample.py -- --validate --export
-& "$env:Temp\BlenderCLI-5.2.2\blender.exe" --background --python-exit-code 1 --python Scripts/generate_quality_sample.py -- --validate --no-render
-& "$env:Temp\BlenderCLI-5.2.2\blender.exe" --background Sources/quality_sample.blend --python-exit-code 1 --python Scripts/validate_animation_quality.py
-& "$env:Temp\BlenderCLI-5.2.2\blender.exe" --background Sources/quality_sample.blend --python-exit-code 1 --python Scripts/generate_quality_sample.py -- --preview-only --preview-views officer_front officer_side gameplay_angle door_closed door_open
-& "$env:Temp\BlenderCLI-5.2.2\blender.exe" --background Sources/quality_sample.blend --python-exit-code 1 --python Scripts/export_to_unity.py -- --validate
-```
+No `ProjectSettings/ProjectVersion.txt` was found in this workspace or the nearby GitHub project roots searched. No Unity editor was found in the common install locations checked. No project was created and nothing was installed. Consequently, Unity import warnings/failures were not collected, and Unity materials, scale settings, collision configuration, door playback, and avatar validation remain untested. Generic is the only appropriate unvalidated import mode for this pass; Humanoid compatibility and whether Humanoid mapping can succeed are undetermined. No Humanoid compatibility claim is made.
 
-A sampled-frame render was also run with `--preview-only --preview-views animations`.
+## Remaining Review
 
-## Review Status and Limitations
-
-No preview images or animation frames were opened or visually inspected in this pass. Please review silhouette, intersections, boot/foot appearance, hand contact, motion quality, gameplay framing, room readability, and door presentation locally. Automated structural and numerical checks do not establish finished art quality or production readiness.
-
-The gait is in-place; intended controller translation speed is 1.25 m/s. Runtime IK/constraints and retargeting were not added. UVs, material response in-engine, Unity import/avatar mapping, and gameplay integration remain untested. This quality sample does not generate the additional characters or equipment listed as future pack goals.
+Please inspect the GIFs and stills for silhouette, intersections, boot/foot appearance, hand/weapon contact, gait quality, door hardware visibility, and framing. Runtime IK, retargeting, UV review, and in-engine material response were not tested. See `Documentation/quality_validation.json`, `Documentation/animation_validation.json`, `Documentation/export_validation.json`, and `Documentation/quality_sample_status.json` for machine-readable results.

@@ -18,11 +18,16 @@ Thumbs.db
 *.png
 *.jpg
 *.jpeg
+Previews/animations/*.gif
 !/Previews/officer_front.png
 !/Previews/officer_side.png
 !/Previews/gameplay_angle.png
 !/Previews/door_closed.png
 !/Previews/door_open.png
+!/Previews/animations/idle_review.gif
+!/Previews/animations/walk_review.gif
+!/Previews/animations/crouch_review.gif
+!/Previews/animations/recoil_review.gif
 
 # Keep source and scripts tracked
 !Scripts/*.py

@@ -13,7 +13,7 @@ The longer-term goal is a reusable first-mission pack with:
 
 ## Important status
 
-The officer, carbine, and quality room sample has been generated and exported with Blender 5.2.2 LTS. Structural checks, full-frame numerical animation checks, and Blender FBX round trips passed. The rendered images and sampled frames still need human visual review; Unity compatibility is untested. See [quality_sample_report.md](Documentation/quality_sample_report.md) for measured results and limitations.
+The officer, carbine, and quality room sample has been generated and exported with Blender 5.2.2 LTS. Structural checks, full-frame numerical animation checks, and Blender FBX round trips passed. Rendered stills and four animation GIFs are available for human visual review but have not been visually inspected in this pass. No Unity project was found, so Unity compatibility is untested. See [quality_sample_report.md](Documentation/quality_sample_report.md) for measured results and limitations.
 
 ## Required folder structure
 
@@ -49,6 +49,8 @@ Windows PowerShell equivalent, with automatic detection through PATH and common 
 ```powershell
 .\Scripts\run_quality_sample.ps1
 ```
+
+The Windows workflow packages the sampled animation frames into four named GIFs using the built-in WPF encoder; only those review GIFs are allowlisted for tracking.
 
 Set `BLENDER_BIN` or pass `-BlenderPath` for a custom install. The launcher checks Blender's process exit code and the generated validation/export reports. `generate_quality_sample.py -- --export` exports the three sample assets in the same Blender run.
 
@@ -87,7 +89,7 @@ The project uses Unity import conventions, so generated FBX/GLB exports should b
 
 This repo intentionally does not claim a tested Unity import; no Unity project or runtime was used.
 
-The `.blend`, `.fbx`, preview images, and measured validation reports are generated locally by the launcher. Large sampled animation-frame sequences remain excluded by `.gitignore` unless intentionally packaged.
+The `.blend`, `.fbx`, preview images, and measured validation reports are generated locally by the launcher. Sampled animation frames remain excluded by `.gitignore`; only the four named review GIFs are allowlisted.
 
 ## License
 

@@ -68,7 +68,10 @@ def main():
         'human_visual_review': 'pending rendered inspection',
         'previews': previews,
         'exports': exports,
-        'unity_compatibility': 'not_run',
+        'unity_compatibility': {
+            'status': 'not_tested_no_workspace_project',
+            'reason': 'No Unity project metadata exists in this workspace.',
+        },
     }
     if args.export:
         export_report = json.loads(

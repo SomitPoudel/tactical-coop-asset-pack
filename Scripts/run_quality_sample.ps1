@@ -25,10 +25,10 @@ function Find-Blender {
     foreach ($root in $installRoots) {
         if (Test-Path -LiteralPath $root) {
             $candidate = Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue |
-                Sort-Object Name -Descending |
-                ForEach-Object { Join-Path $_.FullName 'blender.exe' } |
-                Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } |
-                Select-Object -First 1
+            Sort-Object Name -Descending |
+            ForEach-Object { Join-Path $_.FullName 'blender.exe' } |
+            Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } |
+            Select-Object -First 1
             if ($candidate) {
                 return $candidate
             }
@@ -49,6 +49,10 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
     throw 'Generation exited without writing quality_sample_status.json.'
 }
+& $blender --background Sources/quality_sample.blend --python-exit-code 1 --python Scripts/validate_animation_quality.py
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+& (Join-Path $PSScriptRoot 'package_animation_previews.ps1')
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 & $blender --background Sources/quality_sample.blend --python-exit-code 1 --python Scripts/export_to_unity.py -- --validate
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
