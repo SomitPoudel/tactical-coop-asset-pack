@@ -1,14 +1,17 @@
 # Documentation
 
-This directory contains planning notes, manifest information, and validation documents.
+This directory contains planning notes, manifests, and current sample validation reports.
 
 Included files:
 - `Documentation/asset_manifest.md`
 - `Documentation/limitations.md`
-- `Documentation/quality_sample_manifest.json`
-- `Documentation/full_pack_manifest.json`
-- `Documentation/sample_manifest.json`
+- `Documentation/quality_sample_report.md`
+- `Documentation/quality_validation.json`
+- `Documentation/animation_validation.json`
+- `Documentation/export_validation.json`
+- `Documentation/quality_sample_status.json`
 
 Current status:
-- planning documents created
-- generated Blender output not available here
+- quality sample generated with Blender 5.2.2 LTS
+- structural, numerical animation, export, and Blender round-trip checks passed
+- human visual review remains pending; Unity compatibility is untested

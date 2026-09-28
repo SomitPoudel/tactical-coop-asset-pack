@@ -13,7 +13,7 @@ The longer-term goal is a reusable first-mission pack with:
 
 ## Important status
 
-Blender and Unity are not available in the current editing environment. The scripts and launchers are implemented, but this revision has not produced or visually inspected binary assets. See [quality_sample_report.md](Documentation/quality_sample_report.md) for checks run and checks still pending.
+The officer, carbine, and quality room sample has been generated and exported with Blender 5.2.2 LTS. Structural checks, full-frame numerical animation checks, and Blender FBX round trips passed. The rendered images and sampled frames still need human visual review; Unity compatibility is untested. See [quality_sample_report.md](Documentation/quality_sample_report.md) for measured results and limitations.
 
 ## Required folder structure
 
@@ -85,9 +85,9 @@ The project uses Unity import conventions, so generated FBX/GLB exports should b
 - material slots
 - double-sided normals
 
-This repo intentionally does not claim a tested Unity import because no Unity project or runtime is present in this session.
+This repo intentionally does not claim a tested Unity import; no Unity project or runtime was used.
 
-The `.blend`, `.fbx`, preview images, and measured validation reports are generated locally by the launcher. They are not present in this checkout because Blender is unavailable in the current environment.
+The `.blend`, `.fbx`, preview images, and measured validation reports are generated locally by the launcher. Large sampled animation-frame sequences remain excluded by `.gitignore` unless intentionally packaged.
 
 ## License
 

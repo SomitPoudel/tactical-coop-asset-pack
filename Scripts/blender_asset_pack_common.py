@@ -13,6 +13,7 @@ from pathlib import Path
 
 import bpy
 from mathutils import Matrix, Vector
+from mathutils.bvhtree import BVHTree
 
 BLENDER_MIN = (3, 6, 0)
 ROOT = Path(__file__).resolve().parents[1]
@@ -342,8 +343,9 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
     colors = {'blue': (.12, .25, .38, 1), 'orange': (.42, .20, .08, 1)}
     cloth = mat('MAT_Officer_'+variant,
                 colors.get(variant, colors['blue']), 0, .8)
-    armor = mat('MAT_Armor', (.20, .25, .29, 1), .25, .5)
-    dark = mat('MAT_Rubber', (.035, .045, .05, 1), .1, .65)
+    armor = mat('MAT_Armor', (.105, .135, .16, 1), .12, .68)
+    dark = mat('MAT_Rubber', (.025, .032, .038, 1), .04, .78)
+    pouch = mat('MAT_Officer_Pouch', (.055, .075, .082, 1), 0, .9)
     skin = mat('MAT_Skin', (.62, .38, .27, 1), 0, .75)
     accent = mat('MAT_Accent', (.65, .72, .76, 1), .1, .55)
     root = bpy.data.objects.new(root_name, None)
@@ -352,8 +354,8 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
     arm.parent = root
 
     torso_mesh('Officer_Torso', cloth, arm, col)
-    plate = add_cube('Officer_Plate', (0, -.15, 1.28),
-                     (.42, .075, .34), armor, .018, col)
+    plate = add_cube('Officer_Plate', (0, -.145, 1.27),
+                     (.385, .065, .30), armor, .035, col)
     plate_world = plate.matrix_world.copy()
     plate.parent = arm
     plate.matrix_world = plate_world
@@ -365,9 +367,9 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
     plate.modifiers.new('Armature_Deform', 'ARMATURE').object = arm
 
     segments = [
-        ('Officer_UpperArm.L', 'clavicle.L', 'upper_arm.L', .115, .085, armor),
+        ('Officer_UpperArm.L', 'clavicle.L', 'upper_arm.L', .125, .091, cloth),
         ('Officer_Forearm.L', 'upper_arm.L', 'forearm.L', .085, .065, cloth),
-        ('Officer_UpperArm.R', 'clavicle.R', 'upper_arm.R', .115, .085, armor),
+        ('Officer_UpperArm.R', 'clavicle.R', 'upper_arm.R', .125, .091, cloth),
         ('Officer_Forearm.R', 'upper_arm.R', 'forearm.R', .085, .065, cloth),
         ('Officer_Thigh.L', 'pelvis', 'thigh.L', .105, .085, cloth),
         ('Officer_Shin.L', 'thigh.L', 'shin.L', .102, .084, cloth),
@@ -417,14 +419,34 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
                            {'upper_arm.'+side: .5, 'forearm.'+side: .5}, col)
         weighted_ellipsoid('Officer_Knee.'+side, knee, (.067, .065, .062),
                            cloth, arm, {'thigh.'+side: .5, 'shin.'+side: .5}, col)
-        weighted_ellipsoid('Officer_KneePad.'+side,
-                           (knee.x, knee.y-.061, knee.z),
-                           (.061, .022, .068), dark, arm,
-                           {'thigh.'+side: .5, 'shin.'+side: .5}, col)
+        knee_pad = add_cube('Officer_KneePad.'+side,
+                            (knee.x, knee.y-.077, knee.z),
+                            (.108, .035, .085), dark, .022, col)
+        parent_keep_world(knee_pad, arm)
+        knee_pad_groups = {
+            bone: knee_pad.vertex_groups.new(name=bone)
+            for bone in ('thigh.'+side, 'shin.'+side)}
+        for vertex_index in range(len(knee_pad.data.vertices)):
+            knee_pad_groups['thigh.'+side].add([vertex_index], .5, 'REPLACE')
+            knee_pad_groups['shin.'+side].add([vertex_index], .5, 'REPLACE')
+        knee_pad.modifiers.new('Armature_Deform', 'ARMATURE').object = arm
         hand = arm.data.bones['hand.'+side].head_local
         weighted_ellipsoid('Officer_Glove.'+side, hand, (.09, .09, .065),
                            dark, arm,
                            {'hand.'+side: .7, 'forearm.'+side: .3}, col)
+        for name, location, dimensions in (
+                ('Officer_GloveCuff.'+side,
+                 (hand.x, hand.y+.055, hand.z), (.13, .055, .07)),
+                ('Officer_GloveGuard.'+side,
+                 (hand.x, hand.y-.035, hand.z+.035), (.075, .025, .038))):
+            detail = add_cube(name, location, dimensions, armor, .012, col)
+            parent_keep_world(detail, arm)
+            groups = {bone: detail.vertex_groups.new(name=bone)
+                      for bone in ('forearm.'+side, 'hand.'+side)}
+            for vertex_index in range(len(detail.data.vertices)):
+                groups['forearm.'+side].add([vertex_index], .35, 'REPLACE')
+                groups['hand.'+side].add([vertex_index], .65, 'REPLACE')
+            detail.modifiers.new('Armature_Deform', 'ARMATURE').object = arm
         foot = arm.data.bones['foot.'+side].head_local
         boot_mesh('Officer_Boot.'+side, side, foot.x,
                   ((.043, .097, -.312, .065),
@@ -435,32 +457,59 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
                    (.255, .076, -.075, .040),
                    (.278, .077, -.050, .035)), dark)
         boot_mesh('Officer_BootSole.'+side, side, foot.x,
-                  ((.018, .108, -.325, .075),
+                  ((0.0, .108, -.325, .075),
                    (.052, .108, -.325, .075)), armor)
-        shoulder = arm.data.bones['upper_arm.'+side].head_local
-        weighted_ellipsoid('Officer_Shoulder.'+side, shoulder, (.15, .13, .14),
-                           cloth, arm,
-                           {'clavicle.'+side: .35, 'upper_arm.'+side: .65}, col)
+        shoulder_start = arm.data.bones['clavicle.'+side].head_local
+        shoulder_end = arm.data.bones['upper_arm.'+side].tail_local
+        tapered_limb('Officer_Shoulder.'+side, shoulder_start, shoulder_end,
+                     .145, .091, cloth, arm, 'upper_arm.'+side, col,
+                     'clavicle.'+side)
 
     weighted_ellipsoid('Officer_Head', (0, -.005, 1.63), (.125, .12, .155),
                        skin, arm, {'head': 1.0}, col)
     weighted_ellipsoid('Officer_HelmetShell', (0, .005, 1.735),
-                       (.18, .205, .115), dark, arm, {'head': 1.0}, col)
+                       (.17, .19, .105), dark, arm, {'head': 1.0}, col)
     weighted_ellipsoid('Officer_HelmetBrim', (0, -.045, 1.69),
-                       (.185, .20, .035), armor, arm, {'head': 1.0}, col)
+                       (.176, .195, .025), armor, arm, {'head': 1.0}, col)
+    for side in ('L', 'R'):
+        strap = add_cube('Officer_ChinStrap.'+side,
+                         ((-.105 if side == 'L' else .105), -.073, 1.615),
+                         (.018, .018, .112), pouch, .007, col)
+        strap.rotation_euler.y = math.radians(-23 if side == 'L' else 23)
+        parent_keep_world(strap, arm, 'head')
+        earcup = add_cylinder('Officer_Headset.'+side,
+                              ((-.132 if side == 'L' else .132), .0, 1.655),
+                              .042, .035, armor, col, 12)
+        earcup.rotation_euler.y = math.radians(90)
+        parent_keep_world(earcup, arm, 'head')
     for x in (-.046, .046):
         weighted_ellipsoid('Officer_Eye', (x, -.112, 1.645), (.018, .012, .012),
                            dark, arm, {'head': 1.0}, col)
 
-    details = [
-        ('Officer_Belt', (0, 0, .99), (.46, .30, .075), .012, 'pelvis'),
-        ('Officer_Pouch.L', (-.27, -.10, 1.00), (.12, .13, .14), .014, 'pelvis'),
-        ('Officer_Pouch.R', (.27, -.10, 1.00), (.12, .13, .14), .014, 'pelvis'),
+    vest_details = [
+        ('Officer_VestSide.L', (-.205, 0, 1.27),
+         (.055, .225, .30), .022, 'spine_02'),
+        ('Officer_VestSide.R', (.205, 0, 1.27),
+         (.055, .225, .30), .022, 'spine_02'),
+        ('Officer_VestStrap.L', (-.125, -.015, 1.405),
+         (.065, .075, .235), .024, 'spine_02'),
+        ('Officer_VestStrap.R', (.125, -.015, 1.405),
+         (.065, .075, .235), .024, 'spine_02'),
+        ('Officer_MagPouch.L', (-.125, -.205, 1.19),
+         (.092, .075, .145), .018, 'spine_01'),
+        ('Officer_MagPouch.C', (0, -.205, 1.19),
+         (.092, .075, .145), .018, 'spine_01'),
+        ('Officer_MagPouch.R', (.125, -.205, 1.19),
+         (.092, .075, .145), .018, 'spine_01'),
+        ('Officer_Belt', (0, 0, .99), (.42, .255, .052), .018, 'pelvis'),
+        ('Officer_Pouch.L', (-.235, -.095, 1.00), (.095, .09, .09), .018, 'pelvis'),
+        ('Officer_Pouch.R', (.235, -.095, 1.00), (.095, .09, .09), .018, 'pelvis'),
         ('Officer_ShoulderPatch', (-.30, -.11, 1.40),
          (.10, .025, .075), .008, 'upper_arm.L'),
     ]
-    for name, location, dimensions, bevel, bone in details:
-        accessory = add_cube(name, location, dimensions, accent, bevel, col)
+    for name, location, dimensions, bevel, bone in vest_details:
+        material = pouch if 'Pouch' in name or 'Mag' in name else armor
+        accessory = add_cube(name, location, dimensions, material, bevel, col)
         parent_keep_world(accessory, arm, bone)
 
     attachments = [
@@ -504,9 +553,57 @@ def build_carbine():
     root['asset_type'] = 'equipment'
     metal = mat('MAT_Weapon_Metal', (.08, .10, .11, 1), .5, .4)
     polymer = mat('MAT_Weapon_Polymer', (.025, .03, .035, 1), .05, .7)
-    parts = [add_cube('Carbine_Receiver', (0, 0, 0), (.14, .36, .13), metal, .012, c), add_cube('Carbine_Stock', (0, .27, -.005), (.105, .28, .11), polymer, .018, c), add_cube('Carbine_StockPad', (0, .415, -.005), (.115, .035, .12), polymer, .008, c), add_cube('Carbine_Handguard', (0, -.25, 0), (.12, .40, .115), polymer, .012, c), add_cube('Carbine_Grip', (.075, .015, -.15), (.085, .115, .22), polymer, .012, c),
-             add_cube('Carbine_Magazine', (-.005, -.025, -.19), (.09, .13, .21), metal, .012, c), add_cylinder('Carbine_Barrel', (0, -.29, .005), .018, .42, metal, c, 12), add_cube('Carbine_SightFront', (0, -.43, .105), (.035, .035, .07), metal, .006, c), add_cube('Carbine_SightRear', (0, -.11, .105), (.035, .035, .07), metal, .006, c)]
-    parts[6].rotation_euler.x = math.radians(90)
+    stock_pad = mat('MAT_Weapon_StockPad', (.015, .02, .024, 1), .02, .82)
+    parts = [
+        add_cube('Carbine_Receiver', (0, 0, 0),
+                 (.14, .34, .125), metal, .025, c),
+        add_cube('Carbine_UpperReceiver', (0, -.015, .066),
+                 (.105, .31, .035), polymer, .012, c),
+        add_cube('Carbine_Stock', (0, .275, -.012),
+                 (.105, .28, .09), polymer, .018, c),
+        add_cube('Carbine_StockCheek', (0, .275, .042),
+                 (.078, .22, .025), polymer, .012, c),
+        add_cube('Carbine_StockPad', (0, .418, -.012),
+                 (.115, .035, .105), stock_pad, .012, c),
+        add_cube('Carbine_Handguard', (0, -.245, .005),
+                 (.112, .39, .095), polymer, .025, c),
+        add_cube('Carbine_HandguardRail', (0, -.245, .062),
+                 (.038, .37, .018), metal, .006, c),
+        add_cube('Carbine_Grip', (.075, .015, -.15),
+                 (.078, .11, .19), polymer, .018, c),
+        add_cube('Carbine_Magazine', (-.005, -.025, -.19),
+                 (.09, .13, .21), metal, .014, c),
+        add_cylinder('Carbine_Barrel',
+                     (0, -.29, .005), .018, .42, metal, c, 12),
+        add_cylinder('Carbine_MuzzleDevice',
+                     (0, -.486, .005), .025, .055, metal, c, 12),
+        add_cube('Carbine_SightFront', (0, -.43, .105),
+                 (.035, .035, .07), metal, .006, c),
+        add_cube('Carbine_SightRear', (0, -.11, .105),
+                 (.035, .035, .07), metal, .006, c),
+    ]
+    parts[9].rotation_euler.x = math.radians(90)
+    parts[10].rotation_euler.x = math.radians(90)
+    guard_vertices = [
+        (.035, -.045, -.075), (.095, -.045, -.075),
+        (.115, -.045, -.105), (.105, -.045, -.175),
+        (.075, -.045, -.205), (.045, -.045, -.185),
+        (.045, -.012, -.075), (.095, -.012, -.075),
+        (.115, -.012, -.105), (.105, -.012, -.175),
+        (.075, -.012, -.205), (.045, -.012, -.185),
+    ]
+    guard_faces = [
+        (0, 1, 2, 3, 4, 5), (6, 11, 10, 9, 8, 7),
+        (0, 6, 7, 1), (1, 7, 8, 2), (2, 8, 9, 3),
+        (3, 9, 10, 4), (4, 10, 11, 5), (5, 11, 6, 0),
+    ]
+    guard_mesh = bpy.data.meshes.new('Carbine_TriggerGuard_Mesh')
+    guard_mesh.from_pydata(guard_vertices, [], guard_faces)
+    guard_mesh.update()
+    guard = bpy.data.objects.new('Carbine_TriggerGuard', guard_mesh)
+    c.objects.link(guard)
+    assign_mat(guard, metal)
+    parts.append(guard)
     for o in parts:
         parent_keep_world(o, root)
     for n, loc in [('ATT_Carbine_Muzzle', (0, -.50, .005)), ('ATT_Carbine_MainHand', (.075, .015, -.15)), ('ATT_Carbine_SupportHand', (-.04, -.20, -.08))]:
@@ -523,12 +620,26 @@ def build_room():
     col = collection('Env_QualityRoom')
     created_before = set(bpy.data.objects)
     concrete = mat('MAT_Concrete', (.32, .35, .38, 1), 0, .9)
+    floor_mat = mat('MAT_ConcreteFloor', (.22, .25, .245, 1), 0, .88)
+    floor_nodes = floor_mat.node_tree.nodes
+    floor_links = floor_mat.node_tree.links
+    floor_bsdf = floor_nodes.get('Principled BSDF')
+    floor_noise = floor_nodes.new('ShaderNodeTexNoise')
+    floor_noise.inputs['Scale'].default_value = 5.0
+    floor_noise.inputs['Detail'].default_value = 2.0
+    floor_ramp = floor_nodes.new('ShaderNodeValToRGB')
+    floor_ramp.color_ramp.elements[0].color = (.16, .19, .185, 1)
+    floor_ramp.color_ramp.elements[1].color = (.28, .30, .285, 1)
+    floor_links.new(floor_noise.outputs['Fac'], floor_ramp.inputs['Fac'])
+    floor_links.new(floor_ramp.outputs['Color'],
+                    floor_bsdf.inputs['Base Color'])
     frame = mat('MAT_DoorFrame', (.20, .12, .07, 1), .1, .7)
     door_mat = mat('MAT_Door', (.12, .16, .18, 1), .2, .6)
+    hardware = mat('MAT_DoorHardware', (.045, .055, .06, 1), .55, .4)
     camera_walls = collection('Env_CameraFacingWalls')
     upper = collection('Env_Upper')
 
-    add_cube('Room_Floor', (0, 0, -.06), (6, 6, .12), concrete, .01, col)
+    add_cube('Room_Floor', (0, 0, -.06), (6, 6, .12), floor_mat, .01, col)
     add_cube('Room_Wall_South', (0, -3, 1.5),
              (6, .20, 3), concrete, .02, camera_walls)
     add_cube('Room_Wall_East', (3, 0, 1.5), (.20, 6, 3), concrete, .02, col)
@@ -542,11 +653,20 @@ def build_room():
              (2.4, .20, .58), concrete, .02, upper)
 
     add_cube('DoorFrame_Left', (-1.24, 2.92, 1.21),
-             (.12, .30, 2.42), frame, .015, col)
+             (.12, .12, 2.42), frame, .015, col)
     add_cube('DoorFrame_Right', (1.24, 2.92, 1.21),
-             (.12, .30, 2.42), frame, .015, col)
+             (.12, .12, 2.42), frame, .015, col)
     add_cube('DoorFrame_Top', (0, 2.92, 2.38),
-             (2.52, .30, .08), frame, .012, col)
+             (2.52, .12, .08), frame, .012, col)
+
+    for side, center_x, width in (('L', -2.1, 1.8), ('R', 2.1, 1.8)):
+        for level, z in (('Low', .18), ('High', 2.62)):
+            add_cube(f'Room_NorthTrim_{side}_{level}',
+                     (center_x, 2.86, z), (width, .07, .07),
+                     frame, .012, col)
+    for level, z in (('Low', .18), ('High', 2.62)):
+        add_cube(f'Room_EastTrim_{level}',
+                 (2.86, 0, z), (.07, 5.72, .07), frame, .012, col)
 
     for side, sign in (('L', -1), ('R', 1)):
         hinge_x = sign*1.18
@@ -557,11 +677,25 @@ def build_room():
         pivot['axis'] = 'Z'
         pivot['doorway_clear_width_m'] = 2.36
         pivot['doorway_clear_height_m'] = 2.32
+        for hinge_z in (.32, 1.18, 2.05):
+            hinge = add_cylinder(
+                f'DoorHinge_{side}_{int(hinge_z*100):03d}',
+                (hinge_x, 2.89, hinge_z), .035, .16, hardware, col, 12)
+            parent_keep_world(hinge, pivot)
         local_center_x = -sign*.585
         leaf = add_cube(f'DoorLeaf_{side}', (hinge_x+local_center_x, 2.84, 1.18),
                         (1.17, .08, 2.32), door_mat, .012, col)
         leaf.parent = pivot
         leaf.location = (local_center_x, 0, 1.16)
+        handle_plate = add_cube(
+            f'DoorHandlePlate_{side}', (hinge_x+local_center_x, 2.775, 1.12),
+            (.115, .025, .19), hardware, .012, col)
+        parent_keep_world(handle_plate, leaf)
+        handle_bar = add_cube(
+            f'DoorHandle_{side}',
+            (hinge_x+local_center_x-sign*.015, 2.75, 1.13),
+            (.13, .035, .028), hardware, .012, col)
+        parent_keep_world(handle_bar, leaf)
         proxy = add_cube(f'Collision_Door_{side}', leaf.location,
                          (1.17, .08, 2.32), None, 0, col)
         proxy.parent = leaf
@@ -846,7 +980,25 @@ def validate(path):
 
     old_frame = bpy.context.scene.frame_current
     proxy_errors = {}
-    for frame in (1, 24):
+    frame_collisions = []
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+
+    def world_bvh(obj):
+        evaluated = obj.evaluated_get(depsgraph)
+        mesh = evaluated.to_mesh()
+        try:
+            vertices = [evaluated.matrix_world @ vertex.co
+                        for vertex in mesh.vertices]
+            polygons = [tuple(polygon.vertices) for polygon in mesh.polygons]
+            return BVHTree.FromPolygons(vertices, polygons, epsilon=1e-5)
+        finally:
+            evaluated.to_mesh_clear()
+
+    frame_bvhs = {
+        name: world_bvh(bpy.data.objects[name])
+        for name in ('DoorFrame_Left', 'DoorFrame_Right', 'DoorFrame_Top')
+    }
+    for frame in range(1, 25):
         bpy.context.scene.frame_set(frame)
         frame_errors = {}
         for side in ('L', 'R'):
@@ -860,13 +1012,22 @@ def validate(path):
             frame_errors[side] = max(
                 abs(leaf_min[i]-proxy_min[i]) for i in range(3))+max(
                 abs(leaf_max[i]-proxy_max[i]) for i in range(3))
+            leaf_bvh = world_bvh(leaf)
+            for frame_name, frame_bvh in frame_bvhs.items():
+                if leaf_bvh.overlap(frame_bvh):
+                    frame_collisions.append({
+                        'frame': frame, 'leaf': leaf.name,
+                        'frame_mesh': frame_name,
+                    })
         proxy_errors[str(frame)] = frame_errors
     bpy.context.scene.frame_set(old_frame)
     proxies_aligned = all(error is not None and error <= .002
                           for values in proxy_errors.values()
                           for error in values.values())
-    check(structural, 'door_proxy_alignment_closed_and_open', proxies_aligned,
+    check(structural, 'door_proxy_alignment_full_swing', proxies_aligned,
           proxy_errors)
+    check(structural, 'door_leaf_frame_clearance_full_swing',
+          not frame_collisions, {'intersections': frame_collisions})
 
     char_main = next((obj for obj in char_objects
                       if obj.name == 'ATT_Officer_MainHand'), None)
@@ -991,6 +1152,8 @@ def render_quality_previews(arm, output_dir, views=None):
     old_size = (scene.render.resolution_x, scene.render.resolution_y,
                 scene.render.resolution_percentage)
     old_filepath = scene.render.filepath
+    old_camera_type = camera.data.type
+    old_ortho_scale = camera.data.ortho_scale
     scene.render.resolution_x = 900
     scene.render.resolution_y = 900
     scene.render.resolution_percentage = 100
@@ -1026,9 +1189,13 @@ def render_quality_previews(arm, output_dir, views=None):
                 obj.hide_render = False
                 if obj.name in {'Room_Roof_Section', 'Room_Wall_South', 'Room_Wall_West'}:
                     obj.hide_render = True
-            camera.location = (2.0, -2.2, 2.75)
-            point_camera(camera, (.2, .5, .95))
+            camera.data.type = 'ORTHO'
+            camera.data.ortho_scale = 12.5
+            camera.location = (0, -2.0, 14.0)
+            point_camera(camera, (0, 0, 0))
             render(output_dir/'gameplay_angle.png')
+            camera.data.type = old_camera_type
+            camera.data.ortho_scale = old_ortho_scale
 
         door_views = [view for view in ('door_closed', 'door_open')
                       if view in requested_views]
@@ -1050,6 +1217,8 @@ def render_quality_previews(arm, output_dir, views=None):
                 obj.hide_render = True
             for obj in character_objects:
                 obj.hide_render = False
+            scene.render.resolution_x = 480
+            scene.render.resolution_y = 480
             camera.location = (0, -4.2, 1.0)
             point_camera(camera, (0, -.35, .96))
             for name in ('Anim_RifleReadyIdle', 'Anim_Walk_Forward',
@@ -1076,6 +1245,8 @@ def render_quality_previews(arm, output_dir, views=None):
         reset_pose(arm)
         scene.frame_set(old_frame)
         scene.camera = old_camera
+        camera.data.type = old_camera_type
+        camera.data.ortho_scale = old_ortho_scale
         scene.render.resolution_x, scene.render.resolution_y, scene.render.resolution_percentage = old_size
         scene.render.filepath = old_filepath
     return previews
@@ -1100,7 +1271,7 @@ def build_animations(arm):
         'foot.R': {'rotation': (-.10, 0, 0)},
     }
     crouch = {
-        'root': {'location': (0, -.24, 0)},
+        'root': {'location': (0, -.11, 0)},
         'thigh.L': {'rotation': (.58, 0, 0)},
         'thigh.R': {'rotation': (.58, 0, 0)},
         'shin.L': {'rotation': (-1.12, 0, 0)},

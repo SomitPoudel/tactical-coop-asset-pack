@@ -1,6 +1,6 @@
 # Quality Sample Pipeline
 
-The supported runtime is Blender 3.6 LTS or newer. Run from the repository root:
+The supported runtime is Blender 3.6 LTS or newer; Blender 5.2.2 LTS is the current verified runtime. Run from the repository root:
 
 ```bash
 Scripts/run_quality_sample.sh
@@ -22,10 +22,10 @@ The launchers stop on Python failures, require generated status reports, and run
 - Sampled PNG frames under `Previews/animations/`
 - `Documentation/quality_validation.json`, `export_validation.json`, and `quality_sample_status.json`
 
-The validator measures evaluated mesh descendants and evaluated triangle counts. Its dimension targets are 0.92 x 0.95 x 1.82 m for the officer, 0.14 x 0.93 x 0.44 m for the carbine, and 6.2 x 6.2 x 3.30 m for the room, each with explicit per-axis tolerances in the JSON report. These values are targets, not measurements until Blender runs.
+The validator measures evaluated mesh descendants and evaluated triangle counts. Dimension targets, tolerances, and current measured values are in `Documentation/quality_validation.json`. Full-frame officer motion checks are written separately to `Documentation/animation_validation.json` by `Scripts/validate_animation_quality.py`.
 
 ## Export Policy
 
 The character FBX allowlist is `Anim_RifleReadyIdle`, `Anim_Walk_Forward`, `Anim_CrouchIdle`, and `Anim_RifleRecoil`. The room exports only `Anim_Door_L` and `Anim_Door_R`; the standalone carbine exports no actions. Showcase lights, cameras, reference geometry, and the officer's display-only rifle instance are excluded from asset FBX files. The exporter attempts clean-scene Blender reimports and records dimensions, hierarchy, and clip presence.
 
-Blender round trips are not Unity compatibility tests. Avatar mapping, materials, scale/import settings, and playback must still be checked in a Unity project.
+The FBX round-trip checker verifies imported dimensions, hierarchy, declared clips, and representative animated frames in Blender. Blender round trips are not Unity compatibility tests. Avatar mapping, materials, scale/import settings, and playback still need to be checked in a Unity project.

@@ -1,14 +1,16 @@
 # Previews
 
-This folder is reserved for generated preview renders and a contact sheet.
+Generated still previews and sampled animation frames are stored here.
 
-Planned output:
-- `Previews/ContactSheet.png`
-- `Previews/Officer_01.png`
-- `Previews/Officer_02.png`
-- `Previews/Character_Rig_Overview.png`
-- `Previews/Animation_Clips.png`
-- `Previews/Warehouse_Demo.png`
+Still previews:
+- `Previews/officer_front.png`
+- `Previews/officer_side.png` (three-quarter)
+- `Previews/gameplay_angle.png`
+- `Previews/door_closed.png`
+- `Previews/door_open.png`
+
+Sampled animation frames are under `Previews/animations/` and remain ignored by Git by default.
 
 Current status:
-- not generated in this session
+- generated locally with Blender 5.2.2 LTS
+- not visually reviewed in this session

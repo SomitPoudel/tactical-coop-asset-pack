@@ -14,5 +14,5 @@ Local generation targets:
 - `Equipment/MedicalPouch.fbx`
 
 Current status:
-- procedural scripts prepared only
-- not generated in this session
+- generated sample export: `Equipment/Carbine_Quality.fbx`
+- additional equipment remains planned

@@ -10,4 +10,5 @@ Planned texture files:
 - `Textures/atlas_glass.png`
 
 Current status:
-- not generated in this session
+- no texture atlases are part of the current quality sample; it uses procedural materials
+- the listed atlas files remain planned

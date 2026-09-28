@@ -17,4 +17,5 @@ Local generation targets:
 - prop exports for crates, shelves, monitor, office furniture, lights, camera, etc.
 
 Current status:
-- not generated in this session
+- generated sample export: `Environment/QualityRoom.fbx`
+- other modular environment pieces remain planned

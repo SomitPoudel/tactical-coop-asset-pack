@@ -11,4 +11,5 @@ Local generation targets:
 - `Characters/Civilian_02.blend`
 
 Current status:
-- not generated in this session
+- generated sample export: `Characters/Officer_Quality.fbx`
+- additional character variants remain planned

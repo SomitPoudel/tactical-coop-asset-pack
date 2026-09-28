@@ -19,7 +19,10 @@ Thumbs.db
 *.jpg
 *.jpeg
 !/Previews/officer_front.png
+!/Previews/officer_side.png
 !/Previews/gameplay_angle.png
+!/Previews/door_closed.png
+!/Previews/door_open.png
 
 # Keep source and scripts tracked
 !Scripts/*.py

@@ -8,4 +8,5 @@ Planned files:
 - `Sources/warehouse_layout_reference.blend`
 
 Current status:
-- no Blender source files generated here
+- `quality_sample.blend` contains the generated officer, carbine, quality room, rig, and sample clips
+- other listed source files remain planned

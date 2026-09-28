@@ -54,6 +54,7 @@ def round_trip_check(filepath, asset_name, expected_actions, source_dimensions):
     source_scene = bpy.context.scene
     test_scene = bpy.data.scenes.new('ROUNDTRIP_'+asset_name)
     imported = []
+    actions_before = set(bpy.data.actions)
     try:
         if window:
             window.scene = test_scene
@@ -65,7 +66,9 @@ def round_trip_check(filepath, asset_name, expected_actions, source_dimensions):
         meshes = [obj for obj in imported if obj.type == 'MESH']
         armatures = [obj for obj in imported if obj.type == 'ARMATURE']
         dimensions = evaluated_dimensions(imported)
-        observed_actions = []
+        imported_actions = [action for action in bpy.data.actions
+                            if action not in actions_before]
+        observed_actions = [action.name for action in imported_actions]
         for obj in imported:
             animation = obj.animation_data
             if not animation:
@@ -74,8 +77,84 @@ def round_trip_check(filepath, asset_name, expected_actions, source_dimensions):
                 observed_actions.append(animation.action.name)
             observed_actions.extend(strip.name for track in animation.nla_tracks
                                     for strip in track.strips)
-        action_ok = all(any(name in observed for observed in observed_actions)
-                        for name in expected_actions)
+        clip_checks = {}
+        for expected in expected_actions:
+            owner_name = ('Rig_Officer' if asset_name == 'Char_Officer'
+                          else 'DoorPivot_'+expected[-1]
+                          if expected.startswith('Anim_Door_') else None)
+            animation_owner = next((obj for obj in imported
+                                    if owner_name and
+                                    obj.name.startswith(owner_name) and
+                                    obj.animation_data), None)
+            owner_clips = []
+            if animation_owner:
+                owner_animation = animation_owner.animation_data
+                if owner_animation.action:
+                    owner_clips.append(owner_animation.action)
+                owner_clips.extend(
+                    strip.action for track in owner_animation.nla_tracks
+                    for strip in track.strips if strip.action)
+            clip = next((action for action in owner_clips
+                         if expected in action.name), None)
+            if not clip:
+                clip = next((action for action in imported_actions
+                             if expected in action.name and
+                             owner_name and owner_name in action.name), None)
+            clip_result = {'found': bool(clip), 'evaluated_frames': [],
+                           'pose_changes': False, 'action_name': None,
+                           'curve_count': 0, 'slot_target_types': []}
+            if clip and animation_owner:
+                animation = animation_owner.animation_data
+                animation.action = None
+                test_scene.frame_set(int(round(clip.frame_range[0])))
+                bpy.context.view_layer.update()
+                if animation_owner.type == 'ARMATURE':
+                    rest_pose = {bone.name: bone.matrix_basis.copy()
+                                 for bone in animation_owner.pose.bones}
+                else:
+                    rest_pose = animation_owner.rotation_euler.copy()
+                animation.action = clip
+                slots = getattr(clip, 'slots', ())
+                if slots and hasattr(animation, 'action_slot'):
+                    clip_result['slot_target_types'] = [
+                        getattr(slot, 'target_id_type', None) for slot in slots]
+                    matching_slots = [slot for slot in slots
+                                      if getattr(slot, 'target_id_type', None)
+                                      in {'OBJECT', 'ARMATURE'}]
+                    animation.action_slot = (matching_slots or list(slots))[0]
+                clip_result['action_name'] = clip.name
+                clip_result['curve_count'] = len(_common.action_fcurves(clip))
+                start, end = [int(round(value)) for value in clip.frame_range]
+                sample_frames = sorted({start, (start+end)//2, end})
+                signatures = []
+                for frame in sample_frames:
+                    test_scene.frame_set(frame)
+                    bpy.context.view_layer.update()
+                    if animation_owner.type == 'ARMATURE':
+                        signatures.append({bone.name: bone.matrix_basis.copy()
+                                           for bone in animation_owner.pose.bones})
+                    else:
+                        signatures.append(
+                            animation_owner.rotation_euler.copy())
+                    clip_result['evaluated_frames'].append(frame)
+                if animation_owner.type == 'ARMATURE':
+                    clip_result['pose_changes'] = any(
+                        any(max(abs(rest_pose[bone.name][row][column] -
+                                    signature[bone.name][row][column])
+                                for row in range(4) for column in range(4)) > 1e-5
+                            for bone in animation_owner.pose.bones)
+                        for signature in signatures)
+                else:
+                    clip_result['pose_changes'] = any(
+                        max(abs(rest_pose[axis]-signature[axis])
+                            for axis in range(3)) > 1e-5
+                        for signature in signatures)
+            clip_checks[expected] = clip_result
+        action_ok = all(
+            any(name in observed for observed in observed_actions) and
+            clip_checks.get(name, {}).get('found') and
+            clip_checks.get(name, {}).get('pose_changes')
+            for name in expected_actions)
         dimensions_ok = all(abs(dimensions[i]-source_dimensions[i]) <= .08
                             for i in range(3))
         hierarchy_ok = bool(meshes) and (
@@ -88,7 +167,8 @@ def round_trip_check(filepath, asset_name, expected_actions, source_dimensions):
             'mesh_count': len(meshes),
             'armature_count': len(armatures),
             'expected_actions': list(expected_actions),
-            'observed_actions': observed_actions,
+            'observed_actions': sorted(set(observed_actions)),
+            'round_trip_clip_checks': clip_checks,
             'checks': {'dimensions': dimensions_ok, 'hierarchy': hierarchy_ok,
                        'actions': action_ok},
         }
@@ -184,6 +264,25 @@ def export_all(validate_exports=False):
             status['round_trip_status'] = report['round_trip_status']
             status_path.write_text(json.dumps(
                 status, indent=2), encoding='utf8')
+        quality_path = DIRS['Documentation']/'quality_validation.json'
+        if quality_path.is_file():
+            quality = json.loads(quality_path.read_text(encoding='utf8'))
+            quality['fbx_export_status'] = report['export_status']
+            quality['round_trip'] = {
+                'status': report['round_trip_status'],
+                'assets': {
+                    result.get('asset_root', 'unknown'):
+                    result.get('round_trip', {'status': result.get('status')})
+                    for result in report['exports']
+                },
+            }
+            quality['completion_status'] = (
+                'scripted_checks_passed_pending_human_visual_review'
+                if report['export_status'] == 'passed' and
+                report['round_trip_status'] == 'passed'
+                else 'scripted_export_or_round_trip_failure')
+            quality_path.write_text(json.dumps(quality, indent=2),
+                                    encoding='utf8')
 
     try:
         ensure_fbx_exporter()
