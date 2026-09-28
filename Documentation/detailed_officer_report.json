@@ -1,0 +1,111 @@
+{
+  "generation_status": "passed",
+  "completion_status": "technical_completion_passed_visual_acceptance_not_accepted",
+  "blender": "5.2.2 LTS",
+  "height_m": 1.8278,
+  "evaluated_triangles": {
+    "LOD0": 19264,
+    "LOD1": 10425,
+    "LOD2": 4401
+  },
+  "game_mesh_object_count": 163,
+  "rig_bone_count": 56,
+  "crouch_foot_contact": {
+    "pass": true,
+    "ankle_z_m": {
+      "L": 0.1199,
+      "R": 0.1199
+    },
+    "drift_m": {
+      "L": 0.0,
+      "R": 0.0
+    }
+  },
+  "attachment_sockets": [
+    "ATT_Officer_MainHand",
+    "ATT_Officer_SupportHand",
+    "ATT_Back",
+    "ATT_Belt"
+  ],
+  "textures": "Textures\\Officer_Detailed",
+  "animations": [
+    "Anim_Officer_Walk",
+    "Anim_Officer_StandToCrouch",
+    "Anim_Officer_CrouchIdle",
+    "Anim_Officer_CrouchToStand"
+  ],
+  "timed_animation_previews": [
+    "walk_review.mp4",
+    "stand_to_crouch_review.mp4",
+    "crouch_idle_review.mp4",
+    "crouch_to_stand_review.mp4"
+  ],
+  "assistant_visual_review": {
+    "status": "not_accepted",
+    "findings": [
+      "Rendered garment and body surfaces remain too segmented and procedural for the reference realism target.",
+      "Facial, cloth-fold, seam, and equipment surface detail remain below the requested close-up quality.",
+      "The rifle and final two-hand weapon contact are not present in this independent build."
+    ]
+  },
+  "human_visual_review": "pending user review",
+  "limitations": [
+    "Procedural authored geometry is not sculpted production retopology.",
+    "Garment pieces remain modular surfaces rather than a continuous retopologized clothing shell.",
+    "Texture maps are generated procedural maps; stitch and weave are not baked from a sculpt.",
+    "Rifle geometry and runtime IK are not included in this independent officer build.",
+    "Animation is keyframed procedural motion, not mocap; weapon grip and contact remain visual-review requirements.",
+    "LOD triangle counts are measurements, not a mobile-performance claim."
+  ],
+  "exports": [
+    {
+      "file": "Characters\\Officer_Detailed\\Officer_Detailed_LOD0.fbx",
+      "round_trip": {
+        "status": "passed",
+        "mesh_count": 163,
+        "armature_count": 1,
+        "dimensions_m": [
+          1.4983,
+          1.9584,
+          1.8179
+        ],
+        "imported_actions": [
+          "Rig_Officer_Detailed.001|Rig_Officer_Detailed|Anim_Officer_CrouchIdle",
+          "Rig_Officer_Detailed.001|Rig_Officer_Detailed|Anim_Officer_CrouchToStand",
+          "Rig_Officer_Detailed.001|Rig_Officer_Detailed|Anim_Officer_StandToCrouch",
+          "Rig_Officer_Detailed.001|Rig_Officer_Detailed|Anim_Officer_Walk"
+        ],
+        "imported_attachment_names": [
+          "ATT_Back.001",
+          "ATT_Belt.001",
+          "ATT_Officer_MainHand.001",
+          "ATT_Officer_SupportHand.001"
+        ],
+        "source_dimensions_m": [
+          1.4765,
+          1.893,
+          1.8278
+        ],
+        "checks": {
+          "hierarchy": true,
+          "actions": true,
+          "sockets": true,
+          "dimensions": true
+        }
+      }
+    },
+    {
+      "file": "Characters\\Officer_Detailed\\Officer_Detailed_LOD1.fbx",
+      "round_trip": {
+        "status": "not_run"
+      }
+    },
+    {
+      "file": "Characters\\Officer_Detailed\\Officer_Detailed_LOD2.fbx",
+      "round_trip": {
+        "status": "not_run"
+      }
+    }
+  ],
+  "round_trip_status": "passed"
+}
