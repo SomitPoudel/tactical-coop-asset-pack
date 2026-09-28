@@ -1,0 +1,445 @@
+{
+  "source_fbx": "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\source\\swat lp.fbx",
+  "texture_directory": "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\textures",
+  "blend_file": "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\inspection\\swat_operator_remastered_inspection.blend",
+  "previews": [
+    "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\inspection\\previews\\swat_operator_front.png",
+    "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\inspection\\previews\\swat_operator_side.png",
+    "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\inspection\\previews\\swat_operator_three_quarter.png"
+  ],
+  "missing_textures": [],
+  "import_errors": [],
+  "licence_attribution_files_found": [],
+  "import": {
+    "objects": 33,
+    "mesh_objects": 32,
+    "asset_mesh_objects_excluding_auxiliary": 32,
+    "auxiliary_meshes_retained": [],
+    "materials": [
+      "Body.001",
+      "Eyelashes.001",
+      "HeadGear.001",
+      "KSVR"
+    ],
+    "mapped_materials": {
+      "Body": "Body.001",
+      "Eyelashes": "Eyelashes.001",
+      "HeadGear": "HeadGear.001",
+      "KSVR": "KSVR"
+    },
+    "unmapped_materials": [],
+    "armatures": [
+      "SWAT"
+    ],
+    "mesh_vertex_counts": {
+      "sol_8_low": 28368,
+      "tShape_low": 64,
+      "trigger_low": 232,
+      "topRail_low": 1626,
+      "tape_low": 111,
+      "stockThing_low": 936,
+      "stockFrame_low": 422,
+      "stockButton_low": 71,
+      "stockBack_low": 829,
+      "slider_low": 120,
+      "sideRail_low": 38,
+      "sideKnobs_low": 545,
+      "pipe_low": 132,
+      "pin_low": 805,
+      "mag_low": 310,
+      "light_low": 524,
+      "handleButton_low": 102,
+      "handle_low": 444,
+      "frontSIght_low": 207,
+      "frontGrip_low": 394,
+      "frontClamp_low": 195,
+      "eyeShape_low": 108,
+      "cheekPad_low": 75,
+      "cable_low": 791,
+      "bottomGun_low": 2095,
+      "boneShape_low": 128,
+      "barrel_low": 189,
+      "backSight_low": 232,
+      "backScrew_low": 84,
+      "backClamp_low": 195,
+      "backAim_low": 686,
+      "topGun_low": 1355
+    }
+  },
+  "scale_bounds_meters": {
+    "min": [
+      -0.4135420024394989,
+      -0.3804759979248047,
+      -0.006640355568379164
+    ],
+    "max": [
+      0.3419773578643799,
+      0.28713473677635193,
+      1.8339030742645264
+    ],
+    "dimensions": [
+      0.7555193901062012,
+      0.667610764503479,
+      1.8405433893203735
+    ],
+    "center": [
+      -0.03578232228755951,
+      -0.04667063057422638,
+      0.9136313796043396
+    ]
+  },
+  "skin_deformation_setup": [
+    {
+      "object": "sol_8_low",
+      "vertices": 28368,
+      "vertex_groups": 51,
+      "weighted_vertices": 28368,
+      "unweighted_vertices": 0,
+      "armature_modifiers": [
+        "SWAT"
+      ],
+      "pose_vs_rest_max_vertex_displacement_m": 0.8142752750570036,
+      "pose_vs_rest_changed_vertices_at_1e-5m": 28368,
+      "evaluated_vertices_finite": true
+    }
+  ],
+  "weapon_parenting": [
+    {
+      "object": "tShape_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "trigger_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "topRail_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "tape_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "stockThing_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "stockFrame_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "stockButton_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "stockBack_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "slider_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "sideRail_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "sideKnobs_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "pipe_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "pin_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "mag_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "light_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "handleButton_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "handle_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "frontSIght_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "frontGrip_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "frontClamp_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "eyeShape_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "cheekPad_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "cable_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "bottomGun_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "boneShape_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "barrel_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "backSight_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "backScrew_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "backClamp_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "backAim_low",
+      "parent": "topGun_low",
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    },
+    {
+      "object": "topGun_low",
+      "parent": null,
+      "parent_type": "OBJECT",
+      "parent_bone": null,
+      "armature_modifiers": []
+    }
+  ],
+  "animation_stacks": [
+    {
+      "name": "SWAT|SWAT|SWATAction.001",
+      "frame_start": 1.0,
+      "frame_end": 2.0,
+      "duration_seconds": 0.03333333333333333,
+      "keyframe_points": 1298,
+      "channels": 649,
+      "sampled_max_pose_offset_from_rest_m": 0.847468298189718,
+      "sampled_max_pose_rotation_from_rest_degrees": 178.90248923198365,
+      "sampled_max_frame_to_frame_bone_translation_m": 2.1737954707287488e-07,
+      "sampled_max_frame_to_frame_bone_rotation_degrees": 0.0,
+      "motion_assessment": "Effectively static between sampled frames; keyed pose differs from rest"
+    }
+  ],
+  "licence_attribution_note": "No licence, readme, or attribution files were included in the downloaded bundle. The original download is preserved and this inspection output remains local; do not publish the asset until its licence and attribution requirements are verified.",
+  "texture_paths": [
+    {
+      "image": "Body_Base_color.png",
+      "path_in_blend": "//..\\textures\\Body_Base_color.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "Body_Mixed_AO.png",
+      "path_in_blend": "//..\\textures\\Body_Mixed_AO.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "Body_Normal_OpenGL.png",
+      "path_in_blend": "//..\\textures\\Body_Normal_OpenGL.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "Body_Roughness.png",
+      "path_in_blend": "//..\\textures\\Body_Roughness.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "eyelashes01.png",
+      "path_in_blend": "//..\\textures\\eyelashes01.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "HeadGear_Base_color.png",
+      "path_in_blend": "//..\\textures\\HeadGear_Base_color.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "HeadGear_Emissive.png",
+      "path_in_blend": "//..\\textures\\HeadGear_Emissive.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "HeadGear_Metallic.png",
+      "path_in_blend": "//..\\textures\\HeadGear_Metallic.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "HeadGear_Mixed_AO.png",
+      "path_in_blend": "//..\\textures\\HeadGear_Mixed_AO.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "HeadGear_Normal_OpenGL.png",
+      "path_in_blend": "//..\\textures\\HeadGear_Normal_OpenGL.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "HeadGear_Roughness.png",
+      "path_in_blend": "//..\\textures\\HeadGear_Roughness.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "HeadGear_SSS.png",
+      "path_in_blend": "//..\\textures\\HeadGear_SSS.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "KSVR_Base_color.png",
+      "path_in_blend": "//..\\textures\\KSVR_Base_color.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "KSVR_Emissive.png",
+      "path_in_blend": "//..\\textures\\KSVR_Emissive.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "KSVR_Mixed_AO.png",
+      "path_in_blend": "//..\\textures\\KSVR_Mixed_AO.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "KSVR_Normal_OpenGL.png",
+      "path_in_blend": "//..\\textures\\KSVR_Normal_OpenGL.png",
+      "relative": true,
+      "resolves": true
+    },
+    {
+      "image": "KSVR_Roughness.png",
+      "path_in_blend": "//..\\textures\\KSVR_Roughness.png",
+      "relative": true,
+      "resolves": true
+    }
+  ]
+}
