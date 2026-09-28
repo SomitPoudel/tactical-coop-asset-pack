@@ -1,369 +1,225 @@
-# Shared procedural helpers for the Blender asset pack
+"""Shared Blender 3.6 LTS helpers for the tactical asset pack.
 
-import bpy
+Run scripts from any working directory with Blender 3.6 LTS:
+  blender -b --python Scripts/generate_quality_sample.py -- --validate
+"""
+from __future__ import annotations
+
+import argparse
 import json
 import math
+import sys
 from pathlib import Path
+from typing import Iterable
 
+import bpy
+from mathutils import Vector
 
+BLENDER_MIN = (3, 6, 0)
 ROOT = Path(__file__).resolve().parents[1]
-CHARACTERS_DIR = ROOT / "Characters"
-EQUIPMENT_DIR = ROOT / "Equipment"
-ENVIRONMENT_DIR = ROOT / "Environment"
-ANIMATIONS_DIR = ROOT / "Animations"
-MATERIALS_DIR = ROOT / "Materials"
-TEXTURES_DIR = ROOT / "Textures"
-SOURCES_DIR = ROOT / "Sources"
-PREVIEWS_DIR = ROOT / "Previews"
-DOCS_DIR = ROOT / "Documentation"
+DIRS = {n: ROOT / n for n in ("Characters", "Equipment", "Environment", "Animations", "Materials", "Textures", "Sources", "Previews", "Documentation")}
 
 
-def ensure_directories():
-    for d in [
-        CHARACTERS_DIR,
-        EQUIPMENT_DIR,
-        ENVIRONMENT_DIR,
-        ANIMATIONS_DIR,
-        MATERIALS_DIR,
-        TEXTURES_DIR,
-        SOURCES_DIR,
-        PREVIEWS_DIR,
-        DOCS_DIR,
-    ]:
-        d.mkdir(parents=True, exist_ok=True)
+def ensure_runtime():
+    v = bpy.app.version
+    if v < BLENDER_MIN:
+        raise RuntimeError(f"Blender 3.6 LTS or newer is required; found {bpy.app.version_string}")
+    for p in DIRS.values(): p.mkdir(parents=True, exist_ok=True)
+
+
+def cli_args():
+    argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+    p = argparse.ArgumentParser()
+    p.add_argument("--validate", action="store_true")
+    p.add_argument("--export", action="store_true")
+    p.add_argument("--no-render", action="store_true")
+    return p.parse_args(argv)
 
 
 def clear_scene():
-    bpy.ops.object.select_all(action='SELECT')
-    bpy.ops.object.delete(use_global=False)
-    for block in bpy.data.meshes:
-        if block.users == 0:
-            bpy.data.meshes.remove(block)
-    for block in bpy.data.cameras:
-        if block.users == 0:
-            bpy.data.cameras.remove(block)
-    for block in bpy.data.materials:
-        if block.users == 0:
-            bpy.data.materials.remove(block)
-    for block in bpy.data.images:
-        if block.users == 0:
-            bpy.data.images.remove(block)
+    bpy.ops.object.mode_set(mode='OBJECT') if bpy.context.object and bpy.context.object.mode != 'OBJECT' else None
+    bpy.ops.object.select_all(action='SELECT'); bpy.ops.object.delete(use_global=False)
+    for datablocks in (bpy.data.meshes, bpy.data.armatures, bpy.data.cameras, bpy.data.lights):
+        for block in list(datablocks):
+            if block.users == 0: datablocks.remove(block)
 
 
 def setup_scene():
-    clear_scene()
-    scene = bpy.context.scene
-    scene.unit_settings.system = 'METRIC'
-    scene.unit_settings.scale_length = 1.0
-    scene.render.engine = 'CYCLES'
-    scene.render.resolution_x = 1920
-    scene.render.resolution_y = 1080
-    scene.render.film_transparent = False
-    scene.world.use_nodes = True
-    scene.world.color = (0.04, 0.05, 0.06, 1.0)
-
-    # Add reference cube for 1-meter validation.
-    bpy.ops.mesh.primitive_cube_add(location=(0, 0, 0.5), scale=(0.5, 0.5, 0.5))
-    ref = bpy.context.object
-    ref.name = 'Reference_1m'
-    ref.display_type = 'TEXTURED'
-    ref.scale = (0.5, 0.5, 0.5)
-
-    # Add soft key light and fill light.
-    bpy.ops.object.light_add(type='AREA', location=(3, -2, 4))
-    key = bpy.context.object
-    key.name = 'Key_Light'
-    key.data.energy = 1500
-    key.data.shape = 'RECTANGLE'
-    key.data.size = 2.0
-    key.data.size_y = 2.0
-
-    bpy.ops.object.light_add(type='AREA', location=(-3, 2, 3))
-    fill = bpy.context.object
-    fill.name = 'Fill_Light'
-    fill.data.energy = 800
-    fill.data.shape = 'RECTANGLE'
-    fill.data.size = 2.5
-    fill.data.size_y = 2.5
-
-    # Camera for angled top-down orientation.
-    bpy.ops.object.camera_add(location=(6, -6, 5), rotation=(math.radians(70), 0, math.radians(45)))
-    cam = bpy.context.object
-    cam.name = 'GameplayCamera'
-    cam.data.lens = 35
-    cam.data.dof.use_dof = False
-    bpy.context.scene.camera = cam
+    clear_scene(); s = bpy.context.scene
+    s.unit_settings.system = 'METRIC'; s.unit_settings.scale_length = 1.0
+    s.render.engine = 'BLENDER_EEVEE_NEXT' if 'BLENDER_EEVEE_NEXT' in {i.identifier for i in bpy.types.RenderSettings.bl_rna.properties['engine'].enum_items} else 'BLENDER_EEVEE'
+    s.render.resolution_x, s.render.resolution_y, s.render.resolution_percentage = 1280, 720, 100
+    w = s.world or bpy.data.worlds.new('World'); s.world = w; w.use_nodes = True
+    bg = w.node_tree.nodes.get('Background'); bg.inputs['Color'].default_value = (0.025, 0.035, 0.05, 1); bg.inputs['Strength'].default_value = 0.35
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, .5)); ref = bpy.context.object; ref.name = 'REF_1M_DO_NOT_EXPORT'; ref.hide_render = True
+    bpy.ops.object.light_add(type='AREA', location=(3, -4, 6)); bpy.context.object.name = 'SHOWCASE_Key'; bpy.context.object.data.energy = 1000; bpy.context.object.data.size = 5
+    bpy.ops.object.light_add(type='AREA', location=(-4, 2, 3)); bpy.context.object.name = 'SHOWCASE_Fill'; bpy.context.object.data.energy = 500; bpy.context.object.data.size = 4
+    bpy.ops.object.camera_add(location=(6, -7, 5.5)); cam = bpy.context.object; cam.name = 'SHOWCASE_Camera'; cam.data.lens = 38; s.camera = cam
+    point_camera(cam, (0, 0, 1.0))
 
 
-def write_manifest(path, payload):
-    with open(path, 'w', encoding='utf-8') as fh:
-        json.dump(payload, fh, indent=2)
+def point_camera(obj, target): obj.rotation_euler = (Vector(target) - obj.location).to_track_quat('-Z', 'Y').to_euler()
 
 
-def make_material(name, base_color=(0.5, 0.5, 0.5, 1.0), metallic=0.0, roughness=0.7, emission=None):
-    mat = bpy.data.materials.new(name=name)
-    mat.use_nodes = True
-    bsdf = mat.node_tree.nodes['Principled BSDF']
-    bsdf.inputs['Base Color'].default_value = base_color
-    bsdf.inputs['Metallic'].default_value = metallic
-    bsdf.inputs['Roughness'].default_value = roughness
-    if emission is not None:
-        bsdf.inputs['Emission Color'].default_value = emission
-        bsdf.inputs['Emission Strength'].default_value = 1.0
-    return mat
+def collection(name):
+    c = bpy.data.collections.get(name) or bpy.data.collections.new(name)
+    if c.name not in bpy.context.scene.collection.children: bpy.context.scene.collection.children.link(c)
+    return c
 
 
-def add_cube(name, location=(0, 0, 0), scale=(1, 1, 1), material=None):
-    bpy.ops.mesh.primitive_cube_add(location=location)
-    obj = bpy.context.object
-    obj.name = name
-    obj.scale = scale
-    if material is not None:
-        obj.data.materials.append(material)
-    return obj
+def move_to(obj, col):
+    for c in list(obj.users_collection): c.objects.unlink(obj)
+    col.objects.link(obj); return obj
 
 
-def add_cylinder(name, location=(0, 0, 0), radius=0.5, depth=1.0, material=None):
-    bpy.ops.mesh.primitive_cylinder_add(vertices=16, radius=radius, depth=depth, location=location)
-    obj = bpy.context.object
-    obj.name = name
-    if material is not None:
-        obj.data.materials.append(material)
-    return obj
+def mat(name, color, metallic=0.0, roughness=.7, emission=None):
+    m = bpy.data.materials.get(name) or bpy.data.materials.new(name); m.use_nodes = True
+    bs = m.node_tree.nodes.get('Principled BSDF'); bs.inputs['Base Color'].default_value = (*color[:3], color[3] if len(color)>3 else 1)
+    bs.inputs['Metallic'].default_value = metallic; bs.inputs['Roughness'].default_value = roughness
+    if emission:
+        if 'Emission Color' in bs.inputs: bs.inputs['Emission Color'].default_value = (*emission, 1); bs.inputs['Emission Strength'].default_value = 2
+        elif 'Emission' in bs.inputs: bs.inputs['Emission'].default_value = (*emission, 1)
+    return m
 
 
-def add_uv_sphere(name, location=(0, 0, 0), radius=0.5, material=None):
-    bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=10, radius=radius, location=location)
-    obj = bpy.context.object
-    obj.name = name
-    if material is not None:
-        obj.data.materials.append(material)
-    return obj
+def assign_mat(o, m):
+    o.data.materials.clear(); o.data.materials.append(m); return o
 
 
-def set_ground_origin(obj, z_offset=0.0):
-    obj.location.z = z_offset
-    bpy.context.view_layer.objects.active = obj
-    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
-    obj.location.z = z_offset
+def add_cube(name, location, dimensions, material=None, bevel=.02, col=None):
+    bpy.ops.mesh.primitive_cube_add(size=1, location=location); o=bpy.context.object; o.name=name; o.dimensions=dimensions
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    if bevel:
+        b=o.modifiers.new('Bevel','BEVEL'); b.width=bevel; b.segments=2
+    if material: assign_mat(o, material)
+    if col: move_to(o,col)
+    return o
 
 
-def parent_to_bone(obj, armature, bone_name):
-    obj.parent = armature
-    obj.parent_type = 'BONE'
-    obj.parent_bone = bone_name
+def add_cylinder(name, location, radius, depth, material=None, col=None, vertices=16):
+    bpy.ops.mesh.primitive_cylinder_add(vertices=vertices, radius=radius, depth=depth, location=location); o=bpy.context.object; o.name=name
+    if material: assign_mat(o,material)
+    if col: move_to(o,col)
+    return o
 
 
-def create_humanoid_rig(name='Rig_Humanoid'):
-    bpy.ops.object.armature_add(location=(0, 0, 0))
-    arm = bpy.context.object
-    arm.name = name
-    arm.data.name = name + '_Data'
-    arm.data.display_type = 'STICK'
-    arm.show_in_front = True
+def add_uv(name, location, scale, material=None, col=None):
+    bpy.ops.mesh.primitive_uv_sphere_add(segments=20, ring_count=12, location=location); o=bpy.context.object; o.name=name; o.scale=scale; bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    if material: assign_mat(o,material)
+    if col: move_to(o,col)
+    return o
 
-    bones = {
-        'root': (0, 0, 0.0),
-        'pelvis': (0, 0, 0.9),
-        'spine_01': (0, 0, 1.2),
-        'spine_02': (0, 0, 1.5),
-        'neck': (0, 0, 1.85),
-        'head': (0, 0, 2.05),
-        'shoulder_L': (-0.18, 0.0, 1.55),
-        'upper_arm_L': (-0.32, 0.0, 1.35),
-        'forearm_L': (-0.60, 0.0, 1.20),
-        'hand_L': (-0.85, 0.0, 1.10),
-        'shoulder_R': (0.18, 0.0, 1.55),
-        'upper_arm_R': (0.32, 0.0, 1.35),
-        'forearm_R': (0.60, 0.0, 1.20),
-        'hand_R': (0.85, 0.0, 1.10),
-        'hip_L': (-0.12, 0.0, 0.75),
-        'thigh_L': (-0.18, 0.0, 0.40),
-        'shin_L': (-0.18, 0.0, 0.05),
-        'foot_L': (-0.18, 0.0, -0.18),
-        'hip_R': (0.12, 0.0, 0.75),
-        'thigh_R': (0.18, 0.0, 0.40),
-        'shin_R': (0.18, 0.0, 0.05),
-        'foot_R': (0.18, 0.0, -0.18),
-    }
 
-    edit_bones = arm.data.edit_bones
-    built = {}
-    for name, loc in bones.items():
-        eb = edit_bones.new(name)
-        eb.head = loc
-        eb.tail = (loc[0], loc[1], loc[2] + 0.05)
-        built[name] = eb
+def ground_pivot(o, z=0.0):
+    bpy.context.view_layer.update(); minz=min((o.matrix_world @ Vector(c)).z for c in o.bound_box)
+    o.location.z += z-minz; bpy.context.view_layer.update()
+    o.select_set(True); bpy.context.view_layer.objects.active=o; bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+    o.select_set(False); return o
 
-    # Connect the skeleton.
-    for parent, child in [
-        ('root', 'pelvis'),
-        ('pelvis', 'spine_01'),
-        ('spine_01', 'spine_02'),
-        ('spine_02', 'neck'),
-        ('neck', 'head'),
-        ('spine_02', 'shoulder_L'),
-        ('spine_02', 'shoulder_R'),
-        ('shoulder_L', 'upper_arm_L'),
-        ('upper_arm_L', 'forearm_L'),
-        ('forearm_L', 'hand_L'),
-        ('shoulder_R', 'upper_arm_R'),
-        ('upper_arm_R', 'forearm_R'),
-        ('forearm_R', 'hand_R'),
-        ('pelvis', 'hip_L'),
-        ('hip_L', 'thigh_L'),
-        ('thigh_L', 'shin_L'),
-        ('shin_L', 'foot_L'),
-        ('pelvis', 'hip_R'),
-        ('hip_R', 'thigh_R'),
-        ('thigh_R', 'shin_R'),
-        ('shin_R', 'foot_R'),
-    ]:
-        built[child].parent = built[parent]
 
-    bpy.ops.object.mode_set(mode='OBJECT')
+def parent_keep_world(o, parent, bone=None):
+    world=o.matrix_world.copy(); o.parent=parent
+    if bone: o.parent_type='BONE'; o.parent_bone=bone
+    o.matrix_world=world
+
+
+def create_humanoid_rig(name='Rig_Humanoid', col=None):
+    bpy.ops.object.armature_add(enter_editmode=True, location=(0,0,0)); arm=bpy.context.object; arm.name=name; arm.data.name=name+'_Data'
+    eb=arm.data.edit_bones
+    for b in list(eb): eb.remove(b)
+    specs={
+      'root':((0,0,0),(0,0,.12),None), 'pelvis':((0,0,.82),(0,0,1.02),'root'),
+      'spine_01':((0,0,1.02),(0,0,1.30),'pelvis'), 'spine_02':((0,0,1.30),(0,0,1.58),'spine_01'),
+      'neck':((0,0,1.58),(0,0,1.76),'spine_02'), 'head':((0,0,1.76),(0,0,2.02),'neck'),
+      'clavicle.L':((-.03,0,1.53),(-.20,0,1.53),'spine_02'), 'upper_arm.L':((-.20,0,1.53),(-.48,0,1.25),'clavicle.L'), 'forearm.L':((-.48,0,1.25),(-.72,0,1.10),'upper_arm.L'), 'hand.L':((-.72,0,1.10),(-.88,0,1.08),'forearm.L'),
+      'clavicle.R':((.03,0,1.53),(.20,0,1.53),'spine_02'), 'upper_arm.R':((.20,0,1.53),(.48,0,1.25),'clavicle.R'), 'forearm.R':((.48,0,1.25),(.72,0,1.10),'upper_arm.R'), 'hand.R':((.72,0,1.10),(.88,0,1.08),'forearm.R'),
+      'thigh.L':((-.12,0,.82),(-.16,0,.43),'pelvis'), 'shin.L':((-.16,0,.43),(-.16,0,.08),'thigh.L'), 'foot.L':((-.16,0,.08),(-.16,.22,.04),'shin.L'),
+      'thigh.R':((.12,0,.82),(.16,0,.43),'pelvis'), 'shin.R':((.16,0,.43),(.16,0,.08),'thigh.R'), 'foot.R':((.16,0,.08),(.16,.22,.04),'shin.R')}
+    bones={}
+    for n,(h,t,p) in specs.items(): b=eb.new(n); b.head=h; b.tail=t; bones[n]=b; b.parent=bones.get(p)
+    bpy.ops.object.mode_set(mode='OBJECT'); arm.data.display_type='BBONE'; arm.show_in_front=True
+    if col: move_to(arm,col)
     return arm
 
 
-def build_simple_officer(armature, variant='default'):
-    body_material = make_material('Mat_Officer_Fabric', base_color=(0.22, 0.28, 0.34, 1.0), metallic=0.0, roughness=0.8)
-    armor_material = make_material('Mat_Officer_Armor', base_color=(0.34, 0.40, 0.48, 1.0), metallic=0.2, roughness=0.55)
-    accent_material = make_material('Mat_Officer_Accent', base_color=(0.58, 0.70, 0.80, 1.0), metallic=0.0, roughness=0.55)
-    dark_material = make_material('Mat_Officer_Black', base_color=(0.12, 0.13, 0.14, 1.0), metallic=0.2, roughness=0.55)
-    skin_material = make_material('Mat_Skin', base_color=(0.82, 0.72, 0.64, 1.0), metallic=0.0, roughness=0.7)
-
-    # torso + pelvis proxy
-    torso = add_cube('Officer_Torso', location=(0, 0, 1.45), scale=(0.42, 0.24, 0.62), material=body_material)
-    pelvis = add_cube('Officer_Pelvis', location=(0, 0, 0.95), scale=(0.38, 0.22, 0.28), material=armor_material)
-    chest = add_cube('Officer_ChestPlate', location=(0, 0, 1.55), scale=(0.44, 0.28, 0.25), material=armor_material)
-    neck = add_cylinder('Officer_Neck', location=(0, 0, 1.92), radius=0.07, depth=0.18, material=skin_material)
-    head = add_uv_sphere('Officer_Head', location=(0, 0, 2.12), radius=0.16, material=skin_material)
-    helmet = add_uv_sphere('Officer_Helmet', location=(0, 0, 2.25), radius=0.2, material=dark_material)
-    helmet.scale = (1.0, 1.0, 0.75)
-    helmet.data.materials.clear(); helmet.data.materials.append(dark_material)
-
-    # Lower limbs
-    thigh_l = add_cylinder('Officer_Thigh_L', location=(-0.12, 0.0, 0.5), radius=0.12, depth=0.55, material=body_material)
-    thigh_r = add_cylinder('Officer_Thigh_R', location=(0.12, 0.0, 0.5), radius=0.12, depth=0.55, material=body_material)
-    shin_l = add_cylinder('Officer_Shin_L', location=(-0.12, 0.0, 0.08), radius=0.09, depth=0.55, material=dark_material)
-    shin_r = add_cylinder('Officer_Shin_R', location=(0.12, 0.0, 0.08), radius=0.09, depth=0.55, material=dark_material)
-    boot_l = add_cube('Officer_Boot_L', location=(-0.12, 0.12, -0.18), scale=(0.15, 0.24, 0.1), material=dark_material)
-    boot_r = add_cube('Officer_Boot_R', location=(0.12, 0.12, -0.18), scale=(0.15, 0.24, 0.1), material=dark_material)
-
-    # Upper limbs
-    upper_l = add_cylinder('Officer_UpperArm_L', location=(-0.34, 0.0, 1.38), radius=0.08, depth=0.42, material=armor_material)
-    forearm_l = add_cylinder('Officer_Forearm_L', location=(-0.62, 0.0, 1.16), radius=0.07, depth=0.42, material=armor_material)
-    hand_l = add_cube('Officer_Hand_L', location=(-0.83, 0.0, 1.10), scale=(0.12, 0.12, 0.12), material=skin_material)
-    upper_r = add_cylinder('Officer_UpperArm_R', location=(0.34, 0.0, 1.38), radius=0.08, depth=0.42, material=armor_material)
-    forearm_r = add_cylinder('Officer_Forearm_R', location=(0.62, 0.0, 1.16), radius=0.07, depth=0.42, material=armor_material)
-    hand_r = add_cube('Officer_Hand_R', location=(0.83, 0.0, 1.10), scale=(0.12, 0.12, 0.12), material=skin_material)
-
-    # gear
-    belt = add_cube('Officer_Belt', location=(0, 0, 1.06), scale=(0.46, 0.25, 0.08), material=accent_material)
-    radio = add_cube('Officer_Radio', location=(0.25, 0.18, 1.05), scale=(0.12, 0.08, 0.05), material=dark_material)
-    pouch = add_cube('Officer_MedicalPouch', location=(-0.25, 0.18, 1.04), scale=(0.12, 0.09, 0.08), material=accent_material)
-    headset = add_cylinder('Officer_Headset', location=(0.0, 0.18, 2.04), radius=0.06, depth=0.12, material=dark_material)
-
-    # parent to armature bones
-    for obj in [torso, pelvis, chest, neck, head, helmet, thigh_l, thigh_r, shin_l, shin_r, boot_l, boot_r,
-                upper_l, forearm_l, hand_l, upper_r, forearm_r, hand_r, belt, radio, pouch, headset]:
-        obj.parent = armature
-        obj.parent_type = 'BONE'
-        obj.parent_bone = 'pelvis' if obj.name.startswith('Officer_Pelvis') else 'pelvis'
-
-    # direct assignments by geo type
-    for obj in [torso]: obj.parent_bone = 'spine_02'
-    for obj in [pelvis]: obj.parent_bone = 'pelvis'
-    for obj in [chest, belt, radio, pouch]: obj.parent_bone = 'spine_02'
-    for obj in [neck, head, helmet, headset]: obj.parent_bone = 'neck'
-    for obj in [thigh_l, shin_l, boot_l]: obj.parent_bone = 'thigh_L'
-    for obj in [thigh_r, shin_r, boot_r]: obj.parent_bone = 'thigh_R'
-    for obj in [upper_l, forearm_l, hand_l]: obj.parent_bone = 'upper_arm_L'
-    for obj in [upper_r, forearm_r, hand_r]: obj.parent_bone = 'upper_arm_R'
-
-    # name the whole character asset.
-    officer_root = bpy.data.objects.new('Char_Officer', None)
-    officer_root.name = 'Char_Officer'
-    return armature
+def piece(name, loc, dims, material, arm, bone, col, skin=True):
+    o=add_cube(name,loc,dims,material,.04,col); parent_keep_world(o,arm,bone)
+    if skin:
+        mod=o.modifiers.new('Armature_Deform','ARMATURE'); mod.object=arm
+        vg=o.vertex_groups.new(name=bone); vg.add(list(range(len(o.data.vertices))),1.0,'REPLACE')
+    return o
 
 
-def build_carbine(name='Equip_Carbine'):
-    mat = make_material('Mat_Weapon_Arid', base_color=(0.18, 0.20, 0.21, 1.0), metallic=0.35, roughness=0.45)
-    grip = make_material('Mat_Weapon_Grip', base_color=(0.10, 0.09, 0.10, 1.0), metallic=0.0, roughness=0.78)
-
-    body = add_cube(f'{name}_Body', location=(0, 0, 0), scale=(0.9, 0.08, 0.12), material=mat)
-    stock = add_cube(f'{name}_Stock', location=(-0.55, 0, 0), scale=(0.28, 0.06, 0.12), material=mat)
-    grip_block = add_cube(f'{name}_Grip', location=(0.18, -0.05, -0.08), scale=(0.15, 0.08, 0.22), material=grip)
-    barrel = add_cylinder(f'{name}_Barrel', location=(0.62, 0.0, 0.0), radius=0.025, depth=0.34, material=mat)
-    barrel.rotation_euler = (0, math.radians(90), 0)
-    mag = add_cube(f'{name}_Magazine', location=(0.12, -0.14, -0.10), scale=(0.16, 0.05, 0.08), material=mat)
-    front_sight = add_cube(f'{name}_FrontSight', location=(0.76, 0.0, 0.06), scale=(0.03, 0.025, 0.025), material=mat)
-    rear_sight = add_cube(f'{name}_RearSight', location=(0.42, 0.0, 0.06), scale=(0.03, 0.025, 0.025), material=mat)
-
-    for obj in [body, stock, grip_block, barrel, mag, front_sight, rear_sight]:
-        obj.name = obj.name.replace('_Body', '') if obj.name.endswith('_Body') else obj.name
-
-    return body
+def build_officer(arm, variant='blue', root_name='Char_Officer'):
+    c=collection(root_name); colors={'blue':(.12,.25,.38,1),'orange':(.42,.20,.08,1)}; cloth=mat('MAT_Officer_'+variant,colors.get(variant,colors['blue']),0,.8); armor=mat('MAT_Armor',(.20,.25,.29,1),.25,.5); dark=mat('MAT_Rubber',(.035,.045,.05,1),.1,.65); skin=mat('MAT_Skin',(.62,.38,.27,1),0,.75); accent=mat('MAT_Accent',(.65,.72,.76,1),.1,.55)
+    root=bpy.data.objects.new(root_name,None); c.objects.link(root); root['asset_type']='character'; parent_keep_world(arm,root); arm.parent=root
+    piece('Officer_Torso',(0,0,1.30),(.46,.28,.55),cloth,arm,'spine_01',c); piece('Officer_Plate',(0,-.16,1.38),(.40,.08,.32),armor,arm,'spine_02',c); piece('Officer_Pelvis',(0,0,.90),(.38,.25,.25),cloth,arm,'pelvis',c)
+    piece('Officer_Thigh.L',(-.14,0,.62),(.20,.20,.40),cloth,arm,'thigh.L',c); piece('Officer_Thigh.R',(.14,0,.62),(.20,.20,.40),cloth,arm,'thigh.R',c); piece('Officer_Shin.L',(-.16,0,.25),(.16,.18,.34),dark,arm,'shin.L',c); piece('Officer_Shin.R',(.16,0,.25),(.16,.18,.34),dark,arm,'shin.R',c)
+    piece('Officer_Boot.L',(-.16,.09,.06),(.22,.36,.14),dark,arm,'foot.L',c); piece('Officer_Boot.R',(.16,.09,.06),(.22,.36,.14),dark,arm,'foot.R',c)
+    piece('Officer_UpperArm.L',(-.34,0,1.38),(.18,.18,.38),armor,arm,'upper_arm.L',c); piece('Officer_UpperArm.R',(.34,0,1.38),(.18,.18,.38),armor,arm,'upper_arm.R',c); piece('Officer_Forearm.L',(-.60,0,1.18),(.16,.16,.34),cloth,arm,'forearm.L',c); piece('Officer_Forearm.R',(.60,0,1.18),(.16,.16,.34),cloth,arm,'forearm.R',c)
+    piece('Officer_Glove.L',(-.78,0,1.08),(.16,.16,.14),dark,arm,'hand.L',c); piece('Officer_Glove.R',(.78,0,1.08),(.16,.16,.14),dark,arm,'hand.R',c)
+    piece('Officer_Head',(0,0,1.86),(.28,.25,.32),skin,arm,'head',c); piece('Officer_Helmet',(0,0,2.02),(.36,.32,.20),dark,arm,'head',c); piece('Officer_Belt',(0,0,1.00),(.52,.32,.10),accent,arm,'pelvis',c); piece('Officer_Pouch.L',(-.30,-.15,1.02),(.16,.12,.16),accent,arm,'pelvis',c); piece('Officer_Pouch.R',(.30,-.15,1.02),(.16,.12,.16),accent,arm,'pelvis',c)
+    for n,loc,b in [('ATT_MainHand',(.78,0,1.08),'hand.R'),('ATT_SupportHand',(-.78,0,1.08),'hand.L'),('ATT_Back', (0,.16,1.35),'spine_02'),('ATT_Belt',(.30,-.15,1.02),'pelvis')]:
+        e=bpy.data.objects.new(n,None); c.objects.link(e); e.location=loc; parent_keep_world(e,arm,b); e['attachment']=True
+    return root
 
 
-def create_sample_room():
-    concrete = make_material('Mat_Concrete', base_color=(0.45, 0.46, 0.48, 1.0), metallic=0.0, roughness=0.85)
-    floor = add_cube('Sample_Floor', location=(0, 0, 0), scale=(4.0, 4.0, 0.18), material=concrete)
-
-    wall_n = add_cube('Sample_Wall_North', location=(0, 2.0, 1.5), scale=(4.0, 0.2, 3.0), material=concrete)
-    wall_s = add_cube('Sample_Wall_South', location=(0, -2.0, 1.5), scale=(4.0, 0.2, 3.0), material=concrete)
-    wall_e = add_cube('Sample_Wall_East', location=(2.0, 0, 1.5), scale=(0.2, 4.0, 3.0), material=concrete)
-    wall_w = add_cube('Sample_Wall_West', location=(-2.0, 0, 1.5), scale=(0.2, 4.0, 3.0), material=concrete)
-
-    # doorway opening in north wall
-    bpy.ops.object.empty_add(type='PLAIN_AXES', location=(0, 2.05, 0.0))
-    door_pivot = bpy.context.object
-    door_pivot.name = 'DoorPivot_01'
-
-    frame_mat = make_material('Mat_Frame', base_color=(0.55, 0.48, 0.35, 1.0), metallic=0.1, roughness=0.7)
-    door_leaves = []
-    for i, x in enumerate([-0.52, 0.52]):
-        door = add_cube(f'Sample_Door_{i}', location=(x, 1.95, 1.1), scale=(0.5, 0.08, 2.0), material=frame_mat)
-        door.parent = door_pivot
-        door.location = (x, 0.0, 1.1)
-        door_leaves.append(door)
-
-    # single door pivot at hinge side
-    door_pivot.rotation_euler = (0, 0, math.radians(0))
-    return door_pivot
+def build_carbine():
+    c=collection('Equip_Carbine'); root=bpy.data.objects.new('Equip_Carbine',None); c.objects.link(root); root['asset_type']='equipment'; metal=mat('MAT_Weapon_Metal',(.08,.10,.11,1),.5,.4); polymer=mat('MAT_Weapon_Polymer',(.025,.03,.035,1),.05,.7)
+    parts=[add_cube('Carbine_Receiver',(0,0,0),(.42,.11,.16),metal,.025,c),add_cube('Carbine_Stock',(-.38,0,.01),(.36,.10,.12),polymer,.03,c),add_cube('Carbine_Handguard',(.38,0,.01),(.38,.10,.12),polymer,.03,c),add_cube('Carbine_Grip',(.10,-.06,-.13),(.12,.11,.25),polymer,.025,c),add_cube('Carbine_Magazine',(.04,-.08,-.12),(.14,.07,.20),metal,.02,c),add_cylinder('Carbine_Barrel',(.72,0,.01),.025,.62,metal,c),add_cube('Carbine_SightFront',(.62,0,.12),(.04,.04,.08),metal,.01,c),add_cube('Carbine_SightRear',(.22,0,.12),(.04,.04,.08),metal,.01,c)]
+    for o in parts: parent_keep_world(o,root)
+    for n,loc in [('ATT_Muzzle',(1.03,0,.01)),('ATT_MainHand',(.10,-.06,-.02)),('ATT_SupportHand',(.40,0,-.02))]: e=bpy.data.objects.new(n,None); c.objects.link(e); e.location=loc; parent_keep_world(e,root)
+    return root
 
 
-def set_scene_camera_pose():
-    cam = bpy.data.objects['GameplayCamera']
-    cam.location = (6.0, -6.0, 5.5)
-    cam.rotation_euler = (math.radians(70), 0, math.radians(45))
+def build_room():
+    c=collection('Env_QualityRoom'); concrete=mat('MAT_Concrete',(.32,.35,.38,1),0,.9); frame=mat('MAT_DoorFrame',(.20,.12,.07,1),.1,.7); door_mat=mat('MAT_Door',(.12,.16,.18,1),.2,.6)
+    add_cube('Room_Floor',(0,0,-.06),(6,6,.12),concrete,.01,c)
+    # 3 m walls with a 2.4 m clear double doorway in the north wall.
+    add_cube('Room_Wall_South',(0,-3,1.5),(6,.20,3),concrete,.02,c); add_cube('Room_Wall_East',(3,0,1.5),(.20,6,3),concrete,.02,c); add_cube('Room_Wall_West',(-3,0,1.5),(.20,6,3),concrete,.02,c)
+    add_cube('Room_Wall_North_L',(-2.1,3,1.5),(1.8,.20,3),concrete,.02,c); add_cube('Room_Wall_North_R',(2.1,3,1.5),(1.8,.20,3),concrete,.02,c); add_cube('Room_Wall_North_Header',(0,3,2.75),(2.4,.20,.5),concrete,.02,c)
+    add_cube('DoorFrame_Left',(-1.2,2.92,1.5),(.12,.30,3),frame,.02,c); add_cube('DoorFrame_Right',(1.2,2.92,1.5),(.12,.30,3),frame,.02,c); add_cube('DoorFrame_Top',(0,2.92,2.94),(2.52,.30,.12),frame,.02,c)
+    for side,x in [('L',-1.17),('R',1.17)]:
+        pivot=bpy.data.objects.new(f'DoorPivot_{side}',None); c.objects.link(pivot); pivot.location=(x,2.86,0); pivot['hinge']='outside'; pivot['axis']='Z'
+        leaf=add_cube(f'DoorLeaf_{side}',(x+(0.58 if side=='L' else -0.58),2.84,1.4),(1.16,.10,2.8),door_mat,.025,c); parent_keep_world(leaf,pivot); leaf.location=(0.58 if side=='L' else -0.58,0,1.4)
+        col=add_cube(f'Collision_Door_{side}',leaf.location,(1.16,.12,2.8),None,0,c); parent_keep_world(col,pivot); col.hide_render=True; col.display_type='WIRE'; col['collision_proxy']=True
+        pivot.rotation_euler=(0,0,0); pivot.keyframe_insert('rotation_euler',frame=1); pivot.rotation_euler.z=math.radians(78 if side=='L' else -78); pivot.keyframe_insert('rotation_euler',frame=24)
+    roof=add_cube('Room_Roof_Section',(0,0,3.1),(6,6,.15),concrete,.01,collection('Env_Upper'))
+    return c
 
 
-def write_sample_manifest():
-    manifest = {
-        'project_name': 'Tactical Co-op Asset Pack',
-        'status': 'procedural scripts prepared; local Blender exports not generated in this session',
-        'scene_units': 'meters',
-        'camera': 'angled top-down',
-        'rig': 'shared humanoid skeleton',
-        'characters': ['Officer', 'Suspect', 'Civilian'],
-        'equipment': ['Carbine', 'Pistol', 'Shotgun', 'Shield', 'Radio', 'Flashlight', 'Breaching Charge', 'Drone', 'Medical Pouch'],
-        'architecture': ['Floor tile', 'wall segments', 'corner', 'doorway', 'single door', 'double door', 'window wall', 'shutter', 'pillar', 'stairs', 'roof'],
-        'props': ['Crate', 'Pallet', 'Shelving', 'Barrel', 'Desk', 'Chair', 'Locker', 'Sofa', 'Monitor', 'Fire extinguisher', 'Pendant light', 'Wall light', 'Fluorescent light', 'Security camera', 'Fuse box', 'Briefcase', 'Extraction marker'],
-        'triangles_estimated': 'to be measured after local Blender export',
-        'rig_compatibility': 'shared humanoid rig target',
-        'exports_generated': False,
-    }
-    write_manifest(ROOT / 'Documentation' / 'sample_manifest.json', manifest)
+def action(arm,name,frame_end,poses,loop=False):
+    a=bpy.data.actions.new(name); a.use_fake_user=True; a['loop']=loop; a['frame_start']=1; a['frame_end']=frame_end; arm.animation_data_create(); arm.animation_data.action=a
+    for f,rot in poses:
+        for bone_name,euler in rot.items():
+            pb=arm.pose.bones.get(bone_name)
+            if pb: pb.rotation_mode='XYZ'; pb.rotation_euler=euler; pb.keyframe_insert('rotation_euler',frame=f,group=bone_name)
+    return a
 
 
-if __name__ == '__main__':
-    ensure_directories()
-    setup_scene()
-    arm = create_humanoid_rig()
-    build_simple_officer(arm)
-    build_carbine()
-    create_sample_room()
-    set_scene_camera_pose()
-    write_sample_manifest()
-    print('Procedural sample setup complete. Run Blender locally to export .blend and FBX files.')
+def build_animations(arm):
+    z={}; action(arm,'Anim_RifleReadyIdle',40,[(1,z),(20,{'spine_02':(0,.02,0)}),(40,z)],True)
+    action(arm,'Anim_Walk_Forward',24,[(1,{'thigh.L':(.35,0,0),'thigh.R':(-.35,0,0),'shin.L':(-.2,0,0),'shin.R':(.2,0,0)}),(13,{'thigh.L':(-.35,0,0),'thigh.R':(.35,0,0),'shin.L':(.2,0,0),'shin.R':(-.2,0,0)}),(24,{'thigh.L':(.35,0,0),'thigh.R':(-.35,0,0)})],True)
+    action(arm,'Anim_Run_Forward',16,[(1,{'thigh.L':(.65,0,0),'thigh.R':(-.65,0,0),'shin.L':(-.35,0,0),'shin.R':(.35,0,0)}),(9,{'thigh.L':(-.65,0,0),'thigh.R':(.65,0,0),'shin.L':(.35,0,0),'shin.R':(-.35,0,0)}),(16,{'thigh.L':(.65,0,0),'thigh.R':(-.65,0,0)})],True)
+    action(arm,'Anim_CrouchIdle',30,[(1,{'thigh.L':(.65,0,0),'thigh.R':(.65,0,0),'shin.L':(-.8,0,0),'shin.R':(-.8,0,0),'spine_01':(.25,0,0)}),(30,{'thigh.L':(.65,0,0),'thigh.R':(.65,0,0),'shin.L':(-.8,0,0),'shin.R':(-.8,0,0),'spine_01':(.25,0,0)})],True)
+    action(arm,'Anim_RifleRecoil',12,[(1,{}),(4,{'spine_02':(-.12,0,0),'upper_arm.L':(-.08,0,0),'upper_arm.R':(-.08,0,0)}),(12,{})])
+    action(arm,'Anim_RifleReload',36,[(1,{}),(10,{'forearm.L':(0,-.7,0)}),(20,{'forearm.L':(0,-1.2,0)}),(28,{'forearm.L':(0,-.4,0)}),(36,{})])
+    action(arm,'Anim_Downed',24,[(1,{}),(24,{'spine_01':(1.1,0,0),'thigh.L':(.8,0,0),'thigh.R':(.8,0,0),'shin.L':(-1.0,0,0),'shin.R':(-1.0,0,0)})])
+    arm.animation_data.action=None
+
+
+def bounds(objects):
+    bpy.context.view_layer.update(); pts=[o.matrix_world @ Vector(c) for o in objects for c in o.bound_box]; return [round(max(p[i] for p in pts)-min(p[i] for p in pts),4) for i in range(3)] if pts else [0,0,0]
+
+
+def validate(path):
+    checks=[]; roots=[o for o in bpy.data.objects if o.get('asset_type')]
+    checks.append({'name':'metric_units','pass':bpy.context.scene.unit_settings.system=='METRIC'})
+    arm=bpy.data.objects.get('Rig_Officer'); checks.append({'name':'armature_and_actions','pass':bool(arm and len(bpy.data.actions)>=7)})
+    checks.append({'name':'attachments','pass':all(bpy.data.objects.get(n) for n in ('ATT_Muzzle','ATT_MainHand','ATT_SupportHand'))})
+    checks.append({'name':'door_pivots','pass':all(bpy.data.objects.get(n) and abs(bpy.data.objects[n].location.x)>1 for n in ('DoorPivot_L','DoorPivot_R'))})
+    checks.append({'name':'quality_sample_roots','pass':len(roots)>=3})
+    data={'blender':bpy.app.version_string,'checks':checks,'passed':all(x['pass'] for x in checks),'dimensions':{o.name:bounds([x for x in bpy.data.objects if x.parent==o or x==o]) for o in roots},'actions':{a.name:[a['frame_start'],a['frame_end'],a.get('loop',False)] for a in bpy.data.actions}}
+    Path(path).write_text(json.dumps(data,indent=2),encoding='utf8');
+    if not data['passed']: raise RuntimeError('Quality validation failed: '+', '.join(x['name'] for x in checks if not x['pass']))
+    return data
