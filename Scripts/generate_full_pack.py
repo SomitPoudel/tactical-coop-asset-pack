@@ -1,11 +1,26 @@
 """Expanded procedural pack entry point. The quality sample is authoritative."""
-from blender_asset_pack_common import *
+import importlib
 import bpy
 import sys
 import traceback
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+_common = importlib.import_module('blender_asset_pack_common')
+DIRS = _common.DIRS
+cli_args = _common.cli_args
+ensure_runtime = _common.ensure_runtime
+setup_scene = _common.setup_scene
+collection = _common.collection
+mat = _common.mat
+add_cube = _common.add_cube
+add_cylinder = _common.add_cylinder
+create_humanoid_rig = _common.create_humanoid_rig
+build_carbine = _common.build_carbine
+build_officer = _common.build_officer
+build_room = _common.build_room
+build_animations = _common.build_animations
+validate = _common.validate
 
 
 def prop_set():

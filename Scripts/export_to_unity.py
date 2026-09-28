@@ -1,12 +1,17 @@
 """Export the quality sample with explicit per-asset action lists."""
-from blender_asset_pack_common import DIRS, asset_descendants, evaluated_dimensions, validate
-import json
+import importlib
 import bpy
-import sys
+import json
 import traceback
+import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+_common = importlib.import_module('blender_asset_pack_common')
+DIRS = _common.DIRS
+asset_descendants = _common.asset_descendants
+evaluated_dimensions = _common.evaluated_dimensions
+validate = _common.validate
 
 
 ASSETS = [
@@ -156,29 +161,97 @@ def export_asset(root_name, filename, folder, animation_tracks):
 
 
 def export_all(validate_exports=False):
-    ensure_fbx_exporter()
-    if validate_exports:
-        validate(DIRS['Documentation']/'export_validation.json')
-    results = [export_asset(*asset) for asset in ASSETS]
-    round_trip_states = [result['round_trip']['status'] for result in results]
-    if 'failed' in round_trip_states:
-        raise RuntimeError('One or more FBX round-trip checks failed')
+    report_path = DIRS['Documentation']/'export_validation.json'
+    report_path.parent.mkdir(parents=True, exist_ok=True)
     report = {
-        'export_status': 'passed',
-        'exports': results,
-        'round_trip_status': 'not_run' if 'not_run' in round_trip_states else 'passed',
+        'export_status': 'failed',
+        'preflight_validation': 'not_requested',
+        'exports': [],
+        'failures': [],
+        'round_trip_status': 'not_run',
         'unity_compatibility': 'not_run',
     }
-    report_path = DIRS['Documentation']/'export_validation.json'
-    report_path.write_text(json.dumps(report, indent=2), encoding='utf8')
-    status_path = DIRS['Documentation']/'quality_sample_status.json'
-    status = json.loads(status_path.read_text(
-        encoding='utf8')) if status_path.exists() else {}
-    status['export_status'] = 'passed'
-    status['round_trip_status'] = report['round_trip_status']
-    status_path.write_text(json.dumps(status, indent=2), encoding='utf8')
-    print('EXPORTED', *(result['file'] for result in results), sep='\n')
-    return [result['file'] for result in results]
+
+    def save_report():
+        report_path.write_text(json.dumps(report, indent=2), encoding='utf8')
+        status_path = DIRS['Documentation']/'quality_sample_status.json'
+        if status_path.is_file():
+            try:
+                status = json.loads(status_path.read_text(encoding='utf8'))
+            except (OSError, json.JSONDecodeError):
+                status = {}
+            status['export_status'] = report['export_status']
+            status['round_trip_status'] = report['round_trip_status']
+            status_path.write_text(json.dumps(
+                status, indent=2), encoding='utf8')
+
+    try:
+        ensure_fbx_exporter()
+    except Exception as error:
+        report['failures'].append({
+            'stage': 'fbx_preflight', 'error': str(error),
+        })
+        save_report()
+        raise RuntimeError(
+            f'FBX export preflight failed; see {report_path}') from error
+
+    if validate_exports:
+        try:
+            validate(DIRS['Documentation']/'export_validation.json')
+            report['preflight_validation'] = 'passed'
+        except Exception as error:
+            report['preflight_validation'] = {
+                'status': 'failed', 'error': str(error),
+            }
+            report['failures'].append({
+                'stage': 'sample_validation', 'error': str(error),
+            })
+            save_report()
+            raise RuntimeError(
+                f'Export validation failed; see {report_path}') from error
+
+    for asset in ASSETS:
+        root_name, filename, folder = asset[:3]
+        try:
+            result = export_asset(*asset)
+        except Exception as error:
+            failure = {
+                'asset_root': root_name,
+                'file': str(DIRS[folder]/filename),
+                'status': 'failed',
+                'error': str(error),
+            }
+            report['exports'].append(failure)
+            report['failures'].append(failure.copy())
+        else:
+            report['exports'].append(result)
+            if result['round_trip']['status'] == 'failed':
+                report['failures'].append({
+                    'asset_root': root_name,
+                    'stage': 'round_trip',
+                    'error': result['round_trip'].get('reason',
+                                                      result['round_trip'].get('checks')),
+                })
+
+    round_trip_states = [
+        result['round_trip']['status'] for result in report['exports']
+        if 'round_trip' in result
+    ]
+    if 'failed' in round_trip_states:
+        report['round_trip_status'] = 'failed'
+    elif 'not_run' in round_trip_states or len(round_trip_states) != len(ASSETS):
+        report['round_trip_status'] = 'not_run'
+    else:
+        report['round_trip_status'] = 'passed'
+    report['export_status'] = 'failed' if report['failures'] else 'passed'
+    save_report()
+    if report['failures']:
+        raise RuntimeError(
+            f'FBX export or round-trip checks failed; see {report_path}')
+
+    exported = [result['file'] for result in report['exports']]
+    print('EXPORTED', *exported, sep='\n')
+    return exported
 
 
 def main():

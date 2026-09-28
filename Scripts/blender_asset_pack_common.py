@@ -35,6 +35,10 @@ def cli_args():
     p.add_argument("--validate", action="store_true")
     p.add_argument("--export", action="store_true")
     p.add_argument("--no-render", action="store_true")
+    p.add_argument("--preview-only", action="store_true")
+    p.add_argument("--preview-views", nargs="+", choices=(
+        "officer_front", "officer_side", "gameplay_angle",
+        "door_closed", "door_open", "animations"))
     return p.parse_args(argv)
 
 
@@ -184,12 +188,14 @@ def ground_pivot(o, z=0.0):
 
 
 def parent_keep_world(o, parent, bone=None):
+    bpy.context.view_layer.update()
     world = o.matrix_world.copy()
     o.parent = parent
     if bone:
         o.parent_type = 'BONE'
         o.parent_bone = bone
     o.matrix_world = world
+    bpy.context.view_layer.update()
 
 
 def create_humanoid_rig(name='Rig_Humanoid', col=None):
@@ -204,8 +210,8 @@ def create_humanoid_rig(name='Rig_Humanoid', col=None):
         'root': ((0, 0, 0), (0, 0, .12), None), 'pelvis': ((0, 0, .82), (0, 0, 1.02), 'root'),
         'spine_01': ((0, 0, 1.02), (0, 0, 1.27), 'pelvis'), 'spine_02': ((0, 0, 1.27), (0, 0, 1.47), 'spine_01'),
         'neck': ((0, 0, 1.47), (0, 0, 1.58), 'spine_02'), 'head': ((0, 0, 1.58), (0, 0, 1.76), 'neck'),
-        'clavicle.L': ((-.03, 0, 1.44), (-.22, -.03, 1.44), 'spine_02'), 'upper_arm.L': ((-.22, -.03, 1.44), (-.34, -.20, 1.28), 'clavicle.L'), 'forearm.L': ((-.34, -.20, 1.28), (0, -.82, 1.37), 'upper_arm.L'), 'hand.L': ((0, -.82, 1.37), (-.06, -.91, 1.37), 'forearm.L'),
-        'clavicle.R': ((.03, 0, 1.44), (.22, -.03, 1.44), 'spine_02'), 'upper_arm.R': ((.22, -.03, 1.44), (.38, -.16, 1.29), 'clavicle.R'), 'forearm.R': ((.38, -.16, 1.29), (.16, -.50, 1.27), 'upper_arm.R'), 'hand.R': ((.16, -.50, 1.27), (.24, -.57, 1.27), 'forearm.R'),
+        'clavicle.L': ((-.03, 0, 1.44), (-.22, -.03, 1.44), 'spine_02'), 'upper_arm.L': ((-.22, -.03, 1.44), (-.05, -.30, 1.34), 'clavicle.L'), 'forearm.L': ((-.05, -.30, 1.34), (.04, -.62, 1.34), 'upper_arm.L'), 'hand.L': ((.04, -.62, 1.34), (-.02, -.70, 1.34), 'forearm.L'),
+        'clavicle.R': ((.03, 0, 1.44), (.22, -.03, 1.44), 'spine_02'), 'upper_arm.R': ((.22, -.03, 1.44), (.40, -.22, 1.31), 'clavicle.R'), 'forearm.R': ((.40, -.22, 1.31), (.155, -.405, 1.27), 'upper_arm.R'), 'hand.R': ((.155, -.405, 1.27), (.23, -.47, 1.26), 'forearm.R'),
         'thigh.L': ((-.12, 0, .82), (-.15, 0, .43), 'pelvis'), 'shin.L': ((-.15, 0, .43), (-.15, 0, .08), 'thigh.L'), 'foot.L': ((-.15, 0, .08), (-.15, -.24, .04), 'shin.L'),
         'thigh.R': ((.12, 0, .82), (.15, 0, .43), 'pelvis'), 'shin.R': ((.15, 0, .43), (.15, 0, .08), 'thigh.R'), 'foot.R': ((.15, 0, .08), (.15, -.24, .04), 'shin.R')}
     bones = {}
@@ -320,6 +326,17 @@ def weighted_ellipsoid(name, location, scale, material, arm, bone_weights, col):
     return obj
 
 
+def action_fcurves(action):
+    if hasattr(action, 'fcurves'):
+        return list(action.fcurves)
+    curves = []
+    for layer in action.layers:
+        for strip in layer.strips:
+            for channelbag in strip.channelbags:
+                curves.extend(channelbag.fcurves)
+    return curves
+
+
 def build_officer(arm, variant='blue', root_name='Char_Officer'):
     col = collection(root_name)
     colors = {'blue': (.12, .25, .38, 1), 'orange': (.42, .20, .08, 1)}
@@ -413,8 +430,8 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
         parent_keep_world(accessory, arm, bone)
 
     attachments = [
-        ('ATT_Officer_MainHand', (.16, -.50, 1.27), 'hand.R'),
-        ('ATT_Officer_SupportHand', (0, -.82, 1.37), 'hand.L'),
+        ('ATT_Officer_MainHand', (.155, -.405, 1.27), 'hand.R'),
+        ('ATT_Officer_SupportHand', (.04, -.62, 1.34), 'hand.L'),
         ('ATT_Back', (0, .16, 1.35), 'spine_02'),
         ('ATT_Belt', (.27, -.10, 1.00), 'pelvis'),
     ]
@@ -430,7 +447,7 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
         display = bpy.data.objects.new('SHOWCASE_Carbine', None)
         col.objects.link(display)
         parent_keep_world(display, arm, 'hand.R')
-        display.matrix_world = Matrix.Translation(Vector((.08, -.50, 1.42)))
+        display.matrix_world = Matrix.Translation(Vector((.08, -.42, 1.42)))
         display['exclude_from_asset_export'] = True
         parts = [obj for obj in asset_descendants(
             weapon) if obj.parent == weapon]
@@ -438,6 +455,7 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
             instance = source.copy()
             instance.data = source.data if source.data else None
             col.objects.link(instance)
+            instance.hide_render = False
             instance.parent = display
             instance.matrix_parent_inverse = Matrix.Identity(4)
             instance.matrix_local = source.matrix_local.copy()
@@ -457,11 +475,13 @@ def build_carbine():
     parts[6].rotation_euler.x = math.radians(90)
     for o in parts:
         parent_keep_world(o, root)
-    for n, loc in [('ATT_Carbine_Muzzle', (0, -.50, .005)), ('ATT_Carbine_MainHand', (.075, .015, -.15)), ('ATT_Carbine_SupportHand', (-.08, -.32, -.05))]:
+    for n, loc in [('ATT_Carbine_Muzzle', (0, -.50, .005)), ('ATT_Carbine_MainHand', (.075, .015, -.15)), ('ATT_Carbine_SupportHand', (-.04, -.20, -.08))]:
         e = bpy.data.objects.new(n, None)
         c.objects.link(e)
         e.location = loc
         parent_keep_world(e, root)
+    for part in parts:
+        part.hide_render = True
     return root
 
 
@@ -527,7 +547,7 @@ def build_room():
         pivot.keyframe_insert('rotation_euler', frame=1, group='Door')
         pivot.rotation_euler.z = math.radians(-90 if side == 'L' else 90)
         pivot.keyframe_insert('rotation_euler', frame=24, group='Door')
-        for curve in clip.fcurves:
+        for curve in action_fcurves(clip):
             for key in curve.keyframe_points:
                 key.interpolation = 'LINEAR'
 
@@ -595,7 +615,7 @@ def action(arm, name, frame_end, poses, loop=False):
                 'rotation_euler', frame=frame, group=pose_bone.name)
             pose_bone.keyframe_insert(
                 'scale', frame=frame, group=pose_bone.name)
-    for curve in clip.fcurves:
+    for curve in action_fcurves(clip):
         for key in curve.keyframe_points:
             key.interpolation = 'LINEAR'
     return clip
@@ -717,6 +737,20 @@ def validate(path):
     check(structural, 'armature_and_sample_actions', bool(
         arm and expected_actions.issubset(
             {clip.name for clip in bpy.data.actions})))
+    arm_lengths = {}
+    if arm:
+        for side in ('L', 'R'):
+            arm_lengths[side] = {
+                'upper_arm_m': round(arm.data.bones['upper_arm.'+side].length, 4),
+                'forearm_m': round(arm.data.bones['forearm.'+side].length, 4),
+            }
+    balanced = bool(arm_lengths) and all(
+        abs(values['upper_arm_m']-values['forearm_m']) <= .06
+        for values in arm_lengths.values())
+    balanced = balanced and all(
+        abs(arm_lengths['L'][part]-arm_lengths['R'][part]) <= .06
+        for part in ('upper_arm_m', 'forearm_m'))
+    check(structural, 'balanced_arm_segment_lengths', balanced, arm_lengths)
     deforming = [obj for obj in char_objects if obj.type == 'MESH' and any(
         modifier.type == 'ARMATURE' for modifier in obj.modifiers)]
     check(structural, 'single_armature_skinning', bool(deforming) and all(
@@ -751,7 +785,7 @@ def validate(path):
         if not metadata_ok:
             missing_metadata.append(clip.name)
         if metadata_ok and clip.get('loop', False):
-            for curve in clip.fcurves:
+            for curve in action_fcurves(clip):
                 keys = curve.keyframe_points
                 if not keys or abs(keys[0].co.y-keys[-1].co.y) > 1e-4:
                     loop_mismatches.append(clip.name+':'+curve.data_path)
@@ -766,7 +800,7 @@ def validate(path):
             clip = bpy.data.actions.get(name)
             start = clip.get('frame_start') if clip else None
             end = clip.get('frame_end') if clip else None
-            curves = list(clip.fcurves) if clip else []
+            curves = action_fcurves(clip) if clip else []
             action_coverage[name] = bool(curves and start is not None and
                                          end is not None and all(curve.keyframe_points and
                                                                  abs(curve.keyframe_points[0].co.x-start) < 1e-4 and
@@ -807,7 +841,7 @@ def validate(path):
     socket_errors = {}
     if display and char_main and char_support:
         main_grip = display.matrix_world @ Vector((.075, .015, -.15))
-        support_grip = display.matrix_world @ Vector((-.08, -.32, -.05))
+        support_grip = display.matrix_world @ Vector((-.04, -.20, -.08))
         socket_errors = {
             'main_hand_m': round(
                 (char_main.matrix_world.translation-main_grip).length, 4),
@@ -897,10 +931,15 @@ def validate(path):
     return data
 
 
-def render_quality_previews(arm, output_dir):
+def render_quality_previews(arm, output_dir, views=None):
     output_dir = Path(output_dir)
     animation_dir = output_dir/'animations'
-    animation_dir.mkdir(parents=True, exist_ok=True)
+    requested_views = set(views) if views else {
+        'officer_front', 'officer_side', 'gameplay_angle',
+        'door_closed', 'door_open', 'animations',
+    }
+    if 'animations' in requested_views:
+        animation_dir.mkdir(parents=True, exist_ok=True)
     scene = bpy.context.scene
     camera = bpy.data.objects['SHOWCASE_Camera']
     environment = bpy.data.objects.get('Env_QualityRoom')
@@ -908,6 +947,10 @@ def render_quality_previews(arm, output_dir):
     character = bpy.data.objects.get('Char_Officer')
     character_objects = asset_descendants(character) if character else []
     room_visibility = {obj: obj.hide_render for obj in room_objects}
+    collision_visibility = {
+        obj: obj.hide_render for obj in bpy.data.objects
+        if obj.get('collision_proxy')
+    }
     character_visibility = {obj: obj.hide_render for obj in character_objects}
     old_camera = scene.camera
     old_frame = scene.frame_current
@@ -921,7 +964,10 @@ def render_quality_previews(arm, output_dir):
     previews = []
 
     def render(path):
+        for proxy in collision_visibility:
+            proxy.hide_render = True
         scene.render.filepath = str(path)
+        bpy.context.view_layer.update()
         bpy.ops.render.render(write_still=True)
         previews.append(str(path.relative_to(ROOT)))
 
@@ -930,52 +976,65 @@ def render_quality_previews(arm, output_dir):
             obj.hide_render = True
         arm.animation_data.action = bpy.data.actions.get('Anim_RifleReadyIdle')
         scene.frame_set(1)
-        for name, location, target in [
-                ('officer_front.png', (0, -4.2, 1.0), (0, -.35, .96)),
-                ('officer_side.png', (3.8, -.25, 1.0), (0, -.35, .96))]:
+        for view_name, filename, location, target in [
+                ('officer_front', 'officer_front.png',
+                 (0, -4.2, 1.0), (0, -.35, .96)),
+                ('officer_side', 'officer_side.png',
+                 (3.8, -.25, 1.0), (0, -.35, .96))]:
+            if view_name not in requested_views:
+                continue
             camera.location = location
             point_camera(camera, target)
-            render(output_dir/name)
+            render(output_dir/filename)
 
-        for obj in room_objects:
-            obj.hide_render = False
-            if obj.name in {'Room_Roof_Section', 'Room_Wall_South', 'Room_Wall_West'}:
+        if 'gameplay_angle' in requested_views:
+            for obj in room_objects:
+                obj.hide_render = False
+                if obj.name in {'Room_Roof_Section', 'Room_Wall_South', 'Room_Wall_West'}:
+                    obj.hide_render = True
+            camera.location = (2.0, -2.2, 2.75)
+            point_camera(camera, (.2, .5, .95))
+            render(output_dir/'gameplay_angle.png')
+
+        door_views = [view for view in ('door_closed', 'door_open')
+                      if view in requested_views]
+        if door_views:
+            for obj in character_objects:
                 obj.hide_render = True
-        camera.location = (2.0, -2.2, 2.75)
-        point_camera(camera, (.2, .5, .95))
-        render(output_dir/'gameplay_angle.png')
-
-        for obj in character_objects:
-            obj.hide_render = True
-        for obj in room_objects:
-            obj.hide_render = False
-        camera.location = (0, 5.4, 1.35)
-        point_camera(camera, (0, 2.82, 1.18))
-        for side, frame in (('closed', 1), ('open', 24)):
-            scene.frame_set(frame)
-            render(output_dir/f'door_{side}.png')
-
-        for obj in room_objects:
-            obj.hide_render = True
-        for obj in character_objects:
-            obj.hide_render = False
-        camera.location = (0, -4.2, 1.0)
-        point_camera(camera, (0, -.35, .96))
-        for name in ('Anim_RifleReadyIdle', 'Anim_Walk_Forward',
-                     'Anim_CrouchIdle', 'Anim_RifleRecoil'):
-            clip = bpy.data.actions[name]
-            arm.animation_data.action = clip
-            start = int(clip['frame_start'])
-            end = int(clip['frame_end'])
-            step = max(1, math.ceil((end-start)/7))
-            frames = list(range(start, end+1, step))
-            if frames[-1] != end:
-                frames.append(end)
-            for frame in frames:
+            for obj in room_objects:
+                obj.hide_render = False
+            camera.location = (0, 5.4, 1.35)
+            point_camera(camera, (0, 2.82, 1.18))
+            for side, frame in (('closed', 1), ('open', 24)):
+                if f'door_{side}' not in door_views:
+                    continue
                 scene.frame_set(frame)
-                render(animation_dir/f'{name}_{frame:03}.png')
+                render(output_dir/f'door_{side}.png')
+
+        if 'animations' in requested_views:
+            for obj in room_objects:
+                obj.hide_render = True
+            for obj in character_objects:
+                obj.hide_render = False
+            camera.location = (0, -4.2, 1.0)
+            point_camera(camera, (0, -.35, .96))
+            for name in ('Anim_RifleReadyIdle', 'Anim_Walk_Forward',
+                         'Anim_CrouchIdle', 'Anim_RifleRecoil'):
+                clip = bpy.data.actions[name]
+                arm.animation_data.action = clip
+                start = int(clip['frame_start'])
+                end = int(clip['frame_end'])
+                step = max(1, math.ceil((end-start)/7))
+                frames = list(range(start, end+1, step))
+                if frames[-1] != end:
+                    frames.append(end)
+                for frame in frames:
+                    scene.frame_set(frame)
+                    render(animation_dir/f'{name}_{frame:03}.png')
     finally:
         for obj, hidden in room_visibility.items():
+            obj.hide_render = hidden
+        for obj, hidden in collision_visibility.items():
             obj.hide_render = hidden
         for obj, hidden in character_visibility.items():
             obj.hide_render = hidden

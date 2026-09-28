@@ -1,0 +1,340 @@
+{
+  "blender": "5.2.2 LTS",
+  "structural_validation": {
+    "status": "passed",
+    "checks": [
+      {
+        "name": "metric_units",
+        "pass": true,
+        "details": null
+      },
+      {
+        "name": "asset_root_Char_Officer",
+        "pass": true,
+        "details": null
+      },
+      {
+        "name": "asset_root_Equip_Carbine",
+        "pass": true,
+        "details": null
+      },
+      {
+        "name": "asset_root_Env_QualityRoom",
+        "pass": true,
+        "details": null
+      },
+      {
+        "name": "character_hand_attachments",
+        "pass": true,
+        "details": null
+      },
+      {
+        "name": "weapon_attachments",
+        "pass": true,
+        "details": null
+      },
+      {
+        "name": "weapon_barrel_and_muzzle_alignment",
+        "pass": true,
+        "details": {
+          "muzzle_tip_error_m": 0.0,
+          "faces_character_forward": true
+        }
+      },
+      {
+        "name": "door_pivots_and_proxies",
+        "pass": true,
+        "details": null
+      },
+      {
+        "name": "armature_and_sample_actions",
+        "pass": true,
+        "details": null
+      },
+      {
+        "name": "balanced_arm_segment_lengths",
+        "pass": true,
+        "details": {
+          "L": {
+            "upper_arm_m": 0.3344,
+            "forearm_m": 0.3324
+          },
+          "R": {
+            "upper_arm_m": 0.2922,
+            "forearm_m": 0.3096
+          }
+        }
+      },
+      {
+        "name": "single_armature_skinning",
+        "pass": true,
+        "details": {
+          "deforming_meshes": 26
+        }
+      },
+      {
+        "name": "showcase_weapon_excluded_from_character_export",
+        "pass": true,
+        "details": null
+      },
+      {
+        "name": "action_frame_metadata",
+        "pass": true,
+        "details": {
+          "missing_or_invalid": []
+        }
+      },
+      {
+        "name": "loop_endpoint_channels_match",
+        "pass": true,
+        "details": {
+          "mismatched_channels": []
+        }
+      },
+      {
+        "name": "explicit_action_start_end_channels",
+        "pass": true,
+        "details": {
+          "Anim_CrouchIdle": true,
+          "Anim_RifleReadyIdle": true,
+          "Anim_RifleRecoil": true,
+          "Anim_Walk_Forward": true
+        }
+      },
+      {
+        "name": "door_proxy_alignment_closed_and_open",
+        "pass": true,
+        "details": {
+          "1": {
+            "L": 0.0,
+            "R": 0.0
+          },
+          "24": {
+            "L": 0.0,
+            "R": 0.0
+          }
+        }
+      },
+      {
+        "name": "two_hand_weapon_grip_alignment",
+        "pass": true,
+        "details": {
+          "main_hand_m": 0.0,
+          "support_hand_m": 0.0
+        }
+      }
+    ]
+  },
+  "visual_quality_validation": {
+    "status": "passed",
+    "checks": [
+      {
+        "name": "dimensions_Char_Officer",
+        "pass": true,
+        "details": {
+          "target_m": [
+            0.92,
+            0.95,
+            1.82
+          ],
+          "tolerance_m": [
+            0.28,
+            0.35,
+            0.08
+          ],
+          "measured_m": [
+            0.852,
+            0.92,
+            1.85
+          ]
+        }
+      },
+      {
+        "name": "dimensions_Equip_Carbine",
+        "pass": true,
+        "details": {
+          "target_m": [
+            0.14,
+            0.93,
+            0.44
+          ],
+          "tolerance_m": [
+            0.05,
+            0.15,
+            0.06
+          ],
+          "measured_m": [
+            0.1875,
+            0.9325,
+            0.435
+          ]
+        }
+      },
+      {
+        "name": "dimensions_Env_QualityRoom",
+        "pass": true,
+        "details": {
+          "target_m": [
+            6.2,
+            6.2,
+            3.3
+          ],
+          "tolerance_m": [
+            0.15,
+            0.15,
+            0.12
+          ],
+          "measured_m": [
+            6.2,
+            6.2,
+            3.295
+          ]
+        }
+      },
+      {
+        "name": "evaluated_triangle_budgets",
+        "pass": true,
+        "details": {
+          "Char_Officer": {
+            "count": 7800,
+            "budget": 12000
+          },
+          "Equip_Carbine": {
+            "count": 908,
+            "budget": 2000
+          },
+          "Env_QualityRoom": {
+            "count": 1512,
+            "budget": 12000
+          }
+        }
+      },
+      {
+        "name": "explicit_doorway_clearance",
+        "pass": true,
+        "details": {
+          "clear_width_m": 2.36,
+          "clear_height_m": 2.32
+        }
+      }
+    ],
+    "human_visual_review": {
+      "status": "reviewed_with_limitations",
+      "findings": [
+        "The front view foreshortens the rifle because it aims toward the camera.",
+        "The model remains an angular procedural low-poly blockout.",
+        "The gameplay view crops the upper doorway near the top edge."
+      ]
+    }
+  },
+  "unity_compatibility": {
+    "status": "not_run",
+    "checks": [
+      "Humanoid avatar mapping",
+      "animation playback",
+      "materials and import settings"
+    ]
+  },
+  "round_trip": {
+    "status": "not_run",
+    "reason": "run FBX export and clean-scene import verification"
+  },
+  "completion_status": "pending_rendered_visual_review_and_round_trip",
+  "passed": true,
+  "dimensions_m": {
+    "Char_Officer": [
+      0.852,
+      0.92,
+      1.85
+    ],
+    "Equip_Carbine": [
+      0.1875,
+      0.9325,
+      0.435
+    ],
+    "Env_QualityRoom": [
+      6.2,
+      6.2,
+      3.295
+    ]
+  },
+  "evaluated_triangle_counts": {
+    "Char_Officer": 7800,
+    "Equip_Carbine": 908,
+    "Env_QualityRoom": 1512
+  },
+  "actions": {
+    "Anim_CrouchIdle": {
+      "metadata_range": [
+        1,
+        30
+      ],
+      "actual_range": [
+        1.0,
+        30.0
+      ],
+      "loop": true,
+      "metadata_valid": true
+    },
+    "Anim_Door_L": {
+      "metadata_range": [
+        1,
+        24
+      ],
+      "actual_range": [
+        1.0,
+        24.0
+      ],
+      "loop": false,
+      "metadata_valid": true
+    },
+    "Anim_Door_R": {
+      "metadata_range": [
+        1,
+        24
+      ],
+      "actual_range": [
+        1.0,
+        24.0
+      ],
+      "loop": false,
+      "metadata_valid": true
+    },
+    "Anim_RifleReadyIdle": {
+      "metadata_range": [
+        1,
+        40
+      ],
+      "actual_range": [
+        1.0,
+        40.0
+      ],
+      "loop": true,
+      "metadata_valid": true
+    },
+    "Anim_RifleRecoil": {
+      "metadata_range": [
+        1,
+        12
+      ],
+      "actual_range": [
+        1.0,
+        12.0
+      ],
+      "loop": false,
+      "metadata_valid": true
+    },
+    "Anim_Walk_Forward": {
+      "metadata_range": [
+        1,
+        25
+      ],
+      "actual_range": [
+        1.0,
+        25.0
+      ],
+      "loop": true,
+      "metadata_valid": true
+    }
+  }
+}
