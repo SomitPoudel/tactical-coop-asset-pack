@@ -1230,6 +1230,9 @@ def render_quality_previews(arm, output_dir, views=None):
         if 'animations' in requested_views:
             for obj in room_objects:
                 obj.hide_render = True
+            floor = bpy.data.objects.get('Room_Floor')
+            if floor:
+                floor.hide_render = False
             for obj in character_objects:
                 obj.hide_render = False
             scene.render.resolution_x = 480
@@ -1244,8 +1247,11 @@ def render_quality_previews(arm, output_dir, views=None):
                 arm.animation_data.action = clip
                 start = int(clip['frame_start'])
                 end = int(clip['frame_end'])
-                step = max(1, math.ceil((end-start)/7))
-                frames = list(range(start, end+1, step))
+                if name in {'Anim_Walk_Forward', 'Anim_RifleRecoil'}:
+                    frames = list(range(start, end+1))
+                else:
+                    step = max(1, math.ceil((end-start)/7))
+                    frames = list(range(start, end+1, step))
                 if frames[-1] != end:
                     frames.append(end)
                 for frame in frames:
@@ -1292,14 +1298,14 @@ def build_animations(arm):
         'foot.R': {'rotation': (-.10, 0, 0)},
     }
     crouch = {
-        'root': {'location': (0, -.11, 0)},
-        'thigh.L': {'rotation': (.58, 0, 0)},
-        'thigh.R': {'rotation': (.58, 0, 0)},
-        'shin.L': {'rotation': (-1.12, 0, 0)},
-        'shin.R': {'rotation': (-1.12, 0, 0)},
-        'foot.L': {'rotation': (.54, 0, 0)},
-        'foot.R': {'rotation': (.54, 0, 0)},
-        'spine_01': {'rotation': (-.12, 0, 0)},
+        'root': {'location': (0, -.24, 0)},
+        'thigh.L': {'rotation': (1.2, 0, 0)},
+        'thigh.R': {'rotation': (1.2, 0, 0)},
+        'shin.L': {'rotation': (-1.2, 0, 0)},
+        'shin.R': {'rotation': (-1.2, 0, 0)},
+        'foot.L': {'rotation': (0, 0, 0)},
+        'foot.R': {'rotation': (0, 0, 0)},
+        'spine_01': {'rotation': (-.18, 0, 0)},
     }
     recoil = {
         'spine_02': {'rotation': (-.10, 0, 0)},

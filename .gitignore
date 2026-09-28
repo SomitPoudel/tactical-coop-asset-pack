@@ -28,6 +28,7 @@ Previews/animations/*.gif
 !/Previews/animations/walk_review.gif
 !/Previews/animations/crouch_review.gif
 !/Previews/animations/recoil_review.gif
+/Unity_Handoff_QualitySample.zip
 
 # Keep source and scripts tracked
 !Scripts/*.py

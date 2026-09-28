@@ -17,10 +17,10 @@ Compact animated reviews are generated from those frames:
 - `Previews/animations/crouch_review.gif`
 - `Previews/animations/recoil_review.gif`
 
-These four named GIFs are the only animation files allowlisted for Git tracking. The stills and GIFs are visual-review aids, not numerical validation results.
+These four named GIFs are the only animation files allowlisted for Git tracking. Walk and recoil include every authored frame; all GIF timing is derived from sampled Blender frame numbers at 24 fps. Idle, walk, and crouch loop infinitely with the duplicate endpoint omitted; recoil is one-shot. The stills and GIFs are visual-review aids, not numerical validation results.
 
 Current status:
 - generated locally with Blender 5.2.2 LTS
-- three-quarter animation framing includes feet and weapon contact
+- three-quarter animation framing includes feet and weapon contact over the existing room floor
 - doorway stills use neutral fill lighting and hide collision proxies
 - rendered files have not been visually inspected in this session

@@ -184,6 +184,8 @@ def run():
 
     crouch_frames = checks['Anim_CrouchIdle']['frames']
     idle_frames = checks['Anim_RifleReadyIdle']['frames']
+    checks['Anim_CrouchIdle']['minimum_pelvis_z_m'] = min(
+        frame['pelvis_z_m'] for frame in crouch_frames.values())
     crouch_drop = min(frame['pelvis_z_m'] for frame in crouch_frames.values()) - \
         idle_frames['1']['pelvis_z_m']
     checks['crouch_body_drop_m'] = round(crouch_drop, 5)
@@ -215,7 +217,9 @@ def run():
         'maximum_foot_float_m': .12,
         'maximum_joint_seam_gap_m': .035,
         'maximum_planted_foot_drift_speed_mps': .10,
-        'minimum_crouch_body_drop_m': .10,
+        'maximum_crouch_foot_float_m': .02,
+        'minimum_crouch_pelvis_height_m': .50,
+        'minimum_crouch_body_drop_m': .20,
         'maximum_loop_endpoint_matrix_delta': .001,
         'maximum_recoil_endpoint_matrix_delta': .001,
     }
@@ -237,6 +241,12 @@ def run():
         failures.append('Anim_Walk_Forward:planted_foot_sliding')
     if crouch_drop > -limits['minimum_crouch_body_drop_m']:
         failures.append('Anim_CrouchIdle:body_not_lowered')
+    if checks['Anim_CrouchIdle']['max_foot_float_m'] > \
+            limits['maximum_crouch_foot_float_m']:
+        failures.append('Anim_CrouchIdle:feet_not_grounded')
+    if checks['Anim_CrouchIdle']['minimum_pelvis_z_m'] < \
+            limits['minimum_crouch_pelvis_height_m']:
+        failures.append('Anim_CrouchIdle:pelvis_too_low')
     if any(delta > limits['maximum_loop_endpoint_matrix_delta']
            for delta in loop_deltas.values()):
         failures.append('loop_endpoint_transforms')
@@ -244,6 +254,7 @@ def run():
         failures.append('recoil_does_not_return')
     report = {
         'blender': bpy.app.version_string,
+        'scene_fps': round(fps, 5),
         'status': 'failed' if failures else 'passed',
         'human_visual_review': 'pending; numerical checks do not establish visual quality',
         'locomotion': {

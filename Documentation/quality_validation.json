@@ -96,8 +96,8 @@
         "pass": true,
         "details": {
           "Anim_RifleReadyIdle": true,
-          "Anim_CrouchIdle": true,
           "Anim_RifleRecoil": true,
+          "Anim_CrouchIdle": true,
           "Anim_Walk_Forward": true
         }
       },

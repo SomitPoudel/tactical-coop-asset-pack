@@ -1,5 +1,6 @@
 {
   "blender": "5.2.2 LTS",
+  "scene_fps": 24.0,
   "status": "passed",
   "human_visual_review": "pending; numerical checks do not establish visual quality",
   "locomotion": {
@@ -1753,727 +1754,727 @@
       "frames": {
         "1": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "2": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "3": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "4": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "5": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "6": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "7": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "8": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "9": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "10": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "11": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "12": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "13": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "14": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "15": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "16": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "17": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "18": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "19": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "20": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "21": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "22": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "23": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "24": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "25": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "26": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "27": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "28": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "29": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         },
         "30": {
           "sole_min_z_m": [
-            5e-05,
-            5e-05
+            0.00064,
+            0.00064
           ],
           "sole_max_z_m": [
-            0.0651,
-            0.0651
+            0.0805,
+            0.0805
           ],
           "sole_center_xy_m": [
             [
-              -0.18959,
-              -0.09194
+              -0.2099,
+              0.23686
             ],
             [
-              0.18959,
-              -0.09194
+              0.2099,
+              0.23686
             ]
           ],
           "main_hand_error_m": 0.0,
           "support_hand_error_m": 0.0,
-          "pelvis_z_m": 0.71,
+          "pelvis_z_m": 0.58,
           "max_joint_seam_gap_m": 0.01256
         }
       },
       "max_foot_penetration_m": 0.0,
-      "max_foot_float_m": 5e-05,
+      "max_foot_float_m": 0.00064,
       "max_main_hand_error_m": 0.0,
       "max_support_hand_error_m": 0.0,
       "max_joint_seam_gap_m": 0.01256,
@@ -2542,7 +2543,8 @@
           "worst_frame": 1,
           "minimum_connector_covered_vertex_count": 0
         }
-      }
+      },
+      "minimum_pelvis_z_m": 0.58
     },
     "Anim_RifleRecoil": {
       "frame_range": [
@@ -2912,7 +2914,7 @@
         }
       }
     },
-    "crouch_body_drop_m": -0.11
+    "crouch_body_drop_m": -0.24
   },
   "loop_endpoint_matrix_deltas": {
     "Anim_RifleReadyIdle": 0.0,
@@ -2948,7 +2950,9 @@
     "maximum_foot_float_m": 0.12,
     "maximum_joint_seam_gap_m": 0.035,
     "maximum_planted_foot_drift_speed_mps": 0.1,
-    "minimum_crouch_body_drop_m": 0.1,
+    "maximum_crouch_foot_float_m": 0.02,
+    "minimum_crouch_pelvis_height_m": 0.5,
+    "minimum_crouch_body_drop_m": 0.2,
     "maximum_loop_endpoint_matrix_delta": 0.001,
     "maximum_recoil_endpoint_matrix_delta": 0.001
   },
