@@ -1,15 +1,22 @@
 {
-  "source_fbx": "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\source\\swat lp.fbx",
-  "texture_directory": "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\textures",
-  "blend_file": "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\inspection\\swat_operator_remastered_inspection.blend",
+  "source_fbx": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\source\\swat lp.fbx",
+  "texture_directory": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\textures",
+  "blend_file": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\inspection\\swat_operator_remastered_inspection.blend",
   "previews": [
-    "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\inspection\\previews\\swat_operator_front.png",
-    "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\inspection\\previews\\swat_operator_side.png",
-    "C:\\Users\\poude\\Downloads\\swat-operator-remastered\\inspection\\previews\\swat_operator_three_quarter.png"
+    "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\inspection\\previews\\swat_operator_front.png",
+    "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\inspection\\previews\\swat_operator_side.png",
+    "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\inspection\\previews\\swat_operator_three_quarter.png",
+    "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\inspection\\previews\\swat_operator_gameplay_angle.png"
   ],
   "missing_textures": [],
   "import_errors": [],
   "licence_attribution_files_found": [],
+  "workflow_defaults": {
+    "repository_root": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack",
+    "asset_root": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered",
+    "source_default": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\source\\swat lp.fbx",
+    "output_default": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\inspection"
+  },
   "import": {
     "objects": 33,
     "mesh_objects": 32,
@@ -64,6 +71,111 @@
       "backClamp_low": 195,
       "backAim_low": 686,
       "topGun_low": 1355
+    }
+  },
+  "material_diagnostics": {
+    "Body.001": {
+      "nodes_enabled": true,
+      "principled_shader_found": true,
+      "base_color": {
+        "node_type": "MIX_RGB",
+        "node_label": ""
+      },
+      "roughness": {
+        "node_type": "TEX_IMAGE",
+        "node_label": "Body_Roughness.png",
+        "image": "Body_Roughness.png",
+        "color_space": "Non-Color"
+      },
+      "normal": {
+        "node_type": "NORMAL_MAP",
+        "node_label": "",
+        "normal_image": "Body_Normal_OpenGL.png",
+        "normal_color_space": "Non-Color"
+      },
+      "metallic": null,
+      "emission": null,
+      "alpha_connected": true,
+      "ao_multiply_factor": 0.44999998807907104
+    },
+    "Eyelashes.001": {
+      "nodes_enabled": true,
+      "principled_shader_found": true,
+      "base_color": {
+        "node_type": "TEX_IMAGE",
+        "node_label": "eyelashes01.png",
+        "image": "eyelashes01.png",
+        "color_space": "sRGB"
+      },
+      "roughness": null,
+      "normal": null,
+      "metallic": null,
+      "emission": null,
+      "alpha_connected": true,
+      "ao_multiply_factor": null
+    },
+    "HeadGear.001": {
+      "nodes_enabled": true,
+      "principled_shader_found": true,
+      "base_color": {
+        "node_type": "MIX_RGB",
+        "node_label": ""
+      },
+      "roughness": {
+        "node_type": "TEX_IMAGE",
+        "node_label": "HeadGear_Roughness.png",
+        "image": "HeadGear_Roughness.png",
+        "color_space": "Non-Color"
+      },
+      "normal": {
+        "node_type": "NORMAL_MAP",
+        "node_label": "",
+        "normal_image": "HeadGear_Normal_OpenGL.png",
+        "normal_color_space": "Non-Color"
+      },
+      "metallic": {
+        "node_type": "TEX_IMAGE",
+        "node_label": "HeadGear_Metallic.png",
+        "image": "HeadGear_Metallic.png",
+        "color_space": "Non-Color"
+      },
+      "emission": {
+        "node_type": "TEX_IMAGE",
+        "node_label": "HeadGear_Emissive.png",
+        "image": "HeadGear_Emissive.png",
+        "color_space": "sRGB"
+      },
+      "alpha_connected": true,
+      "ao_multiply_factor": 0.44999998807907104
+    },
+    "KSVR": {
+      "nodes_enabled": true,
+      "principled_shader_found": true,
+      "base_color": {
+        "node_type": "MIX_RGB",
+        "node_label": ""
+      },
+      "roughness": {
+        "node_type": "TEX_IMAGE",
+        "node_label": "KSVR_Roughness.png",
+        "image": "KSVR_Roughness.png",
+        "color_space": "Non-Color"
+      },
+      "normal": {
+        "node_type": "NORMAL_MAP",
+        "node_label": "",
+        "normal_image": "KSVR_Normal_OpenGL.png",
+        "normal_color_space": "Non-Color"
+      },
+      "metallic": null,
+      "emission": {
+        "node_type": "TEX_IMAGE",
+        "node_label": "KSVR_Emissive.png",
+        "image": "KSVR_Emissive.png",
+        "color_space": "sRGB"
+      },
+      "alpha_connected": true,
+      "ao_multiply_factor": 0.44999998807907104
     }
   },
   "scale_bounds_meters": {
@@ -338,6 +450,30 @@
     }
   ],
   "licence_attribution_note": "No licence, readme, or attribution files were included in the downloaded bundle. The original download is preserved and this inspection output remains local; do not publish the asset until its licence and attribution requirements are verified.",
+  "render_settings": {
+    "engine": "BLENDER_EEVEE",
+    "view_transform": "AgX",
+    "look": "None",
+    "exposure_ev": -0.550000011920929,
+    "world_strength": 0.3499999940395355,
+    "area_lights": [
+      {
+        "name": "Inspection_Key",
+        "power_watts": 520.0,
+        "size_m": 1.5644618272781372
+      },
+      {
+        "name": "Inspection_Fill",
+        "power_watts": 240.0,
+        "size_m": 1.6564890146255493
+      },
+      {
+        "name": "Inspection_Rim",
+        "power_watts": 360.0,
+        "size_m": 1.4724347591400146
+      }
+    ]
+  },
   "texture_paths": [
     {
       "image": "Body_Base_color.png",
@@ -441,5 +577,3410 @@
       "relative": true,
       "resolves": true
     }
-  ]
+  ],
+  "game_ready_working_copy": {
+    "working_blend": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\working\\SwatOperatorRemastered_GameReady.blend",
+    "unity_fbx": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\working\\SwatOperatorRemastered_GameReady.fbx",
+    "preserved_reference_action": "Reference_Imported_Static",
+    "generated_clips": {
+      "SWAT_RifleReadyIdle": {
+        "frame_range": [
+          1.0,
+          61.0
+        ],
+        "duration_seconds": 2.0,
+        "keyframe_points": 46988
+      },
+      "SWAT_InPlaceWalk": {
+        "frame_range": [
+          1.0,
+          33.0
+        ],
+        "duration_seconds": 1.0666666666666667,
+        "keyframe_points": 25428
+      },
+      "SWAT_Crouch": {
+        "frame_range": [
+          1.0,
+          32.0
+        ],
+        "duration_seconds": 1.0333333333333334,
+        "keyframe_points": 24658
+      }
+    },
+    "socket_checks": {
+      "weapon_matrix_max_error_on_attach": 0.0,
+      "weapon_translation_followed_right_hand_m": 0.10743946641238052,
+      "weapon_children_before": [
+        "backAim_low",
+        "backClamp_low",
+        "backScrew_low",
+        "backSight_low",
+        "barrel_low",
+        "boneShape_low",
+        "bottomGun_low",
+        "cable_low",
+        "cheekPad_low",
+        "eyeShape_low",
+        "frontClamp_low",
+        "frontGrip_low",
+        "frontSIght_low",
+        "handleButton_low",
+        "handle_low",
+        "light_low",
+        "mag_low",
+        "pin_low",
+        "pipe_low",
+        "sideKnobs_low",
+        "sideRail_low",
+        "slider_low",
+        "stockBack_low",
+        "stockButton_low",
+        "stockFrame_low",
+        "stockThing_low",
+        "tShape_low",
+        "tape_low",
+        "topRail_low",
+        "trigger_low"
+      ],
+      "weapon_children_after": [
+        "SOCKET_LeftHand_Grip",
+        "SOCKET_Muzzle",
+        "SOCKET_RightHand_Grip",
+        "backAim_low",
+        "backClamp_low",
+        "backScrew_low",
+        "backSight_low",
+        "barrel_low",
+        "boneShape_low",
+        "bottomGun_low",
+        "cable_low",
+        "cheekPad_low",
+        "eyeShape_low",
+        "frontClamp_low",
+        "frontGrip_low",
+        "frontSIght_low",
+        "handleButton_low",
+        "handle_low",
+        "light_low",
+        "mag_low",
+        "pin_low",
+        "pipe_low",
+        "sideKnobs_low",
+        "sideRail_low",
+        "slider_low",
+        "stockBack_low",
+        "stockButton_low",
+        "stockFrame_low",
+        "stockThing_low",
+        "tShape_low",
+        "tape_low",
+        "topRail_low",
+        "trigger_low"
+      ],
+      "right_hand_grip_target": "SOCKET_RightHand_Grip",
+      "left_hand_grip_target": "SOCKET_LeftHand_Grip",
+      "muzzle_socket": "SOCKET_Muzzle"
+    },
+    "crouch_pelvis_drop_m": 0.21999996900558472,
+    "evaluated_triangle_count": {
+      "total": 71818,
+      "by_mesh": {
+        "sol_8_low": 50898,
+        "tShape_low": 58,
+        "trigger_low": 224,
+        "topRail_low": 3007,
+        "tape_low": 177,
+        "stockThing_low": 1152,
+        "stockFrame_low": 586,
+        "stockButton_low": 74,
+        "stockBack_low": 1356,
+        "slider_low": 240,
+        "sideRail_low": 36,
+        "sideKnobs_low": 960,
+        "pipe_low": 120,
+        "pin_low": 1264,
+        "mag_low": 508,
+        "light_low": 900,
+        "handleButton_low": 96,
+        "handle_low": 698,
+        "frontSIght_low": 224,
+        "frontGrip_low": 600,
+        "frontClamp_low": 196,
+        "eyeShape_low": 96,
+        "cheekPad_low": 112,
+        "cable_low": 1400,
+        "bottomGun_low": 3087,
+        "boneShape_low": 118,
+        "barrel_low": 320,
+        "backSight_low": 228,
+        "backScrew_low": 120,
+        "backClamp_low": 196,
+        "backAim_low": 878,
+        "topGun_low": 1889
+      }
+    },
+    "clip_pose_checks": {
+      "SWAT_RifleReadyIdle": {
+        "frame_range": [
+          1,
+          61
+        ],
+        "sampled_frames": [
+          1,
+          31,
+          61
+        ],
+        "frame_count_evaluated": 61,
+        "frames": [
+          {
+            "frame": 1,
+            "hips_z_m": 0.9492169618606567,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005730662494897842,
+                "target_error_m": 6.112160434598836e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0022776685655117035,
+                "target_error_m": 1.0881929415619235e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264708160790639,
+            "left_hand_foregrip_error_m": 0.05296372278388252,
+            "minimum_limb_length_ratio": 0.9999893087555589,
+            "maximum_limb_length_ratio": 1.0000130713510742
+          },
+          {
+            "frame": 2,
+            "hips_z_m": 0.9496350884437561,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005727698095142841,
+                "target_error_m": 6.115680998552433e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0018950533121824265,
+                "target_error_m": 0.0003997146076813463
+              }
+            },
+            "right_hand_stock_error_m": 0.06264698776509672,
+            "left_hand_foregrip_error_m": 0.052963441711329516,
+            "minimum_limb_length_ratio": 0.9999899124126146,
+            "maximum_limb_length_ratio": 1.0000129147617736
+          },
+          {
+            "frame": 3,
+            "hips_z_m": 0.9500486254692078,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005724149756133556,
+                "target_error_m": 6.089628543142987e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0015018880367279053,
+                "target_error_m": 0.0008017227409133447
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701331637071,
+            "left_hand_foregrip_error_m": 0.05296356109178963,
+            "minimum_limb_length_ratio": 0.9999895593302299,
+            "maximum_limb_length_ratio": 1.0000127183133436
+          },
+          {
+            "frame": 4,
+            "hips_z_m": 0.9504530429840088,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005720736458897591,
+                "target_error_m": 6.104102436878632e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0011175163090229034,
+                "target_error_m": 0.0011947945409203893
+              }
+            },
+            "right_hand_stock_error_m": 0.06264692040259717,
+            "left_hand_foregrip_error_m": 0.05296343923854384,
+            "minimum_limb_length_ratio": 0.9999896618380318,
+            "maximum_limb_length_ratio": 1.0000128222317208
+          },
+          {
+            "frame": 5,
+            "hips_z_m": 0.9508439302444458,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005717167630791664,
+                "target_error_m": 6.11834249087932e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007462725043296814,
+                "target_error_m": 0.001574451155484019
+              }
+            },
+            "right_hand_stock_error_m": 0.0626469719697585,
+            "left_hand_foregrip_error_m": 0.05296356275748172,
+            "minimum_limb_length_ratio": 0.9999896618380318,
+            "maximum_limb_length_ratio": 1.0000130934159281
+          },
+          {
+            "frame": 6,
+            "hips_z_m": 0.951216995716095,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005713392049074173,
+                "target_error_m": 6.112735416963513e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0003911722160410136,
+                "target_error_m": 0.0019374595084576819
+              }
+            },
+            "right_hand_stock_error_m": 0.06264694130820823,
+            "left_hand_foregrip_error_m": 0.05296350699969849,
+            "minimum_limb_length_ratio": 0.9999895934994985,
+            "maximum_limb_length_ratio": 1.000012804437479
+          },
+          {
+            "frame": 7,
+            "hips_z_m": 0.9515681266784668,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005709683522582054,
+                "target_error_m": 6.104671358288296e-06
+              },
+              "Right": {
+                "sole_min_z_m": -5.7768022088566795e-05,
+                "target_error_m": 0.002278427565112795
+              }
+            },
+            "right_hand_stock_error_m": 0.06264703236367726,
+            "left_hand_foregrip_error_m": 0.05296367064957004,
+            "minimum_limb_length_ratio": 0.9999897757355772,
+            "maximum_limb_length_ratio": 1.0000128791732927
+          },
+          {
+            "frame": 8,
+            "hips_z_m": 0.9518935084342957,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005705852061510086,
+                "target_error_m": 6.063165461064908e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.000251835270319134,
+                "target_error_m": 0.002594962995352288
+              }
+            },
+            "right_hand_stock_error_m": 0.06264689810327102,
+            "left_hand_foregrip_error_m": 0.0529637320739506,
+            "minimum_limb_length_ratio": 0.9999900376998825,
+            "maximum_limb_length_ratio": 1.000012580230004
+          },
+          {
+            "frame": 9,
+            "hips_z_m": 0.952189564704895,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005702279508113861,
+                "target_error_m": 6.0657716359445715e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0005334262386895716,
+                "target_error_m": 0.0028827651245723358
+              }
+            },
+            "right_hand_stock_error_m": 0.06264702167860357,
+            "left_hand_foregrip_error_m": 0.052963300848222455,
+            "minimum_limb_length_ratio": 0.9999894796019323,
+            "maximum_limb_length_ratio": 1.0000127382428963
+          },
+          {
+            "frame": 10,
+            "hips_z_m": 0.9524530172348022,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005699393339455128,
+                "target_error_m": 6.080997276652122e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0007839148165658116,
+                "target_error_m": 0.0031388670771412804
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701378093923,
+            "left_hand_foregrip_error_m": 0.05296303610424621,
+            "minimum_limb_length_ratio": 0.999989935192119,
+            "maximum_limb_length_ratio": 1.0000131339867877
+          },
+          {
+            "frame": 11,
+            "hips_z_m": 0.9526810646057129,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005696235224604607,
+                "target_error_m": 6.140145814273225e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.001001007971353829,
+                "target_error_m": 0.0033607575957715317
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701424550775,
+            "left_hand_foregrip_error_m": 0.05296369707734552,
+            "minimum_limb_length_ratio": 0.9999896618380318,
+            "maximum_limb_length_ratio": 1.0000128279258782
+          },
+          {
+            "frame": 12,
+            "hips_z_m": 0.9528711438179016,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005693704821169376,
+                "target_error_m": 6.108054521405018e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0011817460181191564,
+                "target_error_m": 0.0035455658970115615
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470370093609,
+            "left_hand_foregrip_error_m": 0.05296346832811249,
+            "minimum_limb_length_ratio": 0.9999900718691346,
+            "maximum_limb_length_ratio": 1.0000127731196125
+          },
+          {
+            "frame": 13,
+            "hips_z_m": 0.9530211687088013,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005691359750926495,
+                "target_error_m": 6.058126426104138e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0013244823785498738,
+                "target_error_m": 0.003691449161774826
+              }
+            },
+            "right_hand_stock_error_m": 0.06264703236367726,
+            "left_hand_foregrip_error_m": 0.0529633324106579,
+            "minimum_limb_length_ratio": 0.9999898212945918,
+            "maximum_limb_length_ratio": 1.0000127382428963
+          },
+          {
+            "frame": 14,
+            "hips_z_m": 0.9531295299530029,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005689977668225765,
+                "target_error_m": 6.1876746650641585e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0014274494023993611,
+                "target_error_m": 0.003796703009073246
+              }
+            },
+            "right_hand_stock_error_m": 0.062647070458273,
+            "left_hand_foregrip_error_m": 0.05296350856235968,
+            "minimum_limb_length_ratio": 0.999989935192119,
+            "maximum_limb_length_ratio": 1.00001332616452
+          },
+          {
+            "frame": 15,
+            "hips_z_m": 0.9531950354576111,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005688836798071861,
+                "target_error_m": 6.1456734029050515e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.001489902031607926,
+                "target_error_m": 0.003860568092797514
+              }
+            },
+            "right_hand_stock_error_m": 0.06264696825320776,
+            "left_hand_foregrip_error_m": 0.052963610770604345,
+            "minimum_limb_length_ratio": 0.9999900490896332,
+            "maximum_limb_length_ratio": 1.000013008715357
+          },
+          {
+            "frame": 16,
+            "hips_z_m": 0.9532169699668884,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005688355304300785,
+                "target_error_m": 6.10011025444306e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0015108698280528188,
+                "target_error_m": 0.0038819512048222263
+              }
+            },
+            "right_hand_stock_error_m": 0.0626471118048202,
+            "left_hand_foregrip_error_m": 0.052963258209712066,
+            "minimum_limb_length_ratio": 0.9999900490896332,
+            "maximum_limb_length_ratio": 1.0000132834583606
+          },
+          {
+            "frame": 17,
+            "hips_z_m": 0.9531950354576111,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.00568884052336216,
+                "target_error_m": 6.134032960520677e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0014899243833497167,
+                "target_error_m": 0.003860568092797514
+              }
+            },
+            "right_hand_stock_error_m": 0.06264697522174023,
+            "left_hand_foregrip_error_m": 0.05296370564619258,
+            "minimum_limb_length_ratio": 0.9999898896331098,
+            "maximum_limb_length_ratio": 1.0000129311324744
+          },
+          {
+            "frame": 18,
+            "hips_z_m": 0.9531295299530029,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005689976736903191,
+                "target_error_m": 6.181421069696113e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0014274605782702565,
+                "target_error_m": 0.0037967049741194393
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701656835028,
+            "left_hand_foregrip_error_m": 0.05296356031904586,
+            "minimum_limb_length_ratio": 0.9999897529560693,
+            "maximum_limb_length_ratio": 1.0000132592582025
+          },
+          {
+            "frame": 19,
+            "hips_z_m": 0.9530211687088013,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005691339261829853,
+                "target_error_m": 6.075581875239375e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0013244823785498738,
+                "target_error_m": 0.003691449161774826
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470212140351,
+            "left_hand_foregrip_error_m": 0.05296336387004164,
+            "minimum_limb_length_ratio": 0.9999898440740983,
+            "maximum_limb_length_ratio": 1.0000126699129999
+          },
+          {
+            "frame": 20,
+            "hips_z_m": 0.9528711438179016,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0056936731562018394,
+                "target_error_m": 6.094974541372975e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0011817385675385594,
+                "target_error_m": 0.003545564718640576
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704397788573,
+            "left_hand_foregrip_error_m": 0.0529632089770438,
+            "minimum_limb_length_ratio": 0.9999900946486353,
+            "maximum_limb_length_ratio": 1.000012706213258
+          },
+          {
+            "frame": 21,
+            "hips_z_m": 0.9526810646057129,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005696185864508152,
+                "target_error_m": 6.123941031740525e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0010010098339989781,
+                "target_error_m": 0.0033607552362857644
+              }
+            },
+            "right_hand_stock_error_m": 0.06264711412765912,
+            "left_hand_foregrip_error_m": 0.05296358211041585,
+            "minimum_limb_length_ratio": 0.9999896618380318,
+            "maximum_limb_length_ratio": 1.0000126699129999
+          },
+          {
+            "frame": 22,
+            "hips_z_m": 0.9524530172348022,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0056993719190359116,
+                "target_error_m": 6.097935814225474e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0007839055033400655,
+                "target_error_m": 0.0031388647138462537
+              }
+            },
+            "right_hand_stock_error_m": 0.06264708346617844,
+            "left_hand_foregrip_error_m": 0.052963153012821534,
+            "minimum_limb_length_ratio": 0.9999900490896332,
+            "maximum_limb_length_ratio": 1.000013272070051
+          },
+          {
+            "frame": 23,
+            "hips_z_m": 0.952189564704895,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005702265538275242,
+                "target_error_m": 6.1040859538496375e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0005334225133992732,
+                "target_error_m": 0.0028827690559189486
+              }
+            },
+            "right_hand_stock_error_m": 0.06264700123758794,
+            "left_hand_foregrip_error_m": 0.05296340355485988,
+            "minimum_limb_length_ratio": 0.9999893884838701,
+            "maximum_limb_length_ratio": 1.0000128200964118
+          },
+          {
+            "frame": 24,
+            "hips_z_m": 0.9518935084342957,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005705812945961952,
+                "target_error_m": 6.055891651944839e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.00025185017148032784,
+                "target_error_m": 0.002594962995352288
+              }
+            },
+            "right_hand_stock_error_m": 0.062647047694432,
+            "left_hand_foregrip_error_m": 0.052963316492065225,
+            "minimum_limb_length_ratio": 0.9999898668536042,
+            "maximum_limb_length_ratio": 1.0000125332531933
+          },
+          {
+            "frame": 25,
+            "hips_z_m": 0.9515681266784668,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005709671415388584,
+                "target_error_m": 6.10022826924095e-06
+              },
+              "Right": {
+                "sole_min_z_m": -5.775684621767141e-05,
+                "target_error_m": 0.002278425198119765
+              }
+            },
+            "right_hand_stock_error_m": 0.06264711784420121,
+            "left_hand_foregrip_error_m": 0.05296339067575726,
+            "minimum_limb_length_ratio": 0.9999897985150848,
+            "maximum_limb_length_ratio": 1.0000127289898897
+          },
+          {
+            "frame": 26,
+            "hips_z_m": 0.951216995716095,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005713391117751598,
+                "target_error_m": 6.124271031390938e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0003912094689439982,
+                "target_error_m": 0.0019374279759475552
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470291116985,
+            "left_hand_foregrip_error_m": 0.052963470045323834,
+            "minimum_limb_length_ratio": 0.9999896276687659,
+            "maximum_limb_length_ratio": 1.0000129197441607
+          },
+          {
+            "frame": 27,
+            "hips_z_m": 0.9508439302444458,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005717160180211067,
+                "target_error_m": 6.102829133898712e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007462427020072937,
+                "target_error_m": 0.0015744759122327712
+              }
+            },
+            "right_hand_stock_error_m": 0.06264713874974638,
+            "left_hand_foregrip_error_m": 0.05296330599987262,
+            "minimum_limb_length_ratio": 0.9999897529560693,
+            "maximum_limb_length_ratio": 1.000013070639305
+          },
+          {
+            "frame": 28,
+            "hips_z_m": 0.9504530429840088,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005720734596252441,
+                "target_error_m": 6.114700052209873e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0011175163090229034,
+                "target_error_m": 0.0011947945409203893
+              }
+            },
+            "right_hand_stock_error_m": 0.06264709786778487,
+            "left_hand_foregrip_error_m": 0.05296297917819403,
+            "minimum_limb_length_ratio": 0.9999897301765608,
+            "maximum_limb_length_ratio": 1.0000128222317208
+          },
+          {
+            "frame": 29,
+            "hips_z_m": 0.9500486254692078,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005724145099520683,
+                "target_error_m": 6.095713927274301e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0015018749982118607,
+                "target_error_m": 0.0008017203535202391
+              }
+            },
+            "right_hand_stock_error_m": 0.06264707278111345,
+            "left_hand_foregrip_error_m": 0.052963429416088476,
+            "minimum_limb_length_ratio": 0.9999894226531445,
+            "maximum_limb_length_ratio": 1.000012694824942
+          },
+          {
+            "frame": 30,
+            "hips_z_m": 0.9496350884437561,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005727693438529968,
+                "target_error_m": 6.153426914662752e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0018950700759887695,
+                "target_error_m": 0.0003997146076813463
+              }
+            },
+            "right_hand_stock_error_m": 0.06264699101707763,
+            "left_hand_foregrip_error_m": 0.05296359052473284,
+            "minimum_limb_length_ratio": 0.9999897301765608,
+            "maximum_limb_length_ratio": 1.0000127275663504
+          },
+          {
+            "frame": 31,
+            "hips_z_m": 0.9492169618606567,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005730662494897842,
+                "target_error_m": 6.143102255520668e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0022776667028665543,
+                "target_error_m": 1.0881929415619235e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626471299229615,
+            "left_hand_foregrip_error_m": 0.05296379339522787,
+            "minimum_limb_length_ratio": 0.999989468212175,
+            "maximum_limb_length_ratio": 1.0000129902093489
+          },
+          {
+            "frame": 32,
+            "hips_z_m": 0.9487988352775574,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005733733996748924,
+                "target_error_m": 6.0687257200616065e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0022090915590524673,
+                "target_error_m": 1.3612355520259476e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264703840306593,
+            "left_hand_foregrip_error_m": 0.05296354573994462,
+            "minimum_limb_length_ratio": 0.9999906755257296,
+            "maximum_limb_length_ratio": 1.0000125368120425
+          },
+          {
+            "frame": 33,
+            "hips_z_m": 0.9483852982521057,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.00573652982711792,
+                "target_error_m": 6.135196302117349e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0021790789905935526,
+                "target_error_m": 4.640156755640562e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264718845845911,
+            "left_hand_foregrip_error_m": 0.05296342302805709,
+            "minimum_limb_length_ratio": 0.9999906527462421,
+            "maximum_limb_length_ratio": 1.0000130613863014
+          },
+          {
+            "frame": 34,
+            "hips_z_m": 0.9479808807373047,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0057389140129089355,
+                "target_error_m": 6.0888989595671415e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002150023588910699,
+                "target_error_m": 2.177724542530586e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704165504421,
+            "left_hand_foregrip_error_m": 0.05296342512305671,
+            "minimum_limb_length_ratio": 0.9999906413564982,
+            "maximum_limb_length_ratio": 1.0000127966080123
+          },
+          {
+            "frame": 35,
+            "hips_z_m": 0.9475899934768677,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005740955471992493,
+                "target_error_m": 6.0460715563250635e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0021284616086632013,
+                "target_error_m": 2.616543770635892e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701517464477,
+            "left_hand_foregrip_error_m": 0.05296336584483858,
+            "minimum_limb_length_ratio": 0.9999904477308309,
+            "maximum_limb_length_ratio": 1.0000127531900604
+          },
+          {
+            "frame": 36,
+            "hips_z_m": 0.9472169876098633,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005742902867496014,
+                "target_error_m": 6.063294208545287e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002109563210979104,
+                "target_error_m": 2.737477556367336e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264709879692065,
+            "left_hand_foregrip_error_m": 0.05296352812137875,
+            "minimum_limb_length_ratio": 0.9999903110538667,
+            "maximum_limb_length_ratio": 1.000012580230004
+          },
+          {
+            "frame": 37,
+            "hips_z_m": 0.9468657970428467,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0057449135929346085,
+                "target_error_m": 6.120554746075915e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002092659706249833,
+                "target_error_m": 2.3728900294132774e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701749748727,
+            "left_hand_foregrip_error_m": 0.05296360488058485,
+            "minimum_limb_length_ratio": 0.9999909944385007,
+            "maximum_limb_length_ratio": 1.0000129368266313
+          },
+          {
+            "frame": 38,
+            "hips_z_m": 0.9465404152870178,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005746351554989815,
+                "target_error_m": 6.06408723274407e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002079626778140664,
+                "target_error_m": 3.6426558307243385e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264715408047508,
+            "left_hand_foregrip_error_m": 0.052963087758360665,
+            "minimum_limb_length_ratio": 0.999990823592386,
+            "maximum_limb_length_ratio": 1.00001290337346
+          },
+          {
+            "frame": 39,
+            "hips_z_m": 0.9462443590164185,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.00574792455881834,
+                "target_error_m": 6.052273825834372e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002065591746941209,
+                "target_error_m": 2.299913496128784e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264714989936762,
+            "left_hand_foregrip_error_m": 0.05296343322830039,
+            "minimum_limb_length_ratio": 0.999991153894848,
+            "maximum_limb_length_ratio": 1.0000128357553444
+          },
+          {
+            "frame": 40,
+            "hips_z_m": 0.9459809064865112,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005749095231294632,
+                "target_error_m": 6.09177690266316e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020566193852573633,
+                "target_error_m": 3.6489898299302543e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264709508037743,
+            "left_hand_foregrip_error_m": 0.052963586884253,
+            "minimum_limb_length_ratio": 0.9999910286077203,
+            "maximum_limb_length_ratio": 1.000012743937054
+          },
+          {
+            "frame": 41,
+            "hips_z_m": 0.9457528591156006,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005750097334384918,
+                "target_error_m": 6.108974347231592e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020483380649238825,
+                "target_error_m": 4.3765803773326155e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470653480237,
+            "left_hand_foregrip_error_m": 0.05296344356591869,
+            "minimum_limb_length_ratio": 0.9999911994537998,
+            "maximum_limb_length_ratio": 1.0000130165448218
+          },
+          {
+            "frame": 42,
+            "hips_z_m": 0.9455627799034119,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005751066841185093,
+                "target_error_m": 6.0819662601782254e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020418225321918726,
+                "target_error_m": 5.113356858633789e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264702028489817,
+            "left_hand_foregrip_error_m": 0.052963190654305554,
+            "minimum_limb_length_ratio": 0.999991119725633,
+            "maximum_limb_length_ratio": 1.0000122912514062
+          },
+          {
+            "frame": 43,
+            "hips_z_m": 0.9454127550125122,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005751093849539757,
+                "target_error_m": 6.026523255048236e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002040356630459428,
+                "target_error_m": 9.132284563142577e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264695663898524,
+            "left_hand_foregrip_error_m": 0.052963341013908254,
+            "minimum_limb_length_ratio": 0.9999910741666775,
+            "maximum_limb_length_ratio": 1.0000126869954744
+          },
+          {
+            "frame": 44,
+            "hips_z_m": 0.9453043937683105,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005751707591116428,
+                "target_error_m": 6.0269239263320975e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002029745141044259,
+                "target_error_m": 2.9208651666211474e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264703143454049,
+            "left_hand_foregrip_error_m": 0.05296324766599136,
+            "minimum_limb_length_ratio": 0.9999910969461555,
+            "maximum_limb_length_ratio": 1.0000123731049584
+          },
+          {
+            "frame": 45,
+            "hips_z_m": 0.9452388882637024,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005752088502049446,
+                "target_error_m": 6.1145374915353945e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020274093840271235,
+                "target_error_m": 3.053720234899808e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264708393074643,
+            "left_hand_foregrip_error_m": 0.052963643208630014,
+            "minimum_limb_length_ratio": 0.9999910513871991,
+            "maximum_limb_length_ratio": 1.000012849278968
+          },
+          {
+            "frame": 46,
+            "hips_z_m": 0.945216953754425,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005752061493694782,
+                "target_error_m": 6.0655797365565085e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020269418600946665,
+                "target_error_m": 3.3300011366298454e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470249305827,
+            "left_hand_foregrip_error_m": 0.05296324172441492,
+            "minimum_limb_length_ratio": 0.9999910855564167,
+            "maximum_limb_length_ratio": 1.000012731125199
+          },
+          {
+            "frame": 47,
+            "hips_z_m": 0.9452388882637024,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0057520996779203415,
+                "target_error_m": 6.0959196757595275e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002027396345511079,
+                "target_error_m": 3.0576078960134043e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264709322210574,
+            "left_hand_foregrip_error_m": 0.052963585235733746,
+            "minimum_limb_length_ratio": 0.9999909374897991,
+            "maximum_limb_length_ratio": 1.0000128855792194
+          },
+          {
+            "frame": 48,
+            "hips_z_m": 0.9453043937683105,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005751702934503555,
+                "target_error_m": 6.078345688435795e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020297507289797068,
+                "target_error_m": 2.9243979670760977e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701099352805,
+            "left_hand_foregrip_error_m": 0.052963273046475114,
+            "minimum_limb_length_ratio": 0.9999911652845862,
+            "maximum_limb_length_ratio": 1.0000125417944317
+          },
+          {
+            "frame": 49,
+            "hips_z_m": 0.9454127550125122,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005751107819378376,
+                "target_error_m": 6.024316207114589e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002040349179878831,
+                "target_error_m": 9.13530207028672e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264711970247218,
+            "left_hand_foregrip_error_m": 0.0529631039002611,
+            "minimum_limb_length_ratio": 0.9999910058282406,
+            "maximum_limb_length_ratio": 1.0000126065654877
+          },
+          {
+            "frame": 50,
+            "hips_z_m": 0.9455627799034119,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005751071497797966,
+                "target_error_m": 6.087131472243298e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020418225321918726,
+                "target_error_m": 5.111901933254123e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264705094640978,
+            "left_hand_foregrip_error_m": 0.052963190654305554,
+            "minimum_limb_length_ratio": 0.9999912791819604,
+            "maximum_limb_length_ratio": 1.0000124734645217
+          },
+          {
+            "frame": 51,
+            "hips_z_m": 0.9457528591156006,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005750094540417194,
+                "target_error_m": 6.093300773136611e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020483287516981363,
+                "target_error_m": 4.370386357709258e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264703050540371,
+            "left_hand_foregrip_error_m": 0.05296374751160172,
+            "minimum_limb_length_ratio": 0.9999910855564167,
+            "maximum_limb_length_ratio": 1.0000129709915708
+          },
+          {
+            "frame": 52,
+            "hips_z_m": 0.9459809064865112,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005749131552875042,
+                "target_error_m": 6.132797835076164e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020566454622894526,
+                "target_error_m": 3.677297436968406e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264715082850264,
+            "left_hand_foregrip_error_m": 0.052963600587567314,
+            "minimum_limb_length_ratio": 0.9999910513871991,
+            "maximum_limb_length_ratio": 1.0000129588914881
+          },
+          {
+            "frame": 53,
+            "hips_z_m": 0.9462443590164185,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005747929215431213,
+                "target_error_m": 6.082335043785009e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020655973348766565,
+                "target_error_m": 2.3081412881291033e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264708300161043,
+            "left_hand_foregrip_error_m": 0.05296346180270887,
+            "minimum_limb_length_ratio": 0.999991222233275,
+            "maximum_limb_length_ratio": 1.0000126962484814
+          },
+          {
+            "frame": 54,
+            "hips_z_m": 0.9465404152870178,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005746354348957539,
+                "target_error_m": 6.101649101944928e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020796360913664103,
+                "target_error_m": 3.639576211046087e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264712806469083,
+            "left_hand_foregrip_error_m": 0.052963090505918534,
+            "minimum_limb_length_ratio": 0.999990755253932,
+            "maximum_limb_length_ratio": 1.0000129225912393
+          },
+          {
+            "frame": 55,
+            "hips_z_m": 0.9468657970428467,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0057449182495474815,
+                "target_error_m": 6.138458081138373e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020926541183143854,
+                "target_error_m": 2.3732759973672628e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264702678885643,
+            "left_hand_foregrip_error_m": 0.0529635836902469,
+            "minimum_limb_length_ratio": 0.9999909261000584,
+            "maximum_limb_length_ratio": 1.000012993056427
+          },
+          {
+            "frame": 56,
+            "hips_z_m": 0.9472169876098633,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0057428935542702675,
+                "target_error_m": 6.037080912265746e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0021095576230436563,
+                "target_error_m": 2.732890837786675e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470774267941,
+            "left_hand_foregrip_error_m": 0.05296349374283471,
+            "minimum_limb_length_ratio": 0.9999903566128568,
+            "maximum_limb_length_ratio": 1.0000124699056723
+          },
+          {
+            "frame": 57,
+            "hips_z_m": 0.9475899934768677,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005740990862250328,
+                "target_error_m": 6.071430939258427e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0021284616086632013,
+                "target_error_m": 2.6132426859403183e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264712620642011,
+            "left_hand_foregrip_error_m": 0.05296318862798547,
+            "minimum_limb_length_ratio": 0.9999906071872655,
+            "maximum_limb_length_ratio": 1.0000126834366256
+          },
+          {
+            "frame": 58,
+            "hips_z_m": 0.9479808807373047,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005738941952586174,
+                "target_error_m": 6.081237754144383e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002149982610717416,
+                "target_error_m": 2.157647491600386e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626471378206112,
+            "left_hand_foregrip_error_m": 0.0529633456160456,
+            "minimum_limb_length_ratio": 0.9999905046795605,
+            "maximum_limb_length_ratio": 1.0000127531900604
+          },
+          {
+            "frame": 59,
+            "hips_z_m": 0.9483852982521057,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005736540071666241,
+                "target_error_m": 6.124711475322288e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002179065952077508,
+                "target_error_m": 4.6417834665192694e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264713271036738,
+            "left_hand_foregrip_error_m": 0.0529637202767659,
+            "minimum_limb_length_ratio": 0.9999905616282868,
+            "maximum_limb_length_ratio": 1.0000130265095952
+          },
+          {
+            "frame": 60,
+            "hips_z_m": 0.9487988352775574,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.00573378149420023,
+                "target_error_m": 6.085466949230391e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0022090692073106766,
+                "target_error_m": 1.3650838200206221e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264700123758794,
+            "left_hand_foregrip_error_m": 0.0529635888075254,
+            "minimum_limb_length_ratio": 0.9999904249513383,
+            "maximum_limb_length_ratio": 1.0000128763262144
+          },
+          {
+            "frame": 61,
+            "hips_z_m": 0.9492169618606567,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005730674602091312,
+                "target_error_m": 6.153672454915934e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0022776611149311066,
+                "target_error_m": 1.095539410870748e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264706116691032,
+            "left_hand_foregrip_error_m": 0.05296381207836965,
+            "minimum_limb_length_ratio": 0.9999893087555589,
+            "maximum_limb_length_ratio": 1.0000131040924702
+          }
+        ],
+        "max_right_hand_stock_error_m": 0.06264718845845911,
+        "max_left_hand_foregrip_error_m": 0.05296381207836965,
+        "max_foot_target_error_m": 0.0038819512048222263,
+        "minimum_foot_sole_z_m": -0.0057520996779203415,
+        "minimum_limb_length_ratio": 0.9999893087555589,
+        "maximum_limb_length_ratio": 1.00001332616452,
+        "hips_vertical_excursion_m": 0.008000016212463379,
+        "checks": {
+          "right_hand_stock_grip": true,
+          "left_hand_foregrip": false,
+          "feet_near_floor": true,
+          "limb_lengths_not_collapsed": true
+        }
+      },
+      "SWAT_InPlaceWalk": {
+        "frame_range": [
+          1,
+          33
+        ],
+        "sampled_frames": [
+          1,
+          17,
+          33
+        ],
+        "frame_count_evaluated": 33,
+        "frames": [
+          {
+            "frame": 1,
+            "hips_z_m": 0.9492169618606567,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005264334846287966,
+                "target_error_m": 7.093426199996225e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.017749210819602013,
+                "target_error_m": 0.02072420386164238
+              }
+            },
+            "right_hand_stock_error_m": 0.06264708160790639,
+            "left_hand_foregrip_error_m": 0.05296372278388252,
+            "minimum_limb_length_ratio": 0.9999886709288398,
+            "maximum_limb_length_ratio": 1.0000144208651216
+          },
+          {
+            "frame": 2,
+            "hips_z_m": 0.9499020576477051,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.009318956173956394,
+                "target_error_m": 8.842429911073725e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.017901327461004257,
+                "target_error_m": 0.02087544192974266
+              }
+            },
+            "right_hand_stock_error_m": 0.06264700356043096,
+            "left_hand_foregrip_error_m": 0.05296348210014591,
+            "minimum_limb_length_ratio": 0.9999887164879048,
+            "maximum_limb_length_ratio": 1.0000166074156611
+          },
+          {
+            "frame": 3,
+            "hips_z_m": 0.9518529772758484,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.023461636155843735,
+                "target_error_m": 1.3680937790570376e-05
+              },
+              "Right": {
+                "sole_min_z_m": 0.018308443948626518,
+                "target_error_m": 0.02127787386864215
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470797496343,
+            "left_hand_foregrip_error_m": 0.05296353883676454,
+            "minimum_limb_length_ratio": 0.999989126519395,
+            "maximum_limb_length_ratio": 1.000016085690332
+          },
+          {
+            "frame": 4,
+            "hips_z_m": 0.9547728300094604,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.036717306822538376,
+                "target_error_m": 1.639949967592969e-05
+              },
+              "Right": {
+                "sole_min_z_m": 0.018827170133590698,
+                "target_error_m": 0.021781984853568536
+              }
+            },
+            "right_hand_stock_error_m": 0.06264700541870531,
+            "left_hand_foregrip_error_m": 0.05296340097903961,
+            "minimum_limb_length_ratio": 0.999989058180825,
+            "maximum_limb_length_ratio": 1.0000147269255435
+          },
+          {
+            "frame": 5,
+            "hips_z_m": 0.9582169651985168,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.04989680275321007,
+                "target_error_m": 1.669737614355889e-05
+              },
+              "Right": {
+                "sole_min_z_m": 0.01924142614006996,
+                "target_error_m": 0.02216528100263425
+              }
+            },
+            "right_hand_stock_error_m": 0.06264695710355418,
+            "left_hand_foregrip_error_m": 0.05296355415426738,
+            "minimum_limb_length_ratio": 0.9999893770941117,
+            "maximum_limb_length_ratio": 1.0000212936784487
+          },
+          {
+            "frame": 6,
+            "hips_z_m": 0.9616611003875732,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.059113889932632446,
+                "target_error_m": 8.888852567148144e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.01929047517478466,
+                "target_error_m": 0.022164006376508203
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701378093923,
+            "left_hand_foregrip_error_m": 0.052963609207946176,
+            "minimum_limb_length_ratio": 0.9999888076060283,
+            "maximum_limb_length_ratio": 1.0000182572901497
+          },
+          {
+            "frame": 7,
+            "hips_z_m": 0.9645809531211853,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.06590167433023453,
+                "target_error_m": 1.3290541058185205e-05
+              },
+              "Right": {
+                "sole_min_z_m": 0.01871580444276333,
+                "target_error_m": 0.021522281439842434
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701378093923,
+            "left_hand_foregrip_error_m": 0.052963666940407515,
+            "minimum_limb_length_ratio": 0.9999889556729611,
+            "maximum_limb_length_ratio": 1.0000181597782303
+          },
+          {
+            "frame": 8,
+            "hips_z_m": 0.9665318727493286,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.0700945183634758,
+                "target_error_m": 8.458729990760754e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.017308376729488373,
+                "target_error_m": 0.020038693388538198
+              }
+            },
+            "right_hand_stock_error_m": 0.06264707138740919,
+            "left_hand_foregrip_error_m": 0.05296320762044015,
+            "minimum_limb_length_ratio": 0.9999888303855577,
+            "maximum_limb_length_ratio": 1.00001822668422
+          },
+          {
+            "frame": 9,
+            "hips_z_m": 0.967216968536377,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.07143864780664444,
+                "target_error_m": 1.3631434855496396e-05
+              },
+              "Right": {
+                "sole_min_z_m": 0.014957665465772152,
+                "target_error_m": 0.01761254550088817
+              }
+            },
+            "right_hand_stock_error_m": 0.06264708160790639,
+            "left_hand_foregrip_error_m": 0.05296382217550603,
+            "minimum_limb_length_ratio": 0.9999891208245142,
+            "maximum_limb_length_ratio": 1.0000182451901312
+          },
+          {
+            "frame": 10,
+            "hips_z_m": 0.9665318727493286,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.06990507990121841,
+                "target_error_m": 8.59372898370611e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.011683282442390919,
+                "target_error_m": 0.014272536310463622
+              }
+            },
+            "right_hand_stock_error_m": 0.06264702307230893,
+            "left_hand_foregrip_error_m": 0.052963470010979605,
+            "minimum_limb_length_ratio": 0.9999892631965209,
+            "maximum_limb_length_ratio": 1.0000185156611023
+          },
+          {
+            "frame": 11,
+            "hips_z_m": 0.9645809531211853,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.06551898270845413,
+                "target_error_m": 1.534921140894157e-05
+              },
+              "Right": {
+                "sole_min_z_m": 0.007654803805053234,
+                "target_error_m": 0.010192925723758937
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704351331743,
+            "left_hand_foregrip_error_m": 0.052963678033550225,
+            "minimum_limb_length_ratio": 0.9999892745862806,
+            "maximum_limb_length_ratio": 1.000018581143537
+          },
+          {
+            "frame": 12,
+            "hips_z_m": 0.9616611003875732,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.05850660055875778,
+                "target_error_m": 1.182640271157372e-05
+              },
+              "Right": {
+                "sole_min_z_m": 0.003173378063365817,
+                "target_error_m": 0.0056753090260829465
+              }
+            },
+            "right_hand_stock_error_m": 0.06264695710355418,
+            "left_hand_foregrip_error_m": 0.05296366055240478,
+            "minimum_limb_length_ratio": 0.9999891834681998,
+            "maximum_limb_length_ratio": 1.0000188985909313
+          },
+          {
+            "frame": 13,
+            "hips_z_m": 0.9582169651985168,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.048846255987882614,
+                "target_error_m": 1.406247301120389e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0013600424863398075,
+                "target_error_m": 0.0011176116348591153
+              }
+            },
+            "right_hand_stock_error_m": 0.06264702400144583,
+            "left_hand_foregrip_error_m": 0.05296342917567871,
+            "minimum_limb_length_ratio": 0.9999895821097425,
+            "maximum_limb_length_ratio": 1.0000194587501008
+          },
+          {
+            "frame": 14,
+            "hips_z_m": 0.9547728300094604,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.03589680790901184,
+                "target_error_m": 1.2335452687146923e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.002304455731064081,
+                "target_error_m": 4.548188907632478e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264706116691032,
+            "left_hand_foregrip_error_m": 0.0529634540065677,
+            "minimum_limb_length_ratio": 0.9999913702998503,
+            "maximum_limb_length_ratio": 1.0000138564325163
+          },
+          {
+            "frame": 15,
+            "hips_z_m": 0.9518529772758484,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.022699667140841484,
+                "target_error_m": 1.0150778300917498e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0022287326864898205,
+                "target_error_m": 3.6915672062356143e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264706952913679,
+            "left_hand_foregrip_error_m": 0.052963502466263586,
+            "minimum_limb_length_ratio": 0.9999918315840409,
+            "maximum_limb_length_ratio": 1.0000149966856982
+          },
+          {
+            "frame": 16,
+            "hips_z_m": 0.9499020576477051,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.008580164052546024,
+                "target_error_m": 6.969316261221821e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0021930853836238384,
+                "target_error_m": 5.36338312709784e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626471094819812,
+            "left_hand_foregrip_error_m": 0.052963353961711555,
+            "minimum_limb_length_ratio": 0.9999918657532317,
+            "maximum_limb_length_ratio": 1.0000138322323722
+          },
+          {
+            "frame": 17,
+            "hips_z_m": 0.9492169618606567,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005909828934818506,
+                "target_error_m": 4.932830175655836e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002185382880270481,
+                "target_error_m": 9.448447402097293e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264698497768438,
+            "left_hand_foregrip_error_m": 0.05296393561360998,
+            "minimum_limb_length_ratio": 0.9999921220221257,
+            "maximum_limb_length_ratio": 1.0000106257081076
+          },
+          {
+            "frame": 18,
+            "hips_z_m": 0.9499020576477051,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005882364697754383,
+                "target_error_m": 3.3180439420527424e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.01233461033552885,
+                "target_error_m": 2.023430408238274e-05
+              }
+            },
+            "right_hand_stock_error_m": 0.06264707324568153,
+            "left_hand_foregrip_error_m": 0.05296345256410973,
+            "minimum_limb_length_ratio": 0.9999924352395737,
+            "maximum_limb_length_ratio": 1.000010603643199
+          },
+          {
+            "frame": 19,
+            "hips_z_m": 0.9518529772758484,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005117612890899181,
+                "target_error_m": 0.0006881817204756473
+              },
+              "Right": {
+                "sole_min_z_m": 0.026508264243602753,
+                "target_error_m": 8.730911460264086e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701378093923,
+            "left_hand_foregrip_error_m": 0.05296352472130396,
+            "minimum_limb_length_ratio": 0.9999930445896005,
+            "maximum_limb_length_ratio": 1.0000102413515677
+          },
+          {
+            "frame": 20,
+            "hips_z_m": 0.9547728300094604,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0032847633119672537,
+                "target_error_m": 0.0025146875186675337
+              },
+              "Right": {
+                "sole_min_z_m": 0.03956955298781395,
+                "target_error_m": 4.787356053872216e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704351331743,
+            "left_hand_foregrip_error_m": 0.05296334455137207,
+            "minimum_limb_length_ratio": 0.9999921903604864,
+            "maximum_limb_length_ratio": 1.0000110221646057
+          },
+          {
+            "frame": 21,
+            "hips_z_m": 0.9582169651985168,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0011203191243112087,
+                "target_error_m": 0.004659578446019642
+              },
+              "Right": {
+                "sole_min_z_m": 0.05101374536752701,
+                "target_error_m": 5.561868396278671e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704165504421,
+            "left_hand_foregrip_error_m": 0.052963447721572,
+            "minimum_limb_length_ratio": 0.9999915923996724,
+            "maximum_limb_length_ratio": 1.0000108762515503
+          },
+          {
+            "frame": 22,
+            "hips_z_m": 0.9616611003875732,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.00103930348996073,
+                "target_error_m": 0.006782777743358929
+              },
+              "Right": {
+                "sole_min_z_m": 0.06040692701935768,
+                "target_error_m": 7.597679104538653e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264698497768438,
+            "left_hand_foregrip_error_m": 0.05296357798911725,
+            "minimum_limb_length_ratio": 0.999991193758931,
+            "maximum_limb_length_ratio": 1.0000112812491984
+          },
+          {
+            "frame": 23,
+            "hips_z_m": 0.9645809531211853,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.0028476931620389223,
+                "target_error_m": 0.008538777177509541
+              },
+              "Right": {
+                "sole_min_z_m": 0.06739252805709839,
+                "target_error_m": 8.181117479779108e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704351331743,
+            "left_hand_foregrip_error_m": 0.05296366079281349,
+            "minimum_limb_length_ratio": 0.999990282579497,
+            "maximum_limb_length_ratio": 1.000011046364818
+          },
+          {
+            "frame": 24,
+            "hips_z_m": 0.9665318727493286,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.004005370195955038,
+                "target_error_m": 0.009632547524723468
+              },
+              "Right": {
+                "sole_min_z_m": 0.07170321047306061,
+                "target_error_m": 8.714389660325631e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264700448956814,
+            "left_hand_foregrip_error_m": 0.052963301380559664,
+            "minimum_limb_length_ratio": 0.9999893144504384,
+            "maximum_limb_length_ratio": 1.000011121812534
+          },
+          {
+            "frame": 25,
+            "hips_z_m": 0.967216968536377,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.004310868680477142,
+                "target_error_m": 0.009868252518810773
+              },
+              "Right": {
+                "sole_min_z_m": 0.073174849152565,
+                "target_error_m": 8.876015224944714e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264702400144583,
+            "left_hand_foregrip_error_m": 0.05296379360129197,
+            "minimum_limb_length_ratio": 0.9999888930292613,
+            "maximum_limb_length_ratio": 1.0000112591843044
+          },
+          {
+            "frame": 26,
+            "hips_z_m": 0.9665318727493286,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.0036953487433493137,
+                "target_error_m": 0.009181410607542885
+              },
+              "Right": {
+                "sole_min_z_m": 0.07175156474113464,
+                "target_error_m": 8.922560994155527e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264706116691032,
+            "left_hand_foregrip_error_m": 0.05296348412645476,
+            "minimum_limb_length_ratio": 0.9999884716079067,
+            "maximum_limb_length_ratio": 1.0000114093679282
+          },
+          {
+            "frame": 27,
+            "hips_z_m": 0.9645809531211853,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.002237834734842181,
+                "target_error_m": 0.007652319250828978
+              },
+              "Right": {
+                "sole_min_z_m": 0.06748786568641663,
+                "target_error_m": 8.61048613841652e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264708811185829,
+            "left_hand_foregrip_error_m": 0.05296366707778391,
+            "minimum_limb_length_ratio": 0.9999884488283689,
+            "maximum_limb_length_ratio": 1.0000116570640927
+          },
+          {
+            "frame": 28,
+            "hips_z_m": 0.9616611003875732,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": 0.0001498092751717195,
+                "target_error_m": 0.005492409957654459
+              },
+              "Right": {
+                "sole_min_z_m": 0.060546666383743286,
+                "target_error_m": 7.9697673433065e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264709089926604,
+            "left_hand_foregrip_error_m": 0.052963474372696176,
+            "minimum_limb_length_ratio": 0.9999880957454675,
+            "maximum_limb_length_ratio": 1.0000126649306116
+          },
+          {
+            "frame": 29,
+            "hips_z_m": 0.9582169651985168,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0022583273239433765,
+                "target_error_m": 0.0030121866472616024
+              },
+              "Right": {
+                "sole_min_z_m": 0.051192838698625565,
+                "target_error_m": 7.363435604269498e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626469663949323,
+            "left_hand_foregrip_error_m": 0.05296355425729989,
+            "minimum_limb_length_ratio": 0.9999881982534196,
+            "maximum_limb_length_ratio": 1.0000128969675335
+          },
+          {
+            "frame": 30,
+            "hips_z_m": 0.9547728300094604,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.004629828035831451,
+                "target_error_m": 0.0005715709342072338
+              },
+              "Right": {
+                "sole_min_z_m": 0.03978405520319939,
+                "target_error_m": 6.502645477425597e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264707324568153,
+            "left_hand_foregrip_error_m": 0.0529634574753355,
+            "minimum_limb_length_ratio": 0.9999882039483055,
+            "maximum_limb_length_ratio": 1.0000133268762894
+          },
+          {
+            "frame": 31,
+            "hips_z_m": 0.9518529772758484,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005259505473077297,
+                "target_error_m": 3.953584444993882e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.026756033301353455,
+                "target_error_m": 5.302720112290132e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701378093923,
+            "left_hand_foregrip_error_m": 0.052963497761107245,
+            "minimum_limb_length_ratio": 0.999988243812506,
+            "maximum_limb_length_ratio": 1.0000131973342665
+          },
+          {
+            "frame": 32,
+            "hips_z_m": 0.9499020576477051,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005265426822006702,
+                "target_error_m": 5.5761013286750925e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.0192533228546381,
+                "target_error_m": 0.006943030256690381
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704258418083,
+            "left_hand_foregrip_error_m": 0.05296338830600204,
+            "minimum_limb_length_ratio": 0.9999878964244199,
+            "maximum_limb_length_ratio": 1.000014383853157
+          },
+          {
+            "frame": 33,
+            "hips_z_m": 0.9492169618606567,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005264338571578264,
+                "target_error_m": 7.127523073326239e-06
+              },
+              "Right": {
+                "sole_min_z_m": 0.017749210819602013,
+                "target_error_m": 0.02072420386164238
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704165504421,
+            "left_hand_foregrip_error_m": 0.052963864968110265,
+            "minimum_limb_length_ratio": 0.9999886937083725,
+            "maximum_limb_length_ratio": 1.0000144664183064
+          }
+        ],
+        "max_right_hand_stock_error_m": 0.0626471094819812,
+        "max_left_hand_foregrip_error_m": 0.05296393561360998,
+        "max_foot_target_error_m": 0.02216528100263425,
+        "minimum_foot_sole_z_m": -0.005909828934818506,
+        "minimum_limb_length_ratio": 0.9999878964244199,
+        "maximum_limb_length_ratio": 1.0000212936784487,
+        "hips_vertical_excursion_m": 0.018000006675720215,
+        "checks": {
+          "right_hand_stock_grip": true,
+          "left_hand_foregrip": false,
+          "feet_near_floor": true,
+          "limb_lengths_not_collapsed": true
+        }
+      },
+      "SWAT_Crouch": {
+        "frame_range": [
+          1,
+          32
+        ],
+        "sampled_frames": [
+          1,
+          16,
+          32
+        ],
+        "frame_count_evaluated": 32,
+        "frames": [
+          {
+            "frame": 1,
+            "hips_z_m": 0.9492169618606567,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005730662494897842,
+                "target_error_m": 6.112160434598836e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0022776685655117035,
+                "target_error_m": 1.0881929415619235e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264708160790639,
+            "left_hand_foregrip_error_m": 0.05296372278388252,
+            "minimum_limb_length_ratio": 0.9999893087555589,
+            "maximum_limb_length_ratio": 1.0000130713510742
+          },
+          {
+            "frame": 2,
+            "hips_z_m": 0.9474528431892395,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0057402802631258965,
+                "target_error_m": 6.1060235416144456e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0021693315356969833,
+                "target_error_m": 2.7015932639621713e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470737102496,
+            "left_hand_foregrip_error_m": 0.05296348553456765,
+            "minimum_limb_length_ratio": 0.9999911140307637,
+            "maximum_limb_length_ratio": 1.00001277881377
+          },
+          {
+            "frame": 3,
+            "hips_z_m": 0.9424171447753906,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005753436125814915,
+                "target_error_m": 6.155000063162859e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002147125080227852,
+                "target_error_m": 5.883562680774509e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264710530087077,
+            "left_hand_foregrip_error_m": 0.05296325230248118,
+            "minimum_limb_length_ratio": 0.9999914044690569,
+            "maximum_limb_length_ratio": 1.000013008715357
+          },
+          {
+            "frame": 4,
+            "hips_z_m": 0.9344947338104248,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005747634917497635,
+                "target_error_m": 5.992486388356542e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.002108227461576462,
+                "target_error_m": 4.657423425701977e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704630072716,
+            "left_hand_foregrip_error_m": 0.05296327943452459,
+            "minimum_limb_length_ratio": 0.9999921561913067,
+            "maximum_limb_length_ratio": 1.0000131802518006
+          },
+          {
+            "frame": 5,
+            "hips_z_m": 0.924070417881012,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005709498189389706,
+                "target_error_m": 5.862092003590435e-06
+              },
+              "Right": {
+                "sole_min_z_m": -0.0020637791603803635,
+                "target_error_m": 2.3823494470280082e-05
+              }
+            },
+            "right_hand_stock_error_m": 0.06264698962337155,
+            "left_hand_foregrip_error_m": 0.052963424058384785,
+            "minimum_limb_length_ratio": 0.999991979650526,
+            "maximum_limb_length_ratio": 1.0000128378906534
+          },
+          {
+            "frame": 6,
+            "hips_z_m": 0.9115292429924011,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.00563550740480423,
+                "target_error_m": 1.196028933367692e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.001980230212211609,
+                "target_error_m": 2.338649782337388e-05
+              }
+            },
+            "right_hand_stock_error_m": 0.06264709322210574,
+            "left_hand_foregrip_error_m": 0.05296328661249324,
+            "minimum_limb_length_ratio": 0.9999930388947421,
+            "maximum_limb_length_ratio": 1.0000118997778034
+          },
+          {
+            "frame": 7,
+            "hips_z_m": 0.8972560167312622,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005491971038281918,
+                "target_error_m": 1.944862725692103e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.001891646534204483,
+                "target_error_m": 3.262348488173488e-05
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470857890184,
+            "left_hand_foregrip_error_m": 0.05296297273859152,
+            "minimum_limb_length_ratio": 0.9999930047255914,
+            "maximum_limb_length_ratio": 1.0000109830172028
+          },
+          {
+            "frame": 8,
+            "hips_z_m": 0.8816356658935547,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.005180287640541792,
+                "target_error_m": 3.6593013863547524e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0017635150579735637,
+                "target_error_m": 1.243236482637474e-05
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704444245403,
+            "left_hand_foregrip_error_m": 0.05296365526341268,
+            "minimum_limb_length_ratio": 0.9999933122479061,
+            "maximum_limb_length_ratio": 1.0000095359857557
+          },
+          {
+            "frame": 9,
+            "hips_z_m": 0.865053117275238,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.003604530356824398,
+                "target_error_m": 3.307966916907938e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0016406233189627528,
+                "target_error_m": 4.367158944992238e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470774267941,
+            "left_hand_foregrip_error_m": 0.052963585373110356,
+            "minimum_limb_length_ratio": 0.9999935856009953,
+            "maximum_limb_length_ratio": 1.0000104029236867
+          },
+          {
+            "frame": 10,
+            "hips_z_m": 0.8478931784629822,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.002342547755688429,
+                "target_error_m": 2.9425375492138295e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.001519385608844459,
+                "target_error_m": 1.7616802896772056e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264706767086434,
+            "left_hand_foregrip_error_m": 0.05296359100555091,
+            "minimum_limb_length_ratio": 0.9999940184099004,
+            "maximum_limb_length_ratio": 1.000012288404326
+          },
+          {
+            "frame": 11,
+            "hips_z_m": 0.8305407762527466,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.002278774743899703,
+                "target_error_m": 2.9472773750133204e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0013995690969750285,
+                "target_error_m": 1.2357411780873337e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264698219027193,
+            "left_hand_foregrip_error_m": 0.05296325350453403,
+            "minimum_limb_length_ratio": 0.9999939500716647,
+            "maximum_limb_length_ratio": 1.0000107751800553
+          },
+          {
+            "frame": 12,
+            "hips_z_m": 0.8133808374404907,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.002068523084744811,
+                "target_error_m": 3.34252257446572e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.001282309996895492,
+                "target_error_m": 1.297791909170185e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704630072716,
+            "left_hand_foregrip_error_m": 0.05296358509835714,
+            "minimum_limb_length_ratio": 0.9999947131816985,
+            "maximum_limb_length_ratio": 1.0000087850660044
+          },
+          {
+            "frame": 13,
+            "hips_z_m": 0.7967982888221741,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0018287840066477656,
+                "target_error_m": 4.2776913520881396e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0011698806192725897,
+                "target_error_m": 1.4357212747153595e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264707417481769,
+            "left_hand_foregrip_error_m": 0.05296315047133351,
+            "minimum_limb_length_ratio": 0.9999947359610937,
+            "maximum_limb_length_ratio": 1.00000802275732
+          },
+          {
+            "frame": 14,
+            "hips_z_m": 0.7811779379844666,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.001573154586367309,
+                "target_error_m": 3.781423257793379e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0010653899516910315,
+                "target_error_m": 1.6113420110391282e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264683259895454,
+            "left_hand_foregrip_error_m": 0.052963560645315454,
+            "minimum_limb_length_ratio": 0.9999949865344049,
+            "maximum_limb_length_ratio": 1.0000075287866763
+          },
+          {
+            "frame": 15,
+            "hips_z_m": 0.7669046521186829,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.001346377655863762,
+                "target_error_m": 4.688459219299912e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0009708458092063665,
+                "target_error_m": 1.5403974030684795e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264696871777661,
+            "left_hand_foregrip_error_m": 0.05296349872274507,
+            "minimum_limb_length_ratio": 0.9999950548725697,
+            "maximum_limb_length_ratio": 1.0000070426453005
+          },
+          {
+            "frame": 16,
+            "hips_z_m": 0.754363477230072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0011513326317071915,
+                "target_error_m": 6.288778579516694e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0008883604314178228,
+                "target_error_m": 1.925092197103818e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264711505679467,
+            "left_hand_foregrip_error_m": 0.052963267242278955,
+            "minimum_limb_length_ratio": 0.9999955446292815,
+            "maximum_limb_length_ratio": 1.0000063230417464
+          },
+          {
+            "frame": 17,
+            "hips_z_m": 0.743939220905304,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0009575709700584412,
+                "target_error_m": 4.70555794224336e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0008208078797906637,
+                "target_error_m": 1.797181355133506e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626471931041312,
+            "left_hand_foregrip_error_m": 0.05296341166010685,
+            "minimum_limb_length_ratio": 0.99999547629115,
+            "maximum_limb_length_ratio": 1.0000060456119426
+          },
+          {
+            "frame": 18,
+            "hips_z_m": 0.7360168099403381,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0008001085370779037,
+                "target_error_m": 2.5672636123184144e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007693355437368155,
+                "target_error_m": 1.9851148870419973e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264705094640978,
+            "left_hand_foregrip_error_m": 0.052963288535776545,
+            "minimum_limb_length_ratio": 0.9999948954168445,
+            "maximum_limb_length_ratio": 1.0000056133947446
+          },
+          {
+            "frame": 19,
+            "hips_z_m": 0.7309810519218445,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0007016807794570923,
+                "target_error_m": 1.4185816065924924e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007371155079454184,
+                "target_error_m": 2.1406517752752554e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264707231654537,
+            "left_hand_foregrip_error_m": 0.05296349247209889,
+            "minimum_limb_length_ratio": 0.9999952143282697,
+            "maximum_limb_length_ratio": 1.0000056047628143
+          },
+          {
+            "frame": 20,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006709638983011246,
+                "target_error_m": 1.399485656337437e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007259880658239126,
+                "target_error_m": 1.8104144313660305e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264704862356851,
+            "left_hand_foregrip_error_m": 0.052963603644195834,
+            "minimum_limb_length_ratio": 0.9999948270786686,
+            "maximum_limb_length_ratio": 1.0000054355612393
+          },
+          {
+            "frame": 21,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006709489971399307,
+                "target_error_m": 1.3972172939456752e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007260383572429419,
+                "target_error_m": 1.8695613488934106e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701796205577,
+            "left_hand_foregrip_error_m": 0.05296364994007594,
+            "minimum_limb_length_ratio": 0.9999949865344049,
+            "maximum_limb_length_ratio": 1.00000530059405
+          },
+          {
+            "frame": 22,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006709638983011246,
+                "target_error_m": 1.3972306064661687e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007259936537593603,
+                "target_error_m": 1.895495648185965e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264703747392926,
+            "left_hand_foregrip_error_m": 0.052963634416536086,
+            "minimum_limb_length_ratio": 0.9999948954168445,
+            "maximum_limb_length_ratio": 1.000005409518526
+          },
+          {
+            "frame": 23,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006710067391395569,
+                "target_error_m": 1.4012185500125029e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007260066922754049,
+                "target_error_m": 1.9078869777026283e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470086706853,
+            "left_hand_foregrip_error_m": 0.05296363125687697,
+            "minimum_limb_length_ratio": 0.9999951004313438,
+            "maximum_limb_length_ratio": 1.0000055197197255
+          },
+          {
+            "frame": 24,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006709974259138107,
+                "target_error_m": 1.400520026478741e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007260066922754049,
+                "target_error_m": 1.8448726827188132e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470291116985,
+            "left_hand_foregrip_error_m": 0.05296364368944761,
+            "minimum_limb_length_ratio": 0.9999951687695008,
+            "maximum_limb_length_ratio": 1.0000053168848444
+          },
+          {
+            "frame": 25,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006709843873977661,
+                "target_error_m": 1.397486549076693e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007259880658239126,
+                "target_error_m": 1.9362910819810007e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264708346617844,
+            "left_hand_foregrip_error_m": 0.05296351744033499,
+            "minimum_limb_length_ratio": 0.9999949865344049,
+            "maximum_limb_length_ratio": 1.0000054126820077
+          },
+          {
+            "frame": 26,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.00067097507417202,
+                "target_error_m": 1.39957756547671e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007260458078235388,
+                "target_error_m": 1.864134669780255e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701796205577,
+            "left_hand_foregrip_error_m": 0.05296366189182477,
+            "minimum_limb_length_ratio": 0.9999949637550155,
+            "maximum_limb_length_ratio": 1.0000054350361636
+          },
+          {
+            "frame": 27,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.000670967623591423,
+                "target_error_m": 1.397175794320996e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007259917911142111,
+                "target_error_m": 1.9136827503608173e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470086706853,
+            "left_hand_foregrip_error_m": 0.052963646814761865,
+            "minimum_limb_length_ratio": 0.9999949865344049,
+            "maximum_limb_length_ratio": 1.0000053168848444
+          },
+          {
+            "frame": 28,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006709769368171692,
+                "target_error_m": 1.397486549076693e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007260383572429419,
+                "target_error_m": 1.936520418838607e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470291116985,
+            "left_hand_foregrip_error_m": 0.05296366501713795,
+            "minimum_limb_length_ratio": 0.9999950548725697,
+            "maximum_limb_length_ratio": 1.0000054095640496
+          },
+          {
+            "frame": 29,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.000670991837978363,
+                "target_error_m": 1.39957756547671e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007260178681463003,
+                "target_error_m": 1.9079306206308876e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264707417481769,
+            "left_hand_foregrip_error_m": 0.0529634971772557,
+            "minimum_limb_length_ratio": 0.9999948270786686,
+            "maximum_limb_length_ratio": 1.0000054350361636
+          },
+          {
+            "frame": 30,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006709452718496323,
+                "target_error_m": 1.3941554653231803e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007259880658239126,
+                "target_error_m": 1.902919708531448e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.06264701796205577,
+            "left_hand_foregrip_error_m": 0.05296364368944761,
+            "minimum_limb_length_ratio": 0.9999949409756257,
+            "maximum_limb_length_ratio": 1.0000052745228805
+          },
+          {
+            "frame": 31,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006710048764944077,
+                "target_error_m": 1.4012185500125029e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007260607089847326,
+                "target_error_m": 1.9208631393306617e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470086706853,
+            "left_hand_foregrip_error_m": 0.05296364839459098,
+            "minimum_limb_length_ratio": 0.9999949409756257,
+            "maximum_limb_length_ratio": 1.0000055197197255
+          },
+          {
+            "frame": 32,
+            "hips_z_m": 0.729216992855072,
+            "armature_xy": [
+              0.0,
+              0.0
+            ],
+            "feet": {
+              "Left": {
+                "sole_min_z_m": -0.0006710086017847061,
+                "target_error_m": 1.4004303345451434e-05
+              },
+              "Right": {
+                "sole_min_z_m": -0.0007259880658239126,
+                "target_error_m": 1.944929790378777e-06
+              }
+            },
+            "right_hand_stock_error_m": 0.0626470291116985,
+            "left_hand_foregrip_error_m": 0.052963642109618354,
+            "minimum_limb_length_ratio": 0.9999949409756257,
+            "maximum_limb_length_ratio": 1.0000055196747188
+          }
+        ],
+        "max_right_hand_stock_error_m": 0.0626471931041312,
+        "max_left_hand_foregrip_error_m": 0.05296372278388252,
+        "max_foot_target_error_m": 6.288778579516694e-05,
+        "minimum_foot_sole_z_m": -0.005753436125814915,
+        "minimum_limb_length_ratio": 0.9999893087555589,
+        "maximum_limb_length_ratio": 1.0000131802518006,
+        "hips_vertical_excursion_m": 0.21999996900558472,
+        "checks": {
+          "right_hand_stock_grip": true,
+          "left_hand_foregrip": false,
+          "feet_near_floor": true,
+          "limb_lengths_not_collapsed": true
+        }
+      }
+    },
+    "animation_contact_sheet": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\References\\swat-operator-remastered\\inspection\\previews\\swat_operator_animation_contact_sheet.png",
+    "contact_sheet_layout": [
+      {
+        "row": 0,
+        "action": "SWAT_RifleReadyIdle",
+        "columns": [
+          1,
+          31,
+          61
+        ]
+      },
+      {
+        "row": 1,
+        "action": "SWAT_InPlaceWalk",
+        "columns": [
+          1,
+          17,
+          33
+        ]
+      },
+      {
+        "row": 2,
+        "action": "SWAT_Crouch",
+        "columns": [
+          1,
+          16,
+          32
+        ]
+      }
+    ],
+    "fbx_round_trip": {
+      "status": "passed",
+      "mesh_count": 32,
+      "armature_count": 1,
+      "bone_count": 77,
+      "animation_actions": [
+        "backAim_low.001|SWAT_Crouch",
+        "backAim_low.001|SWAT_InPlaceWalk",
+        "backAim_low.001|SWAT_RifleReadyIdle",
+        "backClamp_low.001|SWAT_Crouch",
+        "backClamp_low.001|SWAT_InPlaceWalk",
+        "backClamp_low.001|SWAT_RifleReadyIdle",
+        "backScrew_low.001|SWAT_Crouch",
+        "backScrew_low.001|SWAT_InPlaceWalk",
+        "backScrew_low.001|SWAT_RifleReadyIdle",
+        "backSight_low.001|SWAT_Crouch",
+        "backSight_low.001|SWAT_InPlaceWalk",
+        "backSight_low.001|SWAT_RifleReadyIdle",
+        "barrel_low.001|SWAT_Crouch",
+        "barrel_low.001|SWAT_InPlaceWalk",
+        "barrel_low.001|SWAT_RifleReadyIdle",
+        "boneShape_low.001|SWAT_Crouch",
+        "boneShape_low.001|SWAT_InPlaceWalk",
+        "boneShape_low.001|SWAT_RifleReadyIdle",
+        "bottomGun_low.001|SWAT_Crouch",
+        "bottomGun_low.001|SWAT_InPlaceWalk",
+        "bottomGun_low.001|SWAT_RifleReadyIdle",
+        "cable_low.001|SWAT_Crouch",
+        "cable_low.001|SWAT_InPlaceWalk",
+        "cable_low.001|SWAT_RifleReadyIdle",
+        "cheekPad_low.001|SWAT_Crouch",
+        "cheekPad_low.001|SWAT_InPlaceWalk",
+        "cheekPad_low.001|SWAT_RifleReadyIdle",
+        "eyeShape_low.001|SWAT_Crouch",
+        "eyeShape_low.001|SWAT_InPlaceWalk",
+        "eyeShape_low.001|SWAT_RifleReadyIdle",
+        "frontClamp_low.001|SWAT_Crouch",
+        "frontClamp_low.001|SWAT_InPlaceWalk",
+        "frontClamp_low.001|SWAT_RifleReadyIdle",
+        "frontGrip_low.001|SWAT_Crouch",
+        "frontGrip_low.001|SWAT_InPlaceWalk",
+        "frontGrip_low.001|SWAT_RifleReadyIdle",
+        "frontSIght_low.001|SWAT_Crouch",
+        "frontSIght_low.001|SWAT_InPlaceWalk",
+        "frontSIght_low.001|SWAT_RifleReadyIdle",
+        "handle_low.001|SWAT_Crouch",
+        "handle_low.001|SWAT_InPlaceWalk",
+        "handle_low.001|SWAT_RifleReadyIdle",
+        "handleButton_low.001|SWAT_Crouch",
+        "handleButton_low.001|SWAT_InPlaceWalk",
+        "handleButton_low.001|SWAT_RifleReadyIdle",
+        "light_low.001|SWAT_Crouch",
+        "light_low.001|SWAT_InPlaceWalk",
+        "light_low.001|SWAT_RifleReadyIdle",
+        "mag_low.001|SWAT_Crouch",
+        "mag_low.001|SWAT_InPlaceWalk",
+        "mag_low.001|SWAT_RifleReadyIdle",
+        "pin_low.001|SWAT_Crouch",
+        "pin_low.001|SWAT_InPlaceWalk",
+        "pin_low.001|SWAT_RifleReadyIdle",
+        "pipe_low.001|SWAT_Crouch",
+        "pipe_low.001|SWAT_InPlaceWalk",
+        "pipe_low.001|SWAT_RifleReadyIdle",
+        "sideKnobs_low.001|SWAT_Crouch",
+        "sideKnobs_low.001|SWAT_InPlaceWalk",
+        "sideKnobs_low.001|SWAT_RifleReadyIdle",
+        "sideRail_low.001|SWAT_Crouch",
+        "sideRail_low.001|SWAT_InPlaceWalk",
+        "sideRail_low.001|SWAT_RifleReadyIdle",
+        "slider_low.001|SWAT_Crouch",
+        "slider_low.001|SWAT_InPlaceWalk",
+        "slider_low.001|SWAT_RifleReadyIdle",
+        "SOCKET_LeftHand_Grip.001|SWAT_Crouch",
+        "SOCKET_LeftHand_Grip.001|SWAT_InPlaceWalk",
+        "SOCKET_LeftHand_Grip.001|SWAT_RifleReadyIdle",
+        "SOCKET_Muzzle.001|SWAT_Crouch",
+        "SOCKET_Muzzle.001|SWAT_InPlaceWalk",
+        "SOCKET_Muzzle.001|SWAT_RifleReadyIdle",
+        "SOCKET_RightHand.001|SWAT_Crouch",
+        "SOCKET_RightHand.001|SWAT_InPlaceWalk",
+        "SOCKET_RightHand.001|SWAT_RifleReadyIdle",
+        "SOCKET_RightHand_Grip.001|SWAT_Crouch",
+        "SOCKET_RightHand_Grip.001|SWAT_InPlaceWalk",
+        "SOCKET_RightHand_Grip.001|SWAT_RifleReadyIdle",
+        "stockBack_low.001|SWAT_Crouch",
+        "stockBack_low.001|SWAT_InPlaceWalk",
+        "stockBack_low.001|SWAT_RifleReadyIdle",
+        "stockButton_low.001|SWAT_Crouch",
+        "stockButton_low.001|SWAT_InPlaceWalk",
+        "stockButton_low.001|SWAT_RifleReadyIdle",
+        "stockFrame_low.001|SWAT_Crouch",
+        "stockFrame_low.001|SWAT_InPlaceWalk",
+        "stockFrame_low.001|SWAT_RifleReadyIdle",
+        "stockThing_low.001|SWAT_Crouch",
+        "stockThing_low.001|SWAT_InPlaceWalk",
+        "stockThing_low.001|SWAT_RifleReadyIdle",
+        "SWAT.001|SWAT_Crouch",
+        "SWAT.001|SWAT_InPlaceWalk",
+        "SWAT.001|SWAT_RifleReadyIdle",
+        "tape_low.001|SWAT_Crouch",
+        "tape_low.001|SWAT_InPlaceWalk",
+        "tape_low.001|SWAT_RifleReadyIdle",
+        "topGun_low.001|SWAT_Crouch",
+        "topGun_low.001|SWAT_InPlaceWalk",
+        "topGun_low.001|SWAT_RifleReadyIdle",
+        "topRail_low.001|SWAT_Crouch",
+        "topRail_low.001|SWAT_InPlaceWalk",
+        "topRail_low.001|SWAT_RifleReadyIdle",
+        "trigger_low.001|SWAT_Crouch",
+        "trigger_low.001|SWAT_InPlaceWalk",
+        "trigger_low.001|SWAT_RifleReadyIdle",
+        "tShape_low.001|SWAT_Crouch",
+        "tShape_low.001|SWAT_InPlaceWalk",
+        "tShape_low.001|SWAT_RifleReadyIdle"
+      ],
+      "expected_clip_name_matches": {
+        "SWAT_RifleReadyIdle": true,
+        "SWAT_InPlaceWalk": true,
+        "SWAT_Crouch": true
+      }
+    },
+    "texture_paths": [
+      {
+        "image": "Body_Base_color.png",
+        "path": "//..\\textures\\Body_Base_color.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "Body_Base_color.png.001",
+        "path": "//..\\textures\\Body_Base_color.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "Body_Mixed_AO.png",
+        "path": "//..\\textures\\Body_Mixed_AO.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "Body_Normal_OpenGL.png",
+        "path": "//..\\textures\\Body_Normal_OpenGL.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "Body_Normal_OpenGL.png.001",
+        "path": "//..\\textures\\Body_Normal_OpenGL.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "Body_Roughness.png",
+        "path": "//..\\textures\\Body_Roughness.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "Body_Roughness.png.001",
+        "path": "//..\\textures\\Body_Roughness.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "eyelashes01.png",
+        "path": "//..\\textures\\eyelashes01.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "eyelashes01.png.001",
+        "path": "//..\\textures\\eyelashes01.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "eyelashes01.png.002",
+        "path": "//..\\textures\\eyelashes01.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "eyelashes01.png.003",
+        "path": "//..\\textures\\eyelashes01.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Base_color.png",
+        "path": "//..\\textures\\HeadGear_Base_color.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Base_color.png.001",
+        "path": "//..\\textures\\HeadGear_Base_color.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Emissive.png",
+        "path": "//..\\textures\\HeadGear_Emissive.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Emissive.png.001",
+        "path": "//..\\textures\\HeadGear_Emissive.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Metallic.png",
+        "path": "//..\\textures\\HeadGear_Metallic.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Metallic.png.001",
+        "path": "//..\\textures\\HeadGear_Metallic.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Mixed_AO.png",
+        "path": "//..\\textures\\HeadGear_Mixed_AO.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Normal_OpenGL.png",
+        "path": "//..\\textures\\HeadGear_Normal_OpenGL.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Normal_OpenGL.png.001",
+        "path": "//..\\textures\\HeadGear_Normal_OpenGL.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Roughness.png",
+        "path": "//..\\textures\\HeadGear_Roughness.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_Roughness.png.001",
+        "path": "//..\\textures\\HeadGear_Roughness.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "HeadGear_SSS.png",
+        "path": "//..\\textures\\HeadGear_SSS.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "KSVR_Base_color.png",
+        "path": "//..\\textures\\KSVR_Base_color.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "KSVR_Base_color.png.001",
+        "path": "//..\\textures\\KSVR_Base_color.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "KSVR_Emissive.png",
+        "path": "//..\\textures\\KSVR_Emissive.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "KSVR_Emissive.png.001",
+        "path": "//..\\textures\\KSVR_Emissive.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "KSVR_Mixed_AO.png",
+        "path": "//..\\textures\\KSVR_Mixed_AO.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "KSVR_Normal_OpenGL.png",
+        "path": "//..\\textures\\KSVR_Normal_OpenGL.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "KSVR_Normal_OpenGL.png.001",
+        "path": "//..\\textures\\KSVR_Normal_OpenGL.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "KSVR_Roughness.png",
+        "path": "//..\\textures\\KSVR_Roughness.png",
+        "relative": true,
+        "resolves": true
+      },
+      {
+        "image": "KSVR_Roughness.png.001",
+        "path": "//..\\textures\\KSVR_Roughness.png",
+        "relative": true,
+        "resolves": true
+      }
+    ],
+    "limits": {
+      "right_hand_stock_error_m": 0.1,
+      "left_hand_foregrip_error_m": 0.05,
+      "foot_target_error_m": 0.015,
+      "crouch_pelvis_drop_m": 0.15,
+      "minimum_limb_length_ratio": 0.65,
+      "maximum_limb_length_ratio": 1.35
+    },
+    "observed_passes": [
+      "reference_static_action_preserved",
+      "weapon_world_transform_preserved_on_attachment",
+      "weapon_child_hierarchy_preserved",
+      "weapon_follows_right_hand",
+      "relative_texture_paths_resolve",
+      "clip_actions_have_distinct_motion",
+      "crouch_pelvis_lowered",
+      "fbx_export_created",
+      "fbx_round_trip"
+    ],
+    "observed_failures": [],
+    "untested": [
+      "Unity rig/avatar and material import (Unity editor not found)",
+      "Human gameplay acceptance and in-engine retargeting",
+      "Full geometric self-intersection/clipping beyond rendered sample views"
+    ],
+    "unity_validation": {
+      "status": "not_run",
+      "reason": "No Unity editor executable found."
+    },
+    "rendered_pose_review": {
+      "status": "pending visual review",
+      "frames_rendered": [
+        {
+          "row": 0,
+          "action": "SWAT_RifleReadyIdle",
+          "columns": [
+            1,
+            31,
+            61
+          ]
+        },
+        {
+          "row": 1,
+          "action": "SWAT_InPlaceWalk",
+          "columns": [
+            1,
+            17,
+            33
+          ]
+        },
+        {
+          "row": 2,
+          "action": "SWAT_Crouch",
+          "columns": [
+            1,
+            16,
+            32
+          ]
+        }
+      ],
+      "keyframe_names_not_used_as_quality_evidence": true
+    }
+  }
 }

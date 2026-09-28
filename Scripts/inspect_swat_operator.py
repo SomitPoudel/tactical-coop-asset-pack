@@ -8,6 +8,9 @@ import sys
 import bpy
 from mathutils import Vector
 
+ROOT = Path(__file__).resolve().parents[1]
+ASSET_ROOT = ROOT / "References" / "swat-operator-remastered"
+
 
 def image_node(nodes, links, material, principled, texture_dir, filename,
                color_space, socket_name):
@@ -88,7 +91,7 @@ def reconnect_material(material, texture_dir, missing_textures):
         if ao:
             multiply = nodes.new("ShaderNodeMixRGB")
             multiply.blend_type = "MULTIPLY"
-            multiply.inputs["Fac"].default_value = 1.0
+            multiply.inputs["Fac"].default_value = 0.45
             multiply.location = (-180, 80)
             links.new(color_output, multiply.inputs["Color1"])
             links.new(ao.outputs["Color"], multiply.inputs["Color2"])
@@ -114,6 +117,61 @@ def reconnect_material(material, texture_dir, missing_textures):
         links.new(normal_map.outputs["Normal"], principled.inputs["Normal"])
 
     return kind
+
+
+def material_diagnostics(materials):
+    results = {}
+    for material in materials:
+        if not material.use_nodes or not material.node_tree:
+            results[material.name] = {"nodes_enabled": False}
+            continue
+        nodes = material.node_tree.nodes
+        shader = next((node for node in nodes
+                       if node.type == "BSDF_PRINCIPLED"), None)
+        if shader is None:
+            results[material.name] = {"nodes_enabled": True,
+                                      "principled_shader_found": False}
+            continue
+
+        def source_for(socket):
+            if socket not in shader.inputs:
+                return None
+            links = list(shader.inputs[socket].links)
+            if not links:
+                return None
+            node = links[0].from_node
+            source = {"node_type": node.type, "node_label": node.label}
+            if node.type == "TEX_IMAGE" and node.image:
+                source.update({"image": node.image.name,
+                               "color_space": node.image.colorspace_settings.name})
+            if node.type == "NORMAL_MAP":
+                normal_links = list(node.inputs["Color"].links)
+                if normal_links:
+                    image_node = normal_links[0].from_node
+                    source["normal_image"] = (
+                        image_node.image.name if image_node.type == "TEX_IMAGE"
+                        and image_node.image else None)
+                    source["normal_color_space"] = (
+                        image_node.image.colorspace_settings.name
+                        if image_node.type == "TEX_IMAGE" and image_node.image else None)
+            return source
+
+        results[material.name] = {
+            "nodes_enabled": True,
+            "principled_shader_found": True,
+            "base_color": source_for("Base Color"),
+            "roughness": source_for("Roughness"),
+            "normal": source_for("Normal"),
+            "metallic": source_for("Metallic"),
+            "emission": source_for("Emission Color"),
+            "alpha_connected": bool(list(shader.inputs["Alpha"].links))
+            if "Alpha" in shader.inputs else False,
+            "ao_multiply_factor": next((node.inputs["Fac"].default_value
+                                        for node in nodes
+                                        if node.type == "MIX_RGB"
+                                        and node.blend_type == "MULTIPLY"), None),
+        }
+    return results
 
 
 def object_bounds(objects):
@@ -332,18 +390,18 @@ def render_previews(scene, bounds, output_dir):
     center = Vector(bounds["center"])
     height = max(bounds["dimensions"])
     add_light("Inspection_Key", center +
-              Vector((3, -4, height * 0.75)), 1400, height * 0.9)
+              Vector((2.2, -3.2, height * 0.7)), 520, height * 0.85)
     add_light("Inspection_Fill", center +
-              Vector((-4, -2, height * 0.35)), 850, height * 0.8)
+              Vector((-3.2, -2.0, height * 0.3)), 240, height * 0.9)
     add_light("Inspection_Rim", center +
-              Vector((1, 3, height * 0.7)), 1200, height * 0.75)
+              Vector((1.0, 2.4, height * 0.6)), 360, height * 0.8)
 
     world = scene.world or bpy.data.worlds.new("Inspection_Neutral_World")
     scene.world = world
     world.use_nodes = True
     background = world.node_tree.nodes.get("Background")
-    background.inputs["Color"].default_value = (0.32, 0.32, 0.32, 1)
-    background.inputs["Strength"].default_value = 0.65
+    background.inputs["Color"].default_value = (0.19, 0.19, 0.19, 1)
+    background.inputs["Strength"].default_value = 0.35
     engines = {item.identifier for item in
                bpy.types.RenderSettings.bl_rna.properties["engine"].enum_items}
     scene.render.engine = ("BLENDER_EEVEE_NEXT" if "BLENDER_EEVEE_NEXT" in engines
@@ -355,12 +413,16 @@ def render_previews(scene, bounds, output_dir):
     scene.render.film_transparent = False
     scene.render.fps = 30
     scene.view_settings.view_transform = "AgX"
+    if "AgX - Medium High Contrast" in scene.view_settings.bl_rna.properties["look"].enum_items.keys():
+        scene.view_settings.look = "AgX - Medium High Contrast"
+    scene.view_settings.exposure = -0.55
     aspect = scene.render.resolution_x / scene.render.resolution_y
     frame_corners = bounds["corners"]
     views = {
         "front": Vector((0, -1, 0)),
         "side": Vector((1, 0, 0)),
         "three_quarter": Vector((1, -1, 0)).normalized(),
+        "gameplay_angle": Vector((0.78, -1, 0.12)).normalized(),
     }
     rendered = []
     for name, direction in views.items():
@@ -378,7 +440,7 @@ def render_previews(scene, bounds, output_dir):
         projected_height = max(abs((point - center).dot(up))
                                for point in frame_corners) * 2
         camera_data.ortho_scale = max(
-            projected_width, projected_height * aspect) * 1.18
+            projected_width, projected_height * aspect) * 1.36
         scene.camera = camera
         destination = output_dir / ("swat_operator_" + name + ".png")
         scene.render.filepath = str(destination)
@@ -390,8 +452,7 @@ def render_previews(scene, bounds, output_dir):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path,
-                        default=Path.home() / "Downloads" / "swat-operator-remastered" /
-                        "source" / "swat lp.fbx")
+                        default=ASSET_ROOT / "source" / "swat lp.fbx")
     parser.add_argument("--textures", type=Path)
     parser.add_argument("--output", type=Path)
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
@@ -415,6 +476,12 @@ def main():
         "missing_textures": [],
         "import_errors": [],
         "licence_attribution_files_found": [],
+        "workflow_defaults": {
+            "repository_root": str(ROOT),
+            "asset_root": str(ASSET_ROOT),
+            "source_default": str(ASSET_ROOT / "source" / "swat lp.fbx"),
+            "output_default": str(ASSET_ROOT / "inspection"),
+        },
     }
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -456,6 +523,7 @@ def main():
         "armatures": [armature.name for armature in armatures],
         "mesh_vertex_counts": {mesh.name: len(mesh.data.vertices) for mesh in meshes},
     }
+    report["material_diagnostics"] = material_diagnostics(materials)
 
     bounds = object_bounds(asset_meshes)
     report["scale_bounds_meters"] = (
@@ -474,6 +542,17 @@ def main():
         report["previews"] = render_previews(scene, bounds, preview_dir)
         for mesh in auxiliary_meshes:
             mesh.hide_render = False
+    report["render_settings"] = {
+        "engine": scene.render.engine,
+        "view_transform": scene.view_settings.view_transform,
+        "look": scene.view_settings.look,
+        "exposure_ev": scene.view_settings.exposure,
+        "world_strength": scene.world.node_tree.nodes["Background"].inputs[
+            "Strength"].default_value,
+        "area_lights": [{"name": obj.name, "power_watts": obj.data.energy,
+                         "size_m": obj.data.size}
+                        for obj in scene.objects if obj.type == "LIGHT"],
+    }
     bpy.ops.wm.save_as_mainfile(filepath=str(blend_path))
     bpy.ops.file.make_paths_relative()
     bpy.ops.wm.save_as_mainfile(filepath=str(blend_path))
