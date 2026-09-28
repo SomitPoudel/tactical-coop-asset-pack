@@ -69,7 +69,7 @@
         "name": "single_armature_skinning",
         "pass": true,
         "details": {
-          "deforming_meshes": 34
+          "deforming_meshes": 23
         }
       },
       {
@@ -95,10 +95,12 @@
         "name": "explicit_action_start_end_channels",
         "pass": true,
         "details": {
-          "Anim_RifleReadyIdle": true,
           "Anim_RifleRecoil": true,
+          "Anim_RifleReadyIdle": true,
           "Anim_CrouchIdle": true,
-          "Anim_Walk_Forward": true
+          "Anim_Walk_Forward": true,
+          "Anim_CrouchToStand": true,
+          "Anim_StandToCrouch": true
         }
       },
       {
@@ -217,6 +219,14 @@
           "main_hand_m": 0.0,
           "support_hand_m": 0.0
         }
+      },
+      {
+        "name": "connected_uniform_surface",
+        "pass": true,
+        "details": {
+          "mesh_object": "Officer_Uniform",
+          "connected_face_components": 1
+        }
       }
     ]
   },
@@ -238,9 +248,9 @@
             0.08
           ],
           "measured_m": [
-            0.832,
-            0.905,
-            1.84
+            0.8038,
+            0.933,
+            1.805
           ]
         }
       },
@@ -291,7 +301,7 @@
         "pass": true,
         "details": {
           "Char_Officer": {
-            "count": 8876,
+            "count": 11084,
             "budget": 12000
           },
           "Equip_Carbine": {
@@ -302,6 +312,32 @@
             "count": 2856,
             "budget": 12000
           }
+        }
+      },
+      {
+        "name": "boot_footprint_dimensions",
+        "pass": true,
+        "details": {
+          "sole_dimensions_m": {
+            "L": [
+              0.104,
+              0.3,
+              0.045
+            ],
+            "R": [
+              0.104,
+              0.3,
+              0.045
+            ]
+          },
+          "target_length_m": [
+            0.28,
+            0.31
+          ],
+          "target_width_m": [
+            0.1,
+            0.12
+          ]
         }
       },
       {
@@ -330,47 +366,61 @@
       "Char_Officer": {
         "status": "passed",
         "dimensions_m": [
-          0.832,
-          0.905,
-          1.84
+          0.8038,
+          0.933,
+          1.805
         ],
         "source_dimensions_m": [
-          0.832,
-          0.905,
-          1.84
+          0.8038,
+          0.933,
+          1.805
         ],
-        "mesh_count": 49,
+        "mesh_count": 37,
         "armature_count": 1,
         "expected_actions": [
           "Anim_RifleReadyIdle",
           "Anim_Walk_Forward",
+          "Anim_StandToCrouch",
           "Anim_CrouchIdle",
+          "Anim_CrouchToStand",
           "Anim_RifleRecoil"
         ],
         "observed_actions": [
           "ATT_Back.001|Anim_CrouchIdle",
+          "ATT_Back.001|Anim_CrouchToStand",
           "ATT_Back.001|Anim_RifleReadyIdle",
           "ATT_Back.001|Anim_RifleRecoil",
+          "ATT_Back.001|Anim_StandToCrouch",
           "ATT_Back.001|Anim_Walk_Forward",
           "ATT_Belt.001|Anim_CrouchIdle",
+          "ATT_Belt.001|Anim_CrouchToStand",
           "ATT_Belt.001|Anim_RifleReadyIdle",
           "ATT_Belt.001|Anim_RifleRecoil",
+          "ATT_Belt.001|Anim_StandToCrouch",
           "ATT_Belt.001|Anim_Walk_Forward",
           "ATT_Officer_MainHand.001|Anim_CrouchIdle",
+          "ATT_Officer_MainHand.001|Anim_CrouchToStand",
           "ATT_Officer_MainHand.001|Anim_RifleReadyIdle",
           "ATT_Officer_MainHand.001|Anim_RifleRecoil",
+          "ATT_Officer_MainHand.001|Anim_StandToCrouch",
           "ATT_Officer_MainHand.001|Anim_Walk_Forward",
           "ATT_Officer_SupportHand.001|Anim_CrouchIdle",
+          "ATT_Officer_SupportHand.001|Anim_CrouchToStand",
           "ATT_Officer_SupportHand.001|Anim_RifleReadyIdle",
           "ATT_Officer_SupportHand.001|Anim_RifleRecoil",
+          "ATT_Officer_SupportHand.001|Anim_StandToCrouch",
           "ATT_Officer_SupportHand.001|Anim_Walk_Forward",
           "Char_Officer.001|Anim_CrouchIdle",
+          "Char_Officer.001|Anim_CrouchToStand",
           "Char_Officer.001|Anim_RifleReadyIdle",
           "Char_Officer.001|Anim_RifleRecoil",
+          "Char_Officer.001|Anim_StandToCrouch",
           "Char_Officer.001|Anim_Walk_Forward",
           "Rig_Officer.001|Anim_CrouchIdle",
+          "Rig_Officer.001|Anim_CrouchToStand",
           "Rig_Officer.001|Anim_RifleReadyIdle",
           "Rig_Officer.001|Anim_RifleRecoil",
+          "Rig_Officer.001|Anim_StandToCrouch",
           "Rig_Officer.001|Anim_Walk_Forward"
         ],
         "round_trip_clip_checks": {
@@ -402,6 +452,20 @@
               "OBJECT"
             ]
           },
+          "Anim_StandToCrouch": {
+            "found": true,
+            "evaluated_frames": [
+              1,
+              8,
+              16
+            ],
+            "pose_changes": true,
+            "action_name": "Rig_Officer.001|Anim_StandToCrouch",
+            "curve_count": 209,
+            "slot_target_types": [
+              "OBJECT"
+            ]
+          },
           "Anim_CrouchIdle": {
             "found": true,
             "evaluated_frames": [
@@ -411,6 +475,20 @@
             ],
             "pose_changes": true,
             "action_name": "Rig_Officer.001|Anim_CrouchIdle",
+            "curve_count": 209,
+            "slot_target_types": [
+              "OBJECT"
+            ]
+          },
+          "Anim_CrouchToStand": {
+            "found": true,
+            "evaluated_frames": [
+              1,
+              8,
+              16
+            ],
+            "pose_changes": true,
+            "action_name": "Rig_Officer.001|Anim_CrouchToStand",
             "curve_count": 209,
             "slot_target_types": [
               "OBJECT"
@@ -604,9 +682,9 @@
   "passed": true,
   "dimensions_m": {
     "Char_Officer": [
-      0.832,
-      0.905,
-      1.84
+      0.8038,
+      0.933,
+      1.805
     ],
     "Equip_Carbine": [
       0.185,
@@ -620,9 +698,24 @@
     ]
   },
   "evaluated_triangle_counts": {
-    "Char_Officer": 8876,
+    "Char_Officer": 11084,
     "Equip_Carbine": 1296,
     "Env_QualityRoom": 2856
+  },
+  "officer_surface": {
+    "connected_face_components": 1,
+    "boot_sole_dimensions_m": {
+      "L": [
+        0.104,
+        0.3,
+        0.045
+      ],
+      "R": [
+        0.104,
+        0.3,
+        0.045
+      ]
+    }
   },
   "actions": {
     "Anim_CrouchIdle": {
@@ -635,6 +728,18 @@
         30.0
       ],
       "loop": true,
+      "metadata_valid": true
+    },
+    "Anim_CrouchToStand": {
+      "metadata_range": [
+        1,
+        16
+      ],
+      "actual_range": [
+        1.0,
+        16.0
+      ],
+      "loop": false,
       "metadata_valid": true
     },
     "Anim_Door_L": {
@@ -681,6 +786,18 @@
       "actual_range": [
         1.0,
         12.0
+      ],
+      "loop": false,
+      "metadata_valid": true
+    },
+    "Anim_StandToCrouch": {
+      "metadata_range": [
+        1,
+        16
+      ],
+      "actual_range": [
+        1.0,
+        16.0
       ],
       "loop": false,
       "metadata_valid": true

@@ -11,7 +11,9 @@ Add-Type -AssemblyName System.Drawing
 $specs = @(
     @{ Pattern = 'Anim_RifleReadyIdle_*.png'; Output = 'idle_review.gif' },
     @{ Pattern = 'Anim_Walk_Forward_*.png'; Output = 'walk_review.gif' },
+    @{ Pattern = 'Anim_StandToCrouch_*.png'; Output = 'stand_to_crouch_review.gif' },
     @{ Pattern = 'Anim_CrouchIdle_*.png'; Output = 'crouch_review.gif' },
+    @{ Pattern = 'Anim_CrouchToStand_*.png'; Output = 'crouch_to_stand_review.gif' },
     @{ Pattern = 'Anim_RifleRecoil_*.png'; Output = 'recoil_review.gif' }
 )
 
@@ -136,6 +138,123 @@ function Set-GifFrameDelays {
         frame_count         = $delayOffsets.Count
         delays_centiseconds = $verifiedDelays.ToArray()
         has_loop_extension  = $hasLoopExtension
+    }
+}
+
+function New-StanceTransitionReview {
+    param(
+        [string]$AnimationDirectory,
+        [object]$QualityReport,
+        [double]$SceneFps
+    )
+
+    $entries = [System.Collections.Generic.List[object]]::new()
+    foreach ($clipName in @('Anim_StandToCrouch', 'Anim_CrouchToStand')) {
+        $clipData = $QualityReport.actions.$clipName
+        $clipStart = [int]$clipData.metadata_range[0]
+        $clipEnd = [int]$clipData.metadata_range[1]
+        $frames = @(Get-ChildItem -LiteralPath $AnimationDirectory `
+                -Filter ($clipName + '_*.png') -File |
+            Sort-Object { [int]($_.BaseName -replace '^.*_(\d+)$', '$1') })
+        $sourceNumbers = @($frames | ForEach-Object {
+                [int]($_.BaseName -replace '^.*_(\d+)$', '$1')
+            })
+        if ($frames.Count -lt 2 -or $sourceNumbers[0] -ne $clipStart -or
+            $sourceNumbers[-1] -ne $clipEnd) {
+            throw "$clipName samples do not span the authored clip range."
+        }
+        $firstSample = 0
+        if ($clipName -eq 'Anim_CrouchToStand') {
+            $firstSample = 1
+        }
+        for ($index = $firstSample; $index -lt $frames.Count; $index++) {
+            if ($index -lt $frames.Count-1) {
+                $duration = $sourceNumbers[$index+1]-$sourceNumbers[$index]
+            }
+            else {
+                $duration = [Math]::Max(
+                    1, $clipEnd-$sourceNumbers[$index]+1)
+            }
+            $entries.Add([pscustomobject]@{
+                    path     = $frames[$index].FullName
+                    duration = $duration
+                })
+        }
+    }
+
+    $delays = @()
+    $exactCentiseconds = 0.0
+    $roundedCentiseconds = 0
+    foreach ($entry in $entries) {
+        $exactCentiseconds += $entry.duration*100.0/$SceneFps
+        $target = [int][Math]::Round(
+            $exactCentiseconds, 0, [MidpointRounding]::AwayFromZero)
+        $delays += $target-$roundedCentiseconds
+        $roundedCentiseconds = $target
+    }
+
+    $outputPath = Join-Path $AnimationDirectory 'stance_transition_review.gif'
+    $encoder = [System.Windows.Media.Imaging.GifBitmapEncoder]::new()
+    for ($index = 0; $index -lt $entries.Count; $index++) {
+        $bitmap = [System.Windows.Media.Imaging.BitmapImage]::new()
+        $bitmap.BeginInit()
+        $bitmap.CacheOption = [System.Windows.Media.Imaging.BitmapCacheOption]::OnLoad
+        $bitmap.CreateOptions = [System.Windows.Media.Imaging.BitmapCreateOptions]::PreservePixelFormat
+        $bitmap.UriSource = [Uri]::new($entries[$index].path)
+        $bitmap.EndInit()
+        $metadata = [System.Windows.Media.Imaging.BitmapMetadata]::new('gif')
+        $metadata.SetQuery('/grctlext/Delay', [UInt16]$delays[$index])
+        $metadata.SetQuery('/grctlext/Disposal', [Byte]2)
+        $encoder.Frames.Add(
+            [System.Windows.Media.Imaging.BitmapFrame]::Create(
+                $bitmap, $null, $metadata, $null))
+    }
+    $stream = [System.IO.File]::Open(
+        $outputPath, [System.IO.FileMode]::Create,
+        [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
+    try {
+        $encoder.Save($stream)
+    }
+    finally {
+        $stream.Dispose()
+    }
+    $timing = Set-GifFrameDelays -Path $outputPath `
+        -DelaysCentiseconds $delays
+    $check = [System.Drawing.Image]::FromFile($outputPath)
+    try {
+        $frameCount = $check.GetFrameCount(
+            [System.Drawing.Imaging.FrameDimension]::Time)
+        $property = $check.GetPropertyItem(0x5100)
+        if ($frameCount -ne $entries.Count -or
+            $property.Value.Length -ne $frameCount*4 -or
+            $timing.has_loop_extension) {
+            throw 'Combined stance review GIF failed frame/timing verification.'
+        }
+        for ($index = 0; $index -lt $frameCount; $index++) {
+            $actual = [int][BitConverter]::ToUInt32(
+                $property.Value, $index*4)
+            if ($actual -le 0 -or $actual -ne $delays[$index]) {
+                throw "Combined stance GIF frame $index has invalid timing."
+            }
+        }
+        return [pscustomobject]@{
+            path               = 'Previews/animations/stance_transition_review.gif'
+            frame_count        = $frameCount
+            width              = $check.Width
+            height             = $check.Height
+            size_bytes         = (Get-Item -LiteralPath $outputPath).Length
+            source_clips       = @('Anim_StandToCrouch', 'Anim_CrouchToStand')
+            source_frame_numbers = @($entries | ForEach-Object {
+                    [IO.Path]::GetFileNameWithoutExtension($_.path)
+                })
+            loops              = $false
+            fps                = $SceneFps
+            frame_delays_ms    = @($delays | ForEach-Object { $_*10 })
+            duration_ms        = $roundedCentiseconds*10
+        }
+    }
+    finally {
+        $check.Dispose()
     }
 }
 
@@ -280,6 +399,11 @@ foreach ($spec in $specs) {
     }
     $check.Dispose()
 }
+
+$reviews += New-StanceTransitionReview `
+    -AnimationDirectory $animationDir `
+    -QualityReport $qualityReport `
+    -SceneFps $sceneFps
 
 if (-not (Test-Path -LiteralPath $statusPath -PathType Leaf)) {
     throw 'Generate the quality sample before packaging animation previews.'

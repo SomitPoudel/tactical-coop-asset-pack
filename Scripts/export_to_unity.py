@@ -17,7 +17,8 @@ validate = _common.validate
 ASSETS = [
     ('Char_Officer', 'Officer_Quality.fbx', 'Characters',
      (('Rig_Officer', ('Anim_RifleReadyIdle', 'Anim_Walk_Forward',
-                       'Anim_CrouchIdle', 'Anim_RifleRecoil')),)),
+                       'Anim_StandToCrouch', 'Anim_CrouchIdle',
+                       'Anim_CrouchToStand', 'Anim_RifleRecoil')),)),
     ('Equip_Carbine', 'Carbine_Quality.fbx', 'Equipment', ()),
     ('Env_QualityRoom', 'QualityRoom.fbx', 'Environment',
      (('DoorPivot_L', ('Anim_Door_L',)),

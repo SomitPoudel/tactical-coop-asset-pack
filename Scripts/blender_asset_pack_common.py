@@ -6,6 +6,7 @@ Run scripts from any working directory with Blender 3.6 LTS:
 from __future__ import annotations
 
 import argparse
+from array import array
 import json
 import math
 import sys
@@ -38,8 +39,10 @@ def cli_args():
     p.add_argument("--no-render", action="store_true")
     p.add_argument("--preview-only", action="store_true")
     p.add_argument("--preview-views", nargs="+", choices=(
-        "officer_front", "officer_side", "gameplay_angle",
-        "door_closed", "door_open", "animations"))
+        "officer_front", "officer_side", "officer_three_quarter",
+        "officer_boots_knees", "officer_side_by_side",
+        "officer_gameplay_distance",
+        "gameplay_angle", "door_closed", "door_open", "animations"))
     return p.parse_args(argv)
 
 
@@ -164,7 +167,7 @@ def add_cylinder(name, location, radius, depth, material=None, col=None, vertice
 
 def add_uv(name, location, scale, material=None, col=None):
     bpy.ops.mesh.primitive_uv_sphere_add(
-        segments=20, ring_count=12, location=location)
+        segments=12, ring_count=8, location=location)
     o = bpy.context.object
     o.name = name
     o.scale = scale
@@ -314,6 +317,204 @@ def torso_mesh(name, material, arm, col):
     return weighted_mesh(name, vertices, faces, material, arm, weights, col)
 
 
+def append_profiled_segment(vertices, faces, start, end, profile, sides=12):
+    start = Vector(start)
+    end = Vector(end)
+    axis = (end-start).normalized()
+    side = Vector((1, 0, 0))-axis*axis.dot(Vector((1, 0, 0)))
+    if side.length < .1:
+        side = Vector((0, 1, 0))-axis*axis.dot(Vector((0, 1, 0)))
+    side.normalize()
+    depth = axis.cross(side).normalized()
+    first = len(vertices)
+    for t, radius_x, radius_y in profile:
+        center = start.lerp(end, t)
+        for index in range(sides):
+            angle = math.tau*index/sides
+            point = center+side*(math.cos(angle)*radius_x) + \
+                depth*(math.sin(angle)*radius_y)
+            vertices.append(tuple(point))
+    for ring in range(len(profile)-1):
+        for index in range(sides):
+            a = first+ring*sides+index
+            b = first+ring*sides+(index+1) % sides
+            faces.append((a, b, b+sides, a+sides))
+    faces.extend((tuple(reversed(range(first, first+sides))),
+                  tuple(range(first+(len(profile)-1)*sides,
+                              first+len(profile)*sides))))
+
+
+def append_torso_profiles(vertices, faces, profiles, sides=16):
+    first = len(vertices)
+    for z, center_y, radius_x, radius_y in profiles:
+        for index in range(sides):
+            angle = math.tau*index/sides
+            vertices.append((math.cos(angle)*radius_x,
+                             center_y+math.sin(angle)*radius_y, z))
+    for ring in range(len(profiles)-1):
+        for index in range(sides):
+            a = first+ring*sides+index
+            b = first+ring*sides+(index+1) % sides
+            faces.append((a, b, b+sides, a+sides))
+    faces.extend((tuple(reversed(range(first, first+sides))),
+                  tuple(range(first+(len(profiles)-1)*sides,
+                              first+len(profiles)*sides))))
+
+
+def uniform_body_mesh(name, material, arm, col):
+    vertices = []
+    faces = []
+    append_torso_profiles(vertices, faces, (
+        (.77, 0, .145, .105), (.82, 0, .19, .13),
+        (.91, 0, .185, .125), (1.00, 0, .17, .115),
+        (1.08, 0, .19, .12), (1.16, 0, .215, .13),
+        (1.28, 0, .235, .14), (1.38, 0, .255, .135),
+        (1.45, 0, .235, .125), (1.50, 0, .13, .11),
+    ))
+    limb_profiles = {
+        'clavicle': ((0, .075, .07), (.25, .105, .085),
+                     (.75, .11, .09), (1, .12, .095)),
+        'upper_arm': ((0, .12, .095), (.12, .12, .09),
+                      (.42, .105, .082), (.78, .09, .073),
+                      (.94, .088, .072), (1, .085, .07)),
+        'forearm': ((0, .083, .07), (.12, .09, .074),
+                    (.36, .086, .07), (.72, .075, .062),
+                    (.91, .071, .06), (1, .067, .057)),
+        'thigh': ((0, .12, .108), (.12, .135, .115),
+                  (.35, .13, .105), (.70, .108, .087),
+                  (.90, .094, .078), (1, .086, .072)),
+        'shin': ((0, .09, .076), (.12, .096, .08),
+                 (.32, .092, .078), (.55, .082, .07),
+                 (.78, .073, .063), (.94, .07, .06), (1, .068, .057)),
+    }
+    for side in ('L', 'R'):
+        for bone_name in ('clavicle', 'upper_arm', 'forearm', 'thigh', 'shin'):
+            bone = arm.data.bones[bone_name+'.'+side]
+            append_profiled_segment(
+                vertices, faces, bone.head_local, bone.tail_local,
+                limb_profiles[bone_name])
+
+    mesh = bpy.data.meshes.new(name+'_SourceMesh')
+    mesh.from_pydata(vertices, [], faces)
+    mesh.update()
+    obj = bpy.data.objects.new(name, mesh)
+    col.objects.link(obj)
+    assign_mat(obj, material)
+    remesh = obj.modifiers.new('Uniform_Surface_Voxel_Fuse', 'REMESH')
+    remesh.mode = 'VOXEL'
+    remesh.voxel_size = .03
+    if hasattr(remesh, 'use_smooth_shade'):
+        remesh.use_smooth_shade = True
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.modifier_apply(modifier=remesh.name)
+    for polygon in obj.data.polygons:
+        polygon.use_smooth = True
+    uv_layer = obj.data.uv_layers.new(name='Uniform_UV')
+    for loop in obj.data.loops:
+        point = obj.data.vertices[loop.vertex_index].co
+        uv_layer.data[loop.index].uv = (point.x+.5, point.z/1.85)
+
+    skeleton = [arm.data.bones[name] for name in (
+        'pelvis', 'spine_01', 'spine_02')]
+    skeleton.extend(arm.data.bones[name+'.'+side]
+                    for side in ('L', 'R')
+                    for name in ('clavicle', 'upper_arm', 'forearm',
+                                 'thigh', 'shin'))
+    weights = []
+    for vertex in obj.data.vertices:
+        distances = []
+        for bone in skeleton:
+            start = bone.head_local
+            segment = bone.tail_local-start
+            fraction = max(0.0, min(1.0,
+                                    (vertex.co-start).dot(segment)/segment.length_squared))
+            nearest = start+segment*fraction
+            distances.append(((vertex.co-nearest).length, bone.name))
+        distances.sort()
+        minimum = distances[0][0]
+        nearby = [(distance, bone) for distance, bone in distances[:3]
+                  if distance <= minimum+.035]
+        raw = [(bone, math.exp(-(distance-minimum)/.018))
+               for distance, bone in nearby]
+        total = sum(weight for _, weight in raw)
+        weights.append({bone: weight/total for bone, weight in raw})
+    world = obj.matrix_world.copy()
+    obj.parent = arm
+    obj.matrix_world = world
+    bone_names = {bone for row in weights for bone in row}
+    groups = {bone: obj.vertex_groups.new(name=bone)
+              for bone in bone_names}
+    for index, row in enumerate(weights):
+        for bone, weight in row.items():
+            groups[bone].add([index], weight, 'REPLACE')
+    obj.modifiers.new('Armature_Deform', 'ARMATURE').object = arm
+    return obj
+
+
+def fitted_vest_plate(name, material, arm, col, back=False):
+    profiles = ((1.12, .155, .20, .12), (1.18, .17, .215, .13),
+                (1.32, .175, .23, .14), (1.39, .15, .24, .135),
+                (1.42, .125, .24, .13))
+    columns = 5
+    front = []
+    back_vertices = []
+    weights = []
+    for z, width, body_width, body_depth in profiles:
+        for column in range(columns):
+            fraction = column/(columns-1)*2-1
+            x = fraction*width
+            surface = -body_depth*math.sqrt(
+                max(.08, 1-(x/body_width)**2))
+            offset = .012 if back else -.012
+            front.append((x, surface+offset, z))
+            back_vertices.append((x, surface-offset, z))
+            upper = max(0.0, min(1.0, (z-1.18)/.16))
+            weights.append({'spine_01': 1-upper, 'spine_02': upper})
+    vertices = front+back_vertices
+    weights.extend(weights.copy())
+    faces = []
+    row_count = len(profiles)
+    offset = row_count*columns
+    for row in range(row_count-1):
+        for column in range(columns-1):
+            first = row*columns+column
+            second = first+columns
+            faces.append((first, first+1, second+1, second))
+            faces.append((offset+first, offset+second,
+                          offset+second+1, offset+first+1))
+    boundary = ([column for column in range(columns)] +
+                [row*columns+columns-1 for row in range(1, row_count)] +
+                [((row_count-1)*columns+column)
+                 for column in range(columns-2, -1, -1)] +
+                [row*columns for row in range(row_count-2, 0, -1)])
+    for index, first in enumerate(boundary):
+        second = boundary[(index+1) % len(boundary)]
+        faces.append((first, second, offset+second, offset+first))
+    return weighted_mesh(name, vertices, faces, material, arm, weights, col)
+
+
+def belt_mesh(name, material, arm, col):
+    vertices = []
+    faces = []
+    append_torso_profiles(vertices, faces, (
+        (.955, 0, .182, .13), (.968, 0, .198, .145),
+        (1.015, 0, .198, .145), (1.03, 0, .182, .13),
+    ), sides=20)
+    weights = [{'pelvis': 1.0} for _ in vertices]
+    return weighted_mesh(name, vertices, faces, material, arm, weights, col)
+
+
+def low_profile_ellipsoid(name, material, arm, col, profiles, bone='head'):
+    vertices = []
+    faces = []
+    append_torso_profiles(vertices, faces, profiles, sides=16)
+    return weighted_mesh(
+        name, vertices, faces, material, arm,
+        [{bone: 1.0} for _ in vertices], col)
+
+
 def weighted_ellipsoid(name, location, scale, material, arm, bone_weights, col):
     obj = add_uv(name, location, scale, material, col)
     groups = {bone: obj.vertex_groups.new(name=bone) for bone in bone_weights}
@@ -343,6 +544,17 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
     colors = {'blue': (.12, .25, .38, 1), 'orange': (.42, .20, .08, 1)}
     cloth = mat('MAT_Officer_'+variant,
                 colors.get(variant, colors['blue']), 0, .8)
+    cloth_nodes = cloth.node_tree.nodes
+    cloth_links = cloth.node_tree.links
+    cloth_bsdf = cloth_nodes.get('Principled BSDF')
+    fabric_noise = cloth_nodes.new('ShaderNodeTexNoise')
+    fabric_noise.inputs['Scale'].default_value = 360
+    fabric_noise.inputs['Detail'].default_value = 2
+    fabric_bump = cloth_nodes.new('ShaderNodeBump')
+    fabric_bump.inputs['Strength'].default_value = .12
+    fabric_bump.inputs['Distance'].default_value = .003
+    cloth_links.new(fabric_noise.outputs['Fac'], fabric_bump.inputs['Height'])
+    cloth_links.new(fabric_bump.outputs['Normal'], cloth_bsdf.inputs['Normal'])
     armor = mat('MAT_Armor', (.105, .135, .16, 1), .12, .68)
     dark = mat('MAT_Rubber', (.025, .032, .038, 1), .04, .78)
     pouch = mat('MAT_Officer_Pouch', (.055, .075, .082, 1), 0, .9)
@@ -353,36 +565,9 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
     root['asset_type'] = 'character'
     arm.parent = root
 
-    torso_mesh('Officer_Torso', cloth, arm, col)
-    plate = add_cube('Officer_Plate', (0, -.145, 1.27),
-                     (.385, .065, .30), armor, .035, col)
-    plate_world = plate.matrix_world.copy()
-    plate.parent = arm
-    plate.matrix_world = plate_world
-    plate_groups = {bone: plate.vertex_groups.new(name=bone)
-                    for bone in ('spine_01', 'spine_02')}
-    for index in range(len(plate.data.vertices)):
-        plate_groups['spine_01'].add([index], .25, 'REPLACE')
-        plate_groups['spine_02'].add([index], .75, 'REPLACE')
-    plate.modifiers.new('Armature_Deform', 'ARMATURE').object = arm
-
-    segments = [
-        ('Officer_UpperArm.L', 'clavicle.L', 'upper_arm.L', .125, .091, cloth),
-        ('Officer_Forearm.L', 'upper_arm.L', 'forearm.L', .085, .065, cloth),
-        ('Officer_UpperArm.R', 'clavicle.R', 'upper_arm.R', .125, .091, cloth),
-        ('Officer_Forearm.R', 'upper_arm.R', 'forearm.R', .085, .065, cloth),
-        ('Officer_Thigh.L', 'pelvis', 'thigh.L', .105, .085, cloth),
-        ('Officer_Shin.L', 'thigh.L', 'shin.L', .102, .084, cloth),
-        ('Officer_Thigh.R', 'pelvis', 'thigh.R', .105, .085, cloth),
-        ('Officer_Shin.R', 'thigh.R', 'shin.R', .102, .084, cloth),
-    ]
-    for mesh_name, neighbor, bone, start_radius, end_radius, material in segments:
-        tapered_limb(mesh_name, arm.data.bones[bone].head_local,
-                     arm.data.bones[bone].tail_local, start_radius, end_radius,
-                     material, arm, bone, col, neighbor)
-
-    weighted_ellipsoid('Officer_Pelvis', (0, 0, .91), (.205, .145, .15),
-                       cloth, arm, {'pelvis': 1.0}, col)
+    uniform_body_mesh('Officer_Uniform', cloth, arm, col)
+    fitted_vest_plate('Officer_Plate', armor, arm, col)
+    fitted_vest_plate('Officer_VestRearPanel', armor, arm, col, back=True)
 
     def boot_mesh(name, side, foot_x, profiles, material):
         vertices = []
@@ -414,11 +599,6 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
     for side in ('L', 'R'):
         elbow = arm.data.bones['forearm.'+side].head_local
         knee = arm.data.bones['shin.'+side].head_local
-        weighted_ellipsoid('Officer_Elbow.'+side, elbow, (.082, .078, .082),
-                           cloth, arm,
-                           {'upper_arm.'+side: .5, 'forearm.'+side: .5}, col)
-        weighted_ellipsoid('Officer_Knee.'+side, knee, (.067, .065, .062),
-                           cloth, arm, {'thigh.'+side: .5, 'shin.'+side: .5}, col)
         knee_pad = add_cube('Officer_KneePad.'+side,
                             (knee.x, knee.y-.077, knee.z),
                             (.108, .035, .085), dark, .022, col)
@@ -434,6 +614,17 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
         weighted_ellipsoid('Officer_Glove.'+side, hand, (.09, .09, .065),
                            dark, arm,
                            {'hand.'+side: .7, 'forearm.'+side: .3}, col)
+        thumb = add_uv(
+            'Officer_GloveThumb.'+side,
+            (hand.x+(-.043 if side == 'L' else .043), hand.y-.065,
+             hand.z-.006), (.034, .055, .043), dark, col)
+        parent_keep_world(thumb, arm)
+        thumb_groups = {bone: thumb.vertex_groups.new(name=bone)
+                        for bone in ('forearm.'+side, 'hand.'+side)}
+        for vertex_index in range(len(thumb.data.vertices)):
+            thumb_groups['forearm.'+side].add([vertex_index], .15, 'REPLACE')
+            thumb_groups['hand.'+side].add([vertex_index], .85, 'REPLACE')
+        thumb.modifiers.new('Armature_Deform', 'ARMATURE').object = arm
         for name, location, dimensions in (
                 ('Officer_GloveCuff.'+side,
                  (hand.x, hand.y+.055, hand.z), (.13, .055, .07)),
@@ -449,28 +640,28 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
             detail.modifiers.new('Armature_Deform', 'ARMATURE').object = arm
         foot = arm.data.bones['foot.'+side].head_local
         boot_mesh('Officer_Boot.'+side, side, foot.x,
-                  ((.043, .097, -.312, .065),
-                   (.075, .104, -.300, .060),
-                   (.105, .096, -.275, .055),
-                   (.145, .081, -.218, .045),
-                   (.205, .078, -.145, .045),
-                   (.255, .076, -.075, .040),
-                   (.278, .077, -.050, .035)), dark)
+                  ((.043, .048, -.235, .060),
+                   (.075, .053, -.232, .058),
+                   (.105, .052, -.215, .055),
+                   (.145, .046, -.180, .048),
+                   (.205, .042, -.125, .046),
+                   (.255, .041, -.065, .042),
+                   (.278, .042, -.045, .038)), dark)
         boot_mesh('Officer_BootSole.'+side, side, foot.x,
-                  ((0.0, .108, -.325, .075),
-                   (.052, .108, -.325, .075)), armor)
-        shoulder_start = arm.data.bones['clavicle.'+side].head_local
-        shoulder_end = arm.data.bones['upper_arm.'+side].tail_local
-        tapered_limb('Officer_Shoulder.'+side, shoulder_start, shoulder_end,
-                     .145, .091, cloth, arm, 'upper_arm.'+side, col,
-                     'clavicle.'+side)
+                  ((0.0, .052, -.240, .060),
+                   (.045, .052, -.240, .060)), armor)
 
     weighted_ellipsoid('Officer_Head', (0, -.005, 1.63), (.125, .12, .155),
                        skin, arm, {'head': 1.0}, col)
-    weighted_ellipsoid('Officer_HelmetShell', (0, .005, 1.735),
-                       (.17, .19, .105), dark, arm, {'head': 1.0}, col)
-    weighted_ellipsoid('Officer_HelmetBrim', (0, -.045, 1.69),
-                       (.176, .195, .025), armor, arm, {'head': 1.0}, col)
+    low_profile_ellipsoid('Officer_HelmetShell', dark, arm, col, (
+        (1.685, .008, .105, .12), (1.705, .012, .15, .16),
+        (1.75, .018, .16, .175), (1.79, .025, .13, .15),
+        (1.805, .025, .07, .09),
+    ))
+    low_profile_ellipsoid('Officer_HelmetBrim', armor, arm, col, (
+        (1.685, -.045, .145, .15), (1.70, -.045, .17, .17),
+        (1.715, -.045, .145, .145),
+    ))
     for side in ('L', 'R'):
         strap = add_cube('Officer_ChinStrap.'+side,
                          ((-.105 if side == 'L' else .105), -.073, 1.615),
@@ -501,9 +692,10 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
          (.092, .075, .145), .018, 'spine_01'),
         ('Officer_MagPouch.R', (.125, -.205, 1.19),
          (.092, .075, .145), .018, 'spine_01'),
-        ('Officer_Belt', (0, 0, .99), (.42, .255, .052), .018, 'pelvis'),
-        ('Officer_Pouch.L', (-.235, -.095, 1.00), (.095, .09, .09), .018, 'pelvis'),
-        ('Officer_Pouch.R', (.235, -.095, 1.00), (.095, .09, .09), .018, 'pelvis'),
+        ('Officer_Pouch.L', (-.235, -.075, .99),
+         (.082, .075, .085), .018, 'pelvis'),
+        ('Officer_Pouch.R', (.235, -.075, .99),
+         (.082, .075, .085), .018, 'pelvis'),
         ('Officer_ShoulderPatch', (-.30, -.11, 1.40),
          (.10, .025, .075), .008, 'upper_arm.L'),
     ]
@@ -511,6 +703,8 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
         material = pouch if 'Pouch' in name or 'Mag' in name else armor
         accessory = add_cube(name, location, dimensions, material, bevel, col)
         parent_keep_world(accessory, arm, bone)
+
+    belt_mesh('Officer_Belt', armor, arm, col)
 
     attachments = [
         ('ATT_Officer_MainHand', (.155, -.405, 1.27), 'hand.R'),
@@ -832,6 +1026,25 @@ def evaluated_triangle_count(objects):
     return count
 
 
+def mesh_component_count(mesh):
+    neighbors = [set() for _ in mesh.vertices]
+    for edge in mesh.edges:
+        first, second = edge.vertices
+        neighbors[first].add(second)
+        neighbors[second].add(first)
+    unseen = set(range(len(mesh.vertices)))
+    components = 0
+    while unseen:
+        components += 1
+        pending = [unseen.pop()]
+        while pending:
+            for neighbor in neighbors[pending.pop()]:
+                if neighbor in unseen:
+                    unseen.remove(neighbor)
+                    pending.append(neighbor)
+    return components
+
+
 def world_aabb(obj):
     bpy.context.view_layer.update()
     evaluated = obj.evaluated_get(bpy.context.evaluated_depsgraph_get())
@@ -900,7 +1113,8 @@ def validate(path):
     arm = bpy.data.objects.get('Rig_Officer')
     expected_actions = {
         'Anim_RifleReadyIdle', 'Anim_Walk_Forward',
-        'Anim_CrouchIdle', 'Anim_RifleRecoil',
+        'Anim_StandToCrouch', 'Anim_CrouchIdle',
+        'Anim_CrouchToStand', 'Anim_RifleRecoil',
     }
     check(structural, 'armature_and_sample_actions', bool(
         arm and expected_actions.issubset(
@@ -1076,6 +1290,27 @@ def validate(path):
             name: {'count': count, 'budget': budgets[name]}
             for name, count in triangles.items()
     })
+    officer_uniform = bpy.data.objects.get('Officer_Uniform')
+    uniform_components = (mesh_component_count(officer_uniform.data)
+                          if officer_uniform else 0)
+    check(structural, 'connected_uniform_surface', bool(
+        officer_uniform and uniform_components == 1), {
+            'mesh_object': officer_uniform.name if officer_uniform else None,
+            'connected_face_components': uniform_components,
+    })
+    boot_dimensions = {}
+    for side in ('L', 'R'):
+        boot = bpy.data.objects.get('Officer_BootSole.'+side)
+        bounds = world_aabb(boot) if boot else None
+        boot_dimensions[side] = (
+            [round(bounds[1][axis]-bounds[0][axis], 4)
+             for axis in range(3)] if bounds else None)
+    boots_in_range = all(dimensions and .28 <= dimensions[1] <= .31 and
+                         .10 <= dimensions[0] <= .12
+                         for dimensions in boot_dimensions.values())
+    check(visual, 'boot_footprint_dimensions', boots_in_range,
+          {'sole_dimensions_m': boot_dimensions,
+           'target_length_m': [.28, .31], 'target_width_m': [.10, .12]})
     environment = roots.get('Env_QualityRoom')
     doorway = {
         'clear_width_m': environment.get('doorway_clear_width_m') if environment else None,
@@ -1118,6 +1353,10 @@ def validate(path):
         'passed': all(item['pass'] for item in all_checks),
         'dimensions_m': dimensions,
         'evaluated_triangle_counts': triangles,
+        'officer_surface': {
+            'connected_face_components': uniform_components,
+            'boot_sole_dimensions_m': boot_dimensions,
+        },
         'actions': action_metadata,
     }
     Path(path).write_text(json.dumps(data, indent=2), encoding='utf8')
@@ -1127,11 +1366,48 @@ def validate(path):
     return data
 
 
+def create_preview_grid():
+    ground = mat('MAT_ReviewGround', (.19, .22, .22, 1), 0, .92)
+    lines = mat('MAT_ReviewGrid', (.095, .125, .13, 1), 0, .9)
+    vertices = [(-1.3, -1.3, -.001), (1.3, -1.3, -.001),
+                (1.3, 1.3, -.001), (-1.3, 1.3, -.001)]
+    faces = [(0, 1, 2, 3)]
+    material_indices = [0]
+    for step in range(-12, 13):
+        coordinate = step*.1
+        for horizontal in (True, False):
+            center = coordinate
+            first = len(vertices)
+            half = .0012
+            if horizontal:
+                vertices.extend(((-1.3, center-half, -.0005),
+                                 (1.3, center-half, -.0005),
+                                 (1.3, center+half, -.0005),
+                                 (-1.3, center+half, -.0005)))
+            else:
+                vertices.extend(((center-half, -1.3, -.0005),
+                                 (center+half, -1.3, -.0005),
+                                 (center+half, 1.3, -.0005),
+                                 (center-half, 1.3, -.0005)))
+            faces.append((first, first+1, first+2, first+3))
+            material_indices.append(1)
+    mesh = bpy.data.meshes.new('ReviewGroundGrid_Mesh')
+    mesh.from_pydata(vertices, [], faces)
+    mesh.materials.append(ground)
+    mesh.materials.append(lines)
+    for polygon, material_index in zip(mesh.polygons, material_indices):
+        polygon.material_index = material_index
+    grid = bpy.data.objects.new('REVIEW_GroundGrid', mesh)
+    bpy.context.scene.collection.objects.link(grid)
+    return grid
+
+
 def render_quality_previews(arm, output_dir, views=None):
     output_dir = Path(output_dir)
     animation_dir = output_dir/'animations'
     requested_views = set(views) if views else {
-        'officer_front', 'officer_side', 'gameplay_angle',
+        'officer_front', 'officer_side', 'officer_three_quarter',
+        'officer_boots_knees', 'officer_side_by_side', 'gameplay_angle',
         'door_closed', 'door_open', 'animations',
     }
     if 'animations' in requested_views:
@@ -1161,35 +1437,113 @@ def render_quality_previews(arm, output_dir, views=None):
     scene.camera = camera
     previews = []
     door_light = None
+    grid = create_preview_grid()
 
-    def render(path):
+    def render(path, track=True):
+        path.parent.mkdir(parents=True, exist_ok=True)
         for proxy in collision_visibility:
             proxy.hide_render = True
         scene.render.filepath = str(path)
         bpy.context.view_layer.update()
         bpy.ops.render.render(write_still=True)
-        previews.append(str(path.relative_to(ROOT)))
+        if track:
+            previews.append(str(path.relative_to(ROOT)))
+
+    def compose_pair(first_path, second_path, output_path):
+        first = bpy.data.images.load(str(first_path), check_existing=False)
+        second = bpy.data.images.load(str(second_path), check_existing=False)
+        width, height = first.size
+        first_pixels = array('f', [0.0])*(width*height*4)
+        second_pixels = array('f', [0.0])*(width*height*4)
+        first.pixels.foreach_get(first_pixels)
+        second.pixels.foreach_get(second_pixels)
+        combined = array('f', [0.0])*(width*height*8)
+        row_size = width*4
+        for row in range(height):
+            source = row*row_size
+            target = row*row_size*2
+            combined[target:target+row_size] = \
+                first_pixels[source:source+row_size]
+            combined[target+row_size:target+row_size*2] = \
+                second_pixels[source:source+row_size]
+        sheet = bpy.data.images.new(
+            'Officer_Standing_Crouched_Comparison', width*2, height, alpha=True)
+        sheet.pixels.foreach_set(combined)
+        sheet.file_format = 'PNG'
+        sheet.filepath_raw = str(output_path)
+        sheet.save()
+        bpy.data.images.remove(first)
+        bpy.data.images.remove(second)
+        bpy.data.images.remove(sheet)
+        previews.append(str(output_path.relative_to(ROOT)))
 
     try:
         for obj in room_objects:
             obj.hide_render = True
+        grid.hide_render = False
         arm.animation_data.action = bpy.data.actions.get('Anim_RifleReadyIdle')
         scene.frame_set(1)
-        for view_name, filename, location, target in [
-                ('officer_front', 'officer_front.png',
-                 (0, -4.2, 1.0), (0, -.35, .96)),
-                ('officer_side', 'officer_side.png',
-                 (3.2, -3.2, 1.25), (0, -.05, .96))]:
+        view_specs = [
+            ('officer_front', 'officer_front.png',
+             (0, -4.2, 1.0), (0, 0, .93)),
+            ('officer_side', 'officer_side.png',
+             (4.0, 0, 1.0), (0, 0, .93)),
+            ('officer_three_quarter', 'officer_three_quarter.png',
+             (3.2, -3.2, 1.25), (0, -.05, .96)),
+        ]
+        for view_name, filename, location, target in view_specs:
             if view_name not in requested_views:
                 continue
+            camera.data.type = 'PERSP'
             camera.location = location
             point_camera(camera, target)
             render(output_dir/filename)
 
+        if 'officer_boots_knees' in requested_views:
+            arm.animation_data.action = bpy.data.actions.get('Anim_CrouchIdle')
+            scene.frame_set(1)
+            camera.data.type = 'ORTHO'
+            camera.data.ortho_scale = 1.0
+            camera.location = (1.2, -2.1, .72)
+            point_camera(camera, (0, -.12, .35))
+            render(output_dir/'officer_boots_knees.png')
+            arm.animation_data.action = bpy.data.actions.get(
+                'Anim_RifleReadyIdle')
+            scene.frame_set(1)
+
+        if 'officer_side_by_side' in requested_views:
+            camera.data.type = 'ORTHO'
+            camera.data.ortho_scale = 1.95
+            camera.location = (4.0, 0, 1.0)
+            point_camera(camera, (0, 0, .92))
+            standing = animation_dir/'_standing_side.png'
+            crouched = animation_dir/'_crouched_side.png'
+            render(standing, track=False)
+            arm.animation_data.action = bpy.data.actions.get('Anim_CrouchIdle')
+            scene.frame_set(1)
+            render(crouched, track=False)
+            comparison = output_dir/'officer_standing_crouched.png'
+            compose_pair(standing, crouched, comparison)
+            standing.unlink(missing_ok=True)
+            crouched.unlink(missing_ok=True)
+            arm.animation_data.action = bpy.data.actions.get(
+                'Anim_RifleReadyIdle')
+            scene.frame_set(1)
+            camera.data.type = 'PERSP'
+            camera.data.ortho_scale = old_ortho_scale
+
+        if 'officer_gameplay_distance' in requested_views:
+            camera.data.type = 'ORTHO'
+            camera.data.ortho_scale = 3.8
+            camera.location = (2.8, -3.6, 6.5)
+            point_camera(camera, (0, -.05, .86))
+            render(output_dir/'officer_gameplay_distance.png')
+
         if 'gameplay_angle' in requested_views:
             for obj in room_objects:
                 obj.hide_render = False
-                if obj.name in {'Room_Roof_Section', 'Room_Wall_South', 'Room_Wall_West'}:
+                if obj.name in {'Room_Roof_Section', 'Room_Wall_South',
+                                'Room_Wall_West', 'Room_Floor'}:
                     obj.hide_render = True
             camera.data.type = 'ORTHO'
             camera.data.ortho_scale = 12.5
@@ -1202,6 +1556,7 @@ def render_quality_previews(arm, output_dir, views=None):
         door_views = [view for view in ('door_closed', 'door_open')
                       if view in requested_views]
         if door_views:
+            grid.hide_render = True
             for obj in character_objects:
                 obj.hide_render = True
             for obj in room_objects:
@@ -1228,11 +1583,12 @@ def render_quality_previews(arm, output_dir, views=None):
                 render(output_dir/f'door_{side}.png')
 
         if 'animations' in requested_views:
+            grid.hide_render = False
             for obj in room_objects:
                 obj.hide_render = True
             floor = bpy.data.objects.get('Room_Floor')
             if floor:
-                floor.hide_render = False
+                floor.hide_render = True
             for obj in character_objects:
                 obj.hide_render = False
             scene.render.resolution_x = 480
@@ -1242,7 +1598,8 @@ def render_quality_previews(arm, output_dir, views=None):
             camera.location = (2.7, -4.8, 2.05)
             point_camera(camera, (0, -.2, .93))
             for name in ('Anim_RifleReadyIdle', 'Anim_Walk_Forward',
-                         'Anim_CrouchIdle', 'Anim_RifleRecoil'):
+                         'Anim_StandToCrouch', 'Anim_CrouchIdle',
+                         'Anim_CrouchToStand', 'Anim_RifleRecoil'):
                 clip = bpy.data.actions[name]
                 arm.animation_data.action = clip
                 start = int(clip['frame_start'])
@@ -1262,6 +1619,9 @@ def render_quality_previews(arm, output_dir, views=None):
             light_data = door_light.data
             bpy.data.objects.remove(door_light, do_unlink=True)
             bpy.data.lights.remove(light_data)
+        grid_mesh = grid.data
+        bpy.data.objects.remove(grid, do_unlink=True)
+        bpy.data.meshes.remove(grid_mesh)
         for obj, hidden in room_visibility.items():
             obj.hide_render = hidden
         for obj, hidden in collision_visibility.items():
@@ -1277,6 +1637,108 @@ def render_quality_previews(arm, output_dir, views=None):
         scene.render.resolution_x, scene.render.resolution_y, scene.render.resolution_percentage = old_size
         scene.render.filepath = old_filepath
     return previews
+
+
+def set_pose_bone_segment(arm, bone_name, head, tail):
+    bone = arm.data.bones[bone_name]
+    start = Vector(head)
+    end = Vector(tail)
+    rest_direction = (bone.tail_local-bone.head_local).normalized()
+    target_direction = (end-start).normalized()
+    swing = rest_direction.rotation_difference(target_direction)
+    rest_rotation = bone.matrix_local.to_3x3().to_quaternion()
+    rotation = swing @ rest_rotation
+    matrix = Matrix.Translation(start) @ rotation.to_matrix().to_4x4()
+    arm.pose.bones[bone_name].matrix = matrix
+
+
+def crouch_knee_target(hip, ankle, upper_length, lower_length):
+    delta_y = ankle.y-hip.y
+    delta_z = ankle.z-hip.z
+    distance = math.hypot(delta_y, delta_z)
+    distance = min(distance, upper_length+lower_length-1e-5)
+    distance = max(distance, abs(upper_length-lower_length)+1e-5)
+    along = (upper_length**2-lower_length**2+distance**2)/(2*distance)
+    bend = math.sqrt(max(0.0, upper_length**2-along**2))
+    direction_y = delta_y/distance
+    direction_z = delta_z/distance
+    knee_y = hip.y+along*direction_y+bend*direction_z
+    knee_z = hip.z+along*direction_z-bend*direction_y
+    return Vector((hip.x, knee_y, knee_z))
+
+
+def author_crouch_pose(arm, pelvis_height, lean=.12):
+    pelvis_drop = max(0.0, .82-pelvis_height)
+    pelvis = (0, 0, pelvis_height)
+    pelvis_tail = (0, 0, pelvis_height+.20)
+    torso_angle = lean
+    spine_one_tail = (0, -.25*math.sin(torso_angle),
+                      pelvis_height+.20+.25*math.cos(torso_angle))
+    spine_two_tail = (0, spine_one_tail[1]-.20*math.sin(torso_angle),
+                      spine_one_tail[2]+.20*math.cos(torso_angle))
+    set_pose_bone_segment(arm, 'pelvis', pelvis, pelvis_tail)
+    bpy.context.view_layer.update()
+    set_pose_bone_segment(arm, 'spine_01', pelvis_tail, spine_one_tail)
+    bpy.context.view_layer.update()
+    set_pose_bone_segment(arm, 'spine_02', spine_one_tail, spine_two_tail)
+    bpy.context.view_layer.update()
+
+    for side, sign in (('L', -1), ('R', 1)):
+        hip = Vector((sign*(.12+pelvis_drop*.125),
+                      -pelvis_drop*.104, pelvis_height))
+        ankle = Vector((arm.data.bones['foot.'+side].head_local.x,
+                        arm.data.bones['foot.'+side].head_local.y,
+                        arm.data.bones['foot.'+side].head_local.z))
+        upper_length = arm.data.bones['thigh.'+side].length
+        lower_length = arm.data.bones['shin.'+side].length
+        knee = crouch_knee_target(
+            hip, ankle, upper_length, lower_length)
+        set_pose_bone_segment(arm, 'thigh.'+side, hip, knee)
+        bpy.context.view_layer.update()
+        set_pose_bone_segment(arm, 'shin.'+side, knee, ankle)
+        bpy.context.view_layer.update()
+        foot_direction = (arm.data.bones['foot.'+side].tail_local -
+                          arm.data.bones['foot.'+side].head_local)
+        set_pose_bone_segment(
+            arm, 'foot.'+side, ankle, ankle+foot_direction)
+    bpy.context.view_layer.update()
+
+
+def author_crouch_action(arm, name, frame_end, key_poses, loop=False):
+    arm.animation_data_create()
+    arm.animation_data.action = None
+    reset_pose(arm)
+    clip = bpy.data.actions.new(name)
+    clip.use_fake_user = True
+    clip['loop'] = loop
+    clip['frame_start'] = 1
+    clip['frame_end'] = frame_end
+    arm.animation_data.action = clip
+    for frame in range(1, frame_end+1):
+        segment = next((index for index in range(len(key_poses)-1)
+                        if key_poses[index][0] <= frame <=
+                        key_poses[index+1][0]), len(key_poses)-2)
+        first = key_poses[segment]
+        second = key_poses[segment+1]
+        amount = (frame-first[0])/(second[0]-first[0])
+        amount = amount*amount*(3-2*amount)
+        pelvis_height = first[1]+(second[1]-first[1])*amount
+        lean = first[2]+(second[2]-first[2])*amount
+        reset_pose(arm)
+        author_crouch_pose(arm, pelvis_height, lean)
+        for pose_bone in arm.pose.bones:
+            pose_bone.keyframe_insert(
+                'location', frame=frame, group=pose_bone.name)
+            pose_bone.keyframe_insert(
+                'rotation_euler', frame=frame, group=pose_bone.name)
+            pose_bone.keyframe_insert(
+                'scale', frame=frame, group=pose_bone.name)
+    for curve in action_fcurves(clip):
+        for key in curve.keyframe_points:
+            key.interpolation = 'BEZIER'
+            key.handle_left_type = 'AUTO_CLAMPED'
+            key.handle_right_type = 'AUTO_CLAMPED'
+    return clip
 
 
 def build_animations(arm):
@@ -1296,16 +1758,6 @@ def build_animations(arm):
         'shin.R': {'rotation': (-.22, 0, 0)},
         'foot.L': {'rotation': (.10, 0, 0)},
         'foot.R': {'rotation': (-.10, 0, 0)},
-    }
-    crouch = {
-        'root': {'location': (0, -.24, 0)},
-        'thigh.L': {'rotation': (1.2, 0, 0)},
-        'thigh.R': {'rotation': (1.2, 0, 0)},
-        'shin.L': {'rotation': (-1.2, 0, 0)},
-        'shin.R': {'rotation': (-1.2, 0, 0)},
-        'foot.L': {'rotation': (0, 0, 0)},
-        'foot.R': {'rotation': (0, 0, 0)},
-        'spine_01': {'rotation': (-.18, 0, 0)},
     }
     recoil = {
         'spine_02': {'rotation': (-.10, 0, 0)},
@@ -1386,8 +1838,15 @@ def build_animations(arm):
     for curve in action_fcurves(walk_clip):
         for key in curve.keyframe_points:
             key.interpolation = 'LINEAR'
-    action(arm, 'Anim_CrouchIdle', 30,
-           [(1, crouch), (30, crouch)], True)
+    author_crouch_action(
+        arm, 'Anim_StandToCrouch', 16,
+        [(1, .82, 0), (8, .70, .07), (16, .58, .12)])
+    author_crouch_action(
+        arm, 'Anim_CrouchIdle', 30,
+        [(1, .58, .12), (15, .58, .095), (30, .58, .12)], True)
+    author_crouch_action(
+        arm, 'Anim_CrouchToStand', 16,
+        [(1, .58, .12), (8, .70, .07), (16, .82, 0)])
     action(arm, 'Anim_RifleRecoil', 12,
            [(1, neutral), (4, recoil), (12, neutral)])
     arm.animation_data.action = None

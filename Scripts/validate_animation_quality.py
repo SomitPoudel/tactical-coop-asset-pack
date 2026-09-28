@@ -1,4 +1,4 @@
-"""Measure the four authored officer clips across every frame."""
+"""Measure officer deformation, contacts and authored clips across every frame."""
 import importlib
 import json
 import math
@@ -16,14 +16,8 @@ common = importlib.import_module('blender_asset_pack_common')
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT/'Documentation'/'animation_validation.json'
 CLIPS = ('Anim_RifleReadyIdle', 'Anim_Walk_Forward',
-         'Anim_CrouchIdle', 'Anim_RifleRecoil')
-JOINT_PAIRS = tuple(
-    (f'Officer_{upper}.{side}', f'Officer_{lower}.{side}',
-     f'{joint}.{side}', f'Officer_{connector}.{side}')
-    for side in ('L', 'R')
-    for upper, lower, joint, connector in (
-        ('UpperArm', 'Forearm', 'forearm', 'Elbow'),
-        ('Thigh', 'Shin', 'shin', 'Knee')))
+         'Anim_StandToCrouch', 'Anim_CrouchIdle',
+         'Anim_CrouchToStand', 'Anim_RifleRecoil')
 
 
 def matrix_delta(first, second):
@@ -31,42 +25,43 @@ def matrix_delta(first, second):
                for row in range(4) for column in range(4))
 
 
-def joint_connector_coverage(segment, connector, seam_center, depsgraph,
-                             radius=.12):
-    def world_mesh(obj):
-        evaluated = obj.evaluated_get(depsgraph)
-        mesh = evaluated.to_mesh()
-        try:
-            vertices = [evaluated.matrix_world @ vertex.co
-                        for vertex in mesh.vertices]
-            polygons = [tuple(polygon.vertices) for polygon in mesh.polygons]
-            return vertices, BVHTree.FromPolygons(
-                vertices, polygons, epsilon=1e-5)
-        finally:
-            evaluated.to_mesh_clear()
+def connected_component_count(mesh):
+    neighbors = [set() for _ in mesh.vertices]
+    for edge in mesh.edges:
+        first, second = edge.vertices
+        neighbors[first].add(second)
+        neighbors[second].add(first)
+    unseen = set(range(len(mesh.vertices)))
+    components = 0
+    while unseen:
+        components += 1
+        pending = [unseen.pop()]
+        while pending:
+            for neighbor in neighbors[pending.pop()]:
+                if neighbor in unseen:
+                    unseen.remove(neighbor)
+                    pending.append(neighbor)
+    return components
 
-    segment_vertices, _ = world_mesh(segment)
-    _, connector_tree = world_mesh(connector)
-    nearby = [vertex for vertex in segment_vertices
-              if (vertex-seam_center).length <= radius]
-    sampled = sorted(nearby, key=lambda vertex: (
-        vertex-seam_center).length)[:10]
-    outside_gaps = []
-    for vertex in sampled:
-        location, normal, _, distance = connector_tree.find_nearest(vertex)
-        if location is None:
-            outside_gaps.append(None)
-        elif (vertex-location).dot(normal) > 1e-6:
-            outside_gaps.append(distance)
-        else:
-            outside_gaps.append(0.0)
-    measured = [gap for gap in outside_gaps if gap is not None]
+
+def skin_weight_report(obj):
+    sums = []
+    empty_vertices = 0
+    maximum_influences = 0
+    for vertex in obj.data.vertices:
+        weights = [group.weight for group in vertex.groups]
+        if not weights:
+            empty_vertices += 1
+            continue
+        sums.append(sum(weights))
+        maximum_influences = max(maximum_influences, len(weights))
     return {
-        'sample_radius_m': radius,
-        'sampled_terminal_vertices': len(sampled),
-        'connector_covered_vertex_count': sum(
-            gap == 0.0 for gap in measured),
-        'max_connector_separation_m': max(measured, default=None),
+        'vertex_count': len(obj.data.vertices),
+        'empty_weight_vertices': empty_vertices,
+        'maximum_influences_per_vertex': maximum_influences,
+        'minimum_weight_sum': round(min(sums, default=0.0), 5),
+        'maximum_weight_sum': round(max(sums, default=0.0), 5),
+        'all_vertices_weighted': empty_vertices == 0,
     }
 
 
@@ -74,6 +69,7 @@ def run():
     scene = bpy.context.scene
     arm = bpy.data.objects['Rig_Officer']
     display = bpy.data.objects['SHOWCASE_Carbine']
+    uniform = bpy.data.objects['Officer_Uniform']
     main_hand = bpy.data.objects['ATT_Officer_MainHand']
     support_hand = bpy.data.objects['ATT_Officer_SupportHand']
     checks = {}
@@ -90,36 +86,13 @@ def run():
         frames = {}
         start = int(clip['frame_start'])
         end = int(clip['frame_end'])
-        joint_seam_summary = {}
         for frame in range(start, end+1):
             scene.frame_set(frame)
+            bpy.context.view_layer.update()
             soles = [common.world_aabb(
                 bpy.data.objects['Officer_BootSole.'+side]) for side in ('L', 'R')]
             main_grip = display.matrix_world @ Vector((.075, .015, -.15))
             support_grip = display.matrix_world @ Vector((-.04, -.20, -.08))
-            joint_gaps = {}
-            for first, second, joint_bone, connector_name in JOINT_PAIRS:
-                seam_center = arm.matrix_world @ arm.pose.bones[joint_bone].head
-                connector = bpy.data.objects[connector_name]
-                joint_gaps[first+'__'+connector_name] = joint_connector_coverage(
-                    bpy.data.objects[first], connector, seam_center, depsgraph)
-                joint_gaps[second+'__'+connector_name] = joint_connector_coverage(
-                    bpy.data.objects[second], connector, seam_center, depsgraph)
-            for seam_name, seam_result in joint_gaps.items():
-                gap = seam_result['max_connector_separation_m'] or 0.0
-                summary = joint_seam_summary.get(seam_name)
-                if summary is None or gap > summary['max_connector_separation_m']:
-                    joint_seam_summary[seam_name] = {
-                        **seam_result,
-                        'max_connector_separation_m': round(gap, 5),
-                        'worst_frame': frame,
-                        'minimum_connector_covered_vertex_count':
-                            seam_result['connector_covered_vertex_count'],
-                    }
-                else:
-                    summary['minimum_connector_covered_vertex_count'] = min(
-                        summary['minimum_connector_covered_vertex_count'],
-                        seam_result['connector_covered_vertex_count'])
             frames[str(frame)] = {
                 'sole_min_z_m': [round(bounds[0][2], 5) for bounds in soles],
                 'sole_max_z_m': [round(bounds[1][2], 5) for bounds in soles],
@@ -132,9 +105,6 @@ def run():
                     (support_hand.matrix_world.translation-support_grip).length, 5),
                 'pelvis_z_m': round(
                     (arm.matrix_world @ arm.pose.bones['pelvis'].matrix).translation.z, 5),
-                'max_joint_seam_gap_m': round(max(
-                    (gap['max_connector_separation_m'] or 0.0
-                     for gap in joint_gaps.values())), 5),
             }
         all_frames = list(frames.values())
         planted_slides = {'L': [], 'R': []}
@@ -163,10 +133,6 @@ def run():
                 frame['main_hand_error_m'] for frame in all_frames),
             'max_support_hand_error_m': max(
                 frame['support_hand_error_m'] for frame in all_frames),
-            'max_joint_seam_gap_m': max(
-                frame['max_joint_seam_gap_m']
-                for frame in all_frames),
-            'joint_seam_summary': joint_seam_summary,
         }
         if name == 'Anim_Walk_Forward':
             checks[name]['planted_foot_slide'] = {
@@ -215,7 +181,6 @@ def run():
         'maximum_support_hand_error_m': .035,
         'maximum_foot_penetration_m': .01,
         'maximum_foot_float_m': .12,
-        'maximum_joint_seam_gap_m': .035,
         'maximum_planted_foot_drift_speed_mps': .10,
         'maximum_crouch_foot_float_m': .02,
         'minimum_crouch_pelvis_height_m': .50,
@@ -232,8 +197,9 @@ def run():
             failures.append(name+':support_hand_alignment')
         if result['max_foot_penetration_m'] > limits['maximum_foot_penetration_m']:
             failures.append(name+':foot_penetration')
-        if result['max_joint_seam_gap_m'] > limits['maximum_joint_seam_gap_m']:
-            failures.append(name+':joint_separation')
+    for name in ('Anim_StandToCrouch', 'Anim_CrouchIdle', 'Anim_CrouchToStand'):
+        if checks[name]['max_foot_float_m'] > limits['maximum_crouch_foot_float_m']:
+            failures.append(name+':feet_not_grounded')
     if checks['Anim_Walk_Forward']['max_foot_float_m'] > limits['maximum_foot_float_m']:
         failures.append('Anim_Walk_Forward:foot_float')
     if checks['Anim_Walk_Forward']['max_planted_foot_drift_speed_mps'] > \
@@ -247,6 +213,27 @@ def run():
     if checks['Anim_CrouchIdle']['minimum_pelvis_z_m'] < \
             limits['minimum_crouch_pelvis_height_m']:
         failures.append('Anim_CrouchIdle:pelvis_too_low')
+    transition_contacts = {
+        name: checks[name]['max_foot_float_m']
+        for name in ('Anim_StandToCrouch', 'Anim_CrouchToStand')}
+    boot_dimensions = {}
+    for side in ('L', 'R'):
+        bounds = common.world_aabb(bpy.data.objects['Officer_BootSole.'+side])
+        boot_dimensions[side] = [round(bounds[1][axis]-bounds[0][axis], 4)
+                                 for axis in range(3)]
+    boot_sizes_ok = all(
+        .28 <= dimensions[1] <= .31 and .10 <= dimensions[0] <= .12
+        for dimensions in boot_dimensions.values())
+    if not boot_sizes_ok:
+        failures.append('boot_dimensions_out_of_target')
+    skin = skin_weight_report(uniform)
+    components = connected_component_count(uniform.data)
+    if components != 1:
+        failures.append('uniform_surface_not_connected')
+    if not skin['all_vertices_weighted'] or \
+            abs(skin['minimum_weight_sum']-1.0) > .01 or \
+            abs(skin['maximum_weight_sum']-1.0) > .01:
+        failures.append('uniform_surface_skin_weights')
     if any(delta > limits['maximum_loop_endpoint_matrix_delta']
            for delta in loop_deltas.values()):
         failures.append('loop_endpoint_transforms')
@@ -268,6 +255,14 @@ def run():
                 'maximum_planted_foot_drift_speed_mps'],
         },
         'checks': checks,
+        'uniform_surface': {
+            'mesh_object': uniform.name,
+            'connected_face_components': components,
+            'skin_weights': skin,
+        },
+        'boot_dimensions_m': boot_dimensions,
+        'transition_max_foot_float_m': transition_contacts,
+        'crouch_pelvis_drop_m': round(crouch_drop, 5),
         'loop_endpoint_matrix_deltas': loop_deltas,
         'recoil_endpoint_matrix_deltas': recoil_deltas,
         'limits': limits,

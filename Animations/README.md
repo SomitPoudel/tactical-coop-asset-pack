@@ -23,5 +23,6 @@ Planned clip set:
 - Revive teammate
 
 Current status:
-- scripts prepared for Blender authoring
-- no local animation export performed in this session
+- quality officer clips authored and exported: rifle-ready idle, walk forward,
+  stand-to-crouch, crouch idle, crouch-to-stand, and rifle recoil
+- additional animation inventory above remains planned; no gameplay implementation

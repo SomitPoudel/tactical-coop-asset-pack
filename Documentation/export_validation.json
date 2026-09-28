@@ -6,60 +6,76 @@
       "file": "C:\\Users\\poude\\OneDrive\\Documents\\GitHub\\tactical-coop-asset-pack\\Characters\\Officer_Quality.fbx",
       "asset_root": "Char_Officer",
       "dimensions_m": [
-        0.832,
-        0.905,
-        1.84
+        0.8038,
+        0.933,
+        1.805
       ],
       "exported_actions": [
         "Anim_RifleReadyIdle",
         "Anim_Walk_Forward",
+        "Anim_StandToCrouch",
         "Anim_CrouchIdle",
+        "Anim_CrouchToStand",
         "Anim_RifleRecoil"
       ],
       "round_trip": {
         "status": "passed",
         "dimensions_m": [
-          0.832,
-          0.905,
-          1.84
+          0.8038,
+          0.933,
+          1.805
         ],
         "source_dimensions_m": [
-          0.832,
-          0.905,
-          1.84
+          0.8038,
+          0.933,
+          1.805
         ],
-        "mesh_count": 49,
+        "mesh_count": 37,
         "armature_count": 1,
         "expected_actions": [
           "Anim_RifleReadyIdle",
           "Anim_Walk_Forward",
+          "Anim_StandToCrouch",
           "Anim_CrouchIdle",
+          "Anim_CrouchToStand",
           "Anim_RifleRecoil"
         ],
         "observed_actions": [
           "ATT_Back.001|Anim_CrouchIdle",
+          "ATT_Back.001|Anim_CrouchToStand",
           "ATT_Back.001|Anim_RifleReadyIdle",
           "ATT_Back.001|Anim_RifleRecoil",
+          "ATT_Back.001|Anim_StandToCrouch",
           "ATT_Back.001|Anim_Walk_Forward",
           "ATT_Belt.001|Anim_CrouchIdle",
+          "ATT_Belt.001|Anim_CrouchToStand",
           "ATT_Belt.001|Anim_RifleReadyIdle",
           "ATT_Belt.001|Anim_RifleRecoil",
+          "ATT_Belt.001|Anim_StandToCrouch",
           "ATT_Belt.001|Anim_Walk_Forward",
           "ATT_Officer_MainHand.001|Anim_CrouchIdle",
+          "ATT_Officer_MainHand.001|Anim_CrouchToStand",
           "ATT_Officer_MainHand.001|Anim_RifleReadyIdle",
           "ATT_Officer_MainHand.001|Anim_RifleRecoil",
+          "ATT_Officer_MainHand.001|Anim_StandToCrouch",
           "ATT_Officer_MainHand.001|Anim_Walk_Forward",
           "ATT_Officer_SupportHand.001|Anim_CrouchIdle",
+          "ATT_Officer_SupportHand.001|Anim_CrouchToStand",
           "ATT_Officer_SupportHand.001|Anim_RifleReadyIdle",
           "ATT_Officer_SupportHand.001|Anim_RifleRecoil",
+          "ATT_Officer_SupportHand.001|Anim_StandToCrouch",
           "ATT_Officer_SupportHand.001|Anim_Walk_Forward",
           "Char_Officer.001|Anim_CrouchIdle",
+          "Char_Officer.001|Anim_CrouchToStand",
           "Char_Officer.001|Anim_RifleReadyIdle",
           "Char_Officer.001|Anim_RifleRecoil",
+          "Char_Officer.001|Anim_StandToCrouch",
           "Char_Officer.001|Anim_Walk_Forward",
           "Rig_Officer.001|Anim_CrouchIdle",
+          "Rig_Officer.001|Anim_CrouchToStand",
           "Rig_Officer.001|Anim_RifleReadyIdle",
           "Rig_Officer.001|Anim_RifleRecoil",
+          "Rig_Officer.001|Anim_StandToCrouch",
           "Rig_Officer.001|Anim_Walk_Forward"
         ],
         "round_trip_clip_checks": {
@@ -91,6 +107,20 @@
               "OBJECT"
             ]
           },
+          "Anim_StandToCrouch": {
+            "found": true,
+            "evaluated_frames": [
+              1,
+              8,
+              16
+            ],
+            "pose_changes": true,
+            "action_name": "Rig_Officer.001|Anim_StandToCrouch",
+            "curve_count": 209,
+            "slot_target_types": [
+              "OBJECT"
+            ]
+          },
           "Anim_CrouchIdle": {
             "found": true,
             "evaluated_frames": [
@@ -100,6 +130,20 @@
             ],
             "pose_changes": true,
             "action_name": "Rig_Officer.001|Anim_CrouchIdle",
+            "curve_count": 209,
+            "slot_target_types": [
+              "OBJECT"
+            ]
+          },
+          "Anim_CrouchToStand": {
+            "found": true,
+            "evaluated_frames": [
+              1,
+              8,
+              16
+            ],
+            "pose_changes": true,
+            "action_name": "Rig_Officer.001|Anim_CrouchToStand",
             "curve_count": 209,
             "slot_target_types": [
               "OBJECT"
