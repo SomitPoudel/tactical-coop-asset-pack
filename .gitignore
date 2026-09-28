@@ -18,6 +18,8 @@ Thumbs.db
 *.png
 *.jpg
 *.jpeg
+!/Previews/officer_front.png
+!/Previews/gameplay_angle.png
 
 # Keep source and scripts tracked
 !Scripts/*.py
