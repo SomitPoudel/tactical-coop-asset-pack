@@ -1,0 +1,25 @@
+# .gitignore
+
+# Blender
+*.blend1
+*.blend2
+*.pyc
+__pycache__/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Generated runtime files
+*.fbx
+*.obj
+*.glb
+*.png
+*.jpg
+*.jpeg
+
+# Keep source and scripts tracked
+!Scripts/*.py
+!Documentation/*.md
+!Documentation/*.json
