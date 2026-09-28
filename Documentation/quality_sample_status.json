@@ -2,10 +2,10 @@
   "generation_status": "passed",
   "structural_validation": "passed",
   "visual_quality_metrics": "passed",
-  "human_visual_review": "reviewed_with_limitations; see quality_validation.json",
+  "human_visual_review": "pending rendered inspection",
   "previews": [
     "Previews\\officer_front.png",
-    "Previews\\gameplay_angle.png"
+    "Previews\\officer_side.png"
   ],
   "exports": [],
   "unity_compatibility": "not_run",

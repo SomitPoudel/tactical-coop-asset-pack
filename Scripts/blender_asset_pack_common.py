@@ -370,9 +370,9 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
         ('Officer_UpperArm.R', 'clavicle.R', 'upper_arm.R', .115, .085, armor),
         ('Officer_Forearm.R', 'upper_arm.R', 'forearm.R', .085, .065, cloth),
         ('Officer_Thigh.L', 'pelvis', 'thigh.L', .105, .085, cloth),
-        ('Officer_Shin.L', 'thigh.L', 'shin.L', .080, .060, dark),
+        ('Officer_Shin.L', 'thigh.L', 'shin.L', .102, .084, cloth),
         ('Officer_Thigh.R', 'pelvis', 'thigh.R', .105, .085, cloth),
-        ('Officer_Shin.R', 'thigh.R', 'shin.R', .080, .060, dark),
+        ('Officer_Shin.R', 'thigh.R', 'shin.R', .102, .084, cloth),
     ]
     for mesh_name, neighbor, bone, start_radius, end_radius, material in segments:
         tapered_limb(mesh_name, arm.data.bones[bone].head_local,
@@ -381,28 +381,62 @@ def build_officer(arm, variant='blue', root_name='Char_Officer'):
 
     weighted_ellipsoid('Officer_Pelvis', (0, 0, .91), (.205, .145, .15),
                        cloth, arm, {'pelvis': 1.0}, col)
+
+    def boot_mesh(name, side, foot_x, profiles, material):
+        vertices = []
+        faces = []
+        ring_size = 8
+        for z, half_width, front, back in profiles:
+            vertices.extend((
+                (foot_x+half_width*.62, front, z),
+                (foot_x+half_width, front+.035, z),
+                (foot_x+half_width, back-.025, z),
+                (foot_x+half_width*.62, back, z),
+                (foot_x-half_width*.62, back, z),
+                (foot_x-half_width, back-.025, z),
+                (foot_x-half_width, front+.035, z),
+                (foot_x-half_width*.62, front, z),
+            ))
+        for ring in range(len(profiles)-1):
+            for index in range(ring_size):
+                a = ring*ring_size+index
+                b = ring*ring_size+(index+1) % ring_size
+                faces.append((a, b, b+ring_size, a+ring_size))
+        faces.extend((tuple(reversed(range(ring_size))),
+                      tuple(range((len(profiles)-1)*ring_size,
+                                  len(profiles)*ring_size))))
+        return weighted_mesh(
+            name, vertices, faces, material, arm,
+            [{'foot.'+side: 1.0} for _ in vertices], col)
+
     for side in ('L', 'R'):
         elbow = arm.data.bones['forearm.'+side].head_local
         knee = arm.data.bones['shin.'+side].head_local
         weighted_ellipsoid('Officer_Elbow.'+side, elbow, (.082, .078, .082),
                            cloth, arm,
                            {'upper_arm.'+side: .5, 'forearm.'+side: .5}, col)
-        weighted_ellipsoid('Officer_Knee.'+side, knee, (.083, .09, .085),
-                           dark, arm, {'thigh.'+side: .5, 'shin.'+side: .5}, col)
+        weighted_ellipsoid('Officer_Knee.'+side, knee, (.067, .065, .062),
+                           cloth, arm, {'thigh.'+side: .5, 'shin.'+side: .5}, col)
+        weighted_ellipsoid('Officer_KneePad.'+side,
+                           (knee.x, knee.y-.061, knee.z),
+                           (.061, .022, .068), dark, arm,
+                           {'thigh.'+side: .5, 'shin.'+side: .5}, col)
         hand = arm.data.bones['hand.'+side].head_local
         weighted_ellipsoid('Officer_Glove.'+side, hand, (.09, .09, .065),
                            dark, arm,
                            {'hand.'+side: .7, 'forearm.'+side: .3}, col)
         foot = arm.data.bones['foot.'+side].head_local
-        boot = add_cube('Officer_Boot.'+side,
-                        (foot.x, foot.y-.10, .075), (.21, .37, .15),
-                        dark, .018, col)
-        boot_world = boot.matrix_world.copy()
-        boot.parent = arm
-        boot.matrix_world = boot_world
-        boot.vertex_groups.new(name='foot.'+side).add(
-            list(range(len(boot.data.vertices))), 1.0, 'REPLACE')
-        boot.modifiers.new('Armature_Deform', 'ARMATURE').object = arm
+        boot_mesh('Officer_Boot.'+side, side, foot.x,
+                  ((.043, .097, -.312, .065),
+                   (.075, .104, -.300, .060),
+                   (.105, .096, -.275, .055),
+                   (.145, .081, -.218, .045),
+                   (.205, .078, -.145, .045),
+                   (.255, .076, -.075, .040),
+                   (.278, .077, -.050, .035)), dark)
+        boot_mesh('Officer_BootSole.'+side, side, foot.x,
+                  ((.018, .108, -.325, .075),
+                   (.052, .108, -.325, .075)), armor)
         shoulder = arm.data.bones['upper_arm.'+side].head_local
         weighted_ellipsoid('Officer_Shoulder.'+side, shoulder, (.15, .13, .14),
                            cloth, arm,
@@ -980,7 +1014,7 @@ def render_quality_previews(arm, output_dir, views=None):
                 ('officer_front', 'officer_front.png',
                  (0, -4.2, 1.0), (0, -.35, .96)),
                 ('officer_side', 'officer_side.png',
-                 (3.8, -.25, 1.0), (0, -.35, .96))]:
+                 (3.2, -3.2, 1.25), (0, -.05, .96))]:
             if view_name not in requested_views:
                 continue
             camera.location = location

@@ -69,7 +69,7 @@
         "name": "single_armature_skinning",
         "pass": true,
         "details": {
-          "deforming_meshes": 26
+          "deforming_meshes": 30
         }
       },
       {
@@ -96,9 +96,9 @@
         "pass": true,
         "details": {
           "Anim_CrouchIdle": true,
-          "Anim_RifleReadyIdle": true,
+          "Anim_Walk_Forward": true,
           "Anim_RifleRecoil": true,
-          "Anim_Walk_Forward": true
+          "Anim_RifleReadyIdle": true
         }
       },
       {
@@ -145,7 +145,7 @@
           "measured_m": [
             0.852,
             0.92,
-            1.85
+            1.832
           ]
         }
       },
@@ -196,7 +196,7 @@
         "pass": true,
         "details": {
           "Char_Officer": {
-            "count": 7800,
+            "count": 8736,
             "budget": 12000
           },
           "Equip_Carbine": {
@@ -218,14 +218,7 @@
         }
       }
     ],
-    "human_visual_review": {
-      "status": "reviewed_with_limitations",
-      "findings": [
-        "The front view foreshortens the rifle because it aims toward the camera.",
-        "The model remains an angular procedural low-poly blockout.",
-        "The gameplay view crops the upper doorway near the top edge."
-      ]
-    }
+    "human_visual_review": "pending rendered inspection"
   },
   "unity_compatibility": {
     "status": "not_run",
@@ -245,7 +238,7 @@
     "Char_Officer": [
       0.852,
       0.92,
-      1.85
+      1.832
     ],
     "Equip_Carbine": [
       0.1875,
@@ -259,7 +252,7 @@
     ]
   },
   "evaluated_triangle_counts": {
-    "Char_Officer": 7800,
+    "Char_Officer": 8736,
     "Equip_Carbine": 908,
     "Env_QualityRoom": 1512
   },
